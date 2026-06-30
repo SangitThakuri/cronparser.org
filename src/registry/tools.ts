@@ -1,5 +1,5 @@
 import { lazy } from "react"
-import { Code2, ArrowLeftRight, Shield, Search, Fingerprint, FileCode, Database, Clock } from "lucide-react"
+import { Code2, ArrowLeftRight, Shield, Search, Fingerprint, FileCode, Database, Clock, Diff, Hash, Type } from "lucide-react"
 import type { RegistryEntry } from "./types"
 
 export const tools: RegistryEntry[] = [
@@ -58,5 +58,26 @@ export const tools: RegistryEntry[] = [
     description: "Translate cron expressions to plain English",
     icon: Clock,
     component: lazy(() => import("../tools/cron-parser/CronParser")),
+  },
+  {
+    id: "diff-checker",
+    name: "Text Diff Checker",
+    description: "Compare two texts side-by-side with color highlights",
+    icon: Diff,
+    component: lazy(() => import("../tools/diff-checker/DiffChecker")),
+  },
+  {
+    id: "hash-generator",
+    name: "Hash Generator",
+    description: "Generate MD5, SHA-1, SHA-256, SHA-512 hashes",
+    icon: Hash,
+    component: lazy(() => import("../tools/hash-generator/HashGenerator")),
+  },
+  {
+    id: "text-inspector",
+    name: "Case Converter",
+    description: "Convert case and inspect text statistics",
+    icon: Type,
+    component: lazy(() => import("../tools/text-inspector/TextInspector")),
   },
 ]
