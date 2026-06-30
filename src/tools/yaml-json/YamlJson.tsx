@@ -116,7 +116,7 @@ export default function YamlJson() {
         )}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         {/* Input */}
         <div
           className="relative flex flex-col gap-3"
@@ -167,11 +167,11 @@ export default function YamlJson() {
           </div>
 
           {error ? (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
+            <div className="overflow-x-auto rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
               <p className="font-mono text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
           ) : output ? (
-            <pre className="min-h-[200px] overflow-auto rounded-lg border border-green-200 bg-gray-50 p-4 font-mono text-sm text-gray-900 dark:border-green-800 dark:bg-gray-900 dark:text-gray-100">
+            <pre className="min-h-[200px] overflow-x-auto rounded-lg border border-green-200 bg-gray-50 p-4 font-mono text-sm text-gray-900 dark:border-green-800 dark:bg-gray-900 dark:text-gray-100">
               <code>{output}</code>
             </pre>
           ) : (

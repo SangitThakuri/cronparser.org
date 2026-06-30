@@ -12,7 +12,7 @@ export function JsonOutput({ formatted, error }: JsonOutputProps) {
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Output
         </label>
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
+        <div className="overflow-x-auto rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
           <p className="font-mono text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       </div>

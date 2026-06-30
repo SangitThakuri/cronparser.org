@@ -1,3 +1,4 @@
+import { useState } from "react"
 import type { ReactNode } from "react"
 import { Sidebar } from "./Sidebar"
 import { TopBar } from "./TopBar"
@@ -10,18 +11,28 @@ interface ShellLayoutProps {
 
 export function ShellLayout({ children }: ShellLayoutProps) {
   const { query, setQuery, filtered } = useSearchFilter(tools)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         collapsed={false}
         onToggle={() => {}}
         items={filtered}
-        onNavigate={() => setQuery("")}
+        onNavigate={() => {
+          setQuery("")
+          setMobileSidebarOpen(false)
+        }}
+        mobileOpen={mobileSidebarOpen}
+        onMobileClose={() => setMobileSidebarOpen(false)}
       />
-      <div className="flex flex-1 flex-col">
-        <TopBar searchQuery={query} onSearchChange={setQuery} />
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6 dark:bg-gray-950">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <TopBar
+          searchQuery={query}
+          onSearchChange={setQuery}
+          onMenuToggle={() => setMobileSidebarOpen(true)}
+        />
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
           {children}
         </main>
       </div>

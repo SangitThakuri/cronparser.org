@@ -35,7 +35,7 @@ export default function RegexTester() {
         <RegexCheatSheet />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <RegexInput
           pattern={state.pattern}
           flags={state.flags}

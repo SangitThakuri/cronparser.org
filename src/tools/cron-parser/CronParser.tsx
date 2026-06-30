@@ -108,13 +108,13 @@ export default function CronParser() {
         </div>
       )}
       {error && (
-        <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
+        <div className="mb-5 overflow-x-auto rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
           <p className="font-mono text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
 
       {/* Field reference */}
-      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
           Standard 5-field order
         </p>

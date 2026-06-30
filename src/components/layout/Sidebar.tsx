@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Code2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Code2, X } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import type { RegistryEntry } from "../../registry/types"
 
@@ -7,65 +7,99 @@ interface SidebarProps {
   onToggle: () => void
   items: RegistryEntry[]
   onNavigate?: () => void
+  mobileOpen: boolean
+  onMobileClose: () => void
 }
 
-export function Sidebar({ collapsed, onToggle, items, onNavigate }: SidebarProps) {
+export function Sidebar({
+  collapsed,
+  onToggle,
+  items,
+  onNavigate,
+  mobileOpen,
+  onMobileClose,
+}: SidebarProps) {
   return (
-    <aside
-      className={`flex flex-col border-r border-gray-200 bg-white transition-all duration-200 dark:border-gray-800 dark:bg-gray-900 ${collapsed ? "w-16" : "w-64"}`}
-    >
-      <div className="flex h-14 items-center gap-2 border-b border-gray-200 px-4 dark:border-gray-800">
-        <Code2 className="h-6 w-6 shrink-0 text-blue-600" />
-        {!collapsed && (
-          <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-            DevBits
-          </span>
-        )}
-      </div>
+    <>
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={onMobileClose}
+          aria-hidden="true"
+        />
+      )}
 
-      <div className="flex-1 overflow-y-auto py-2">
-        {items.map((tool) => (
-          <NavLink
-            key={tool.id}
-            to={`/${tool.id}`}
-            onClick={onNavigate}
-            className={({ isActive }) =>
-              `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
-                isActive
-                  ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
-              }`
-            }
-          >
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center">
-              <tool.icon className="h-4 w-4" />
+      <aside
+        className={`
+          fixed inset-y-0 left-0 z-50 flex flex-col border-r border-gray-200 bg-white
+          transition-transform duration-200 dark:border-gray-800 dark:bg-gray-900
+          md:relative md:z-auto md:translate-x-0
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+          ${collapsed ? "w-16" : "w-64"}
+        `}
+      >
+        <div className="flex h-14 items-center gap-2 border-b border-gray-200 px-4 dark:border-gray-800">
+          <Code2 className="h-6 w-6 shrink-0 text-blue-600" />
+          {!collapsed && (
+            <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+              DevBits
             </span>
-            {!collapsed && (
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-medium">{tool.name}</div>
-                <div className="truncate text-xs text-gray-400 dark:text-gray-500">
-                  {tool.description}
-                </div>
-              </div>
-            )}
-          </NavLink>
-        ))}
-      </div>
-
-      <div className="border-t border-gray-200 p-2 dark:border-gray-800">
-        <button
-          type="button"
-          onClick={onToggle}
-          className="flex w-full cursor-pointer items-center justify-center rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300"
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
           )}
-        </button>
-      </div>
-    </aside>
+          <button
+            type="button"
+            onClick={onMobileClose}
+            className="ml-auto flex items-center justify-center rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300 md:hidden"
+            aria-label="Close navigation"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto py-2">
+          {items.map((tool) => (
+            <NavLink
+              key={tool.id}
+              to={`/${tool.id}`}
+              onClick={onNavigate}
+              className={({ isActive }) =>
+                `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                }`
+              }
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                <tool.icon className="h-4 w-4" />
+              </span>
+              {!collapsed && (
+                <div className="min-w-0 flex-1">
+                  <div className="truncate font-medium">{tool.name}</div>
+                  <div className="truncate text-xs text-gray-400 dark:text-gray-500">
+                    {tool.description}
+                  </div>
+                </div>
+              )}
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="border-t border-gray-200 p-2 dark:border-gray-800">
+          <button
+            type="button"
+            onClick={onToggle}
+            className="hidden w-full cursor-pointer items-center justify-center rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-300 md:flex"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </button>
+        </div>
+      </aside>
+    </>
   )
 }
