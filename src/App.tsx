@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom"
+import { Helmet } from "react-helmet-async"
 import { ShellLayout } from "./components/layout/ShellLayout"
 import { tools } from "./registry/tools"
 
@@ -14,6 +15,10 @@ function LoadingSpinner() {
 function WelcomePage() {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center">
+      <Helmet>
+        <title>DevBits — Free Developer Utilities</title>
+        <meta name="description" content="A collection of free, fast, and private developer tools. Format JSON, encode Base64, debug JWTs, and test regex — all client-side." />
+      </Helmet>
       <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
         Welcome to DevBits
       </h1>
