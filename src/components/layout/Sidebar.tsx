@@ -58,7 +58,7 @@ export function Sidebar({
             <Code2 className="h-6 w-6 shrink-0 text-blue-600" />
             {!collapsed && (
               <span className="truncate text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-                DevBits
+                CronParser
               </span>
             )}
           </NavLink>
