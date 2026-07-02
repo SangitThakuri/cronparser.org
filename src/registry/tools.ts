@@ -2,7 +2,6 @@ import { lazy } from "react"
 import {
   ArrowLeftRight,
   Braces,
-  Clock,
   Code2,
   Database,
   Diff,
@@ -135,14 +134,6 @@ export const tools: RegistryEntry[] = [
   },
 
   // ── Development Tools ─────────────────────────────────────────────────────
-  {
-    id: "cron-parser",
-    name: "Cron Parser",
-    description: "Translate cron expressions to plain English",
-    category: "Development Tools",
-    icon: Clock,
-    component: lazy(() => import("../tools/cron-parser/CronParser")),
-  },
   {
     id: "markdown-preview",
     name: "Markdown Preview",

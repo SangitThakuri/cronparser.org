@@ -12,12 +12,13 @@ interface ShellLayoutProps {
 export function ShellLayout({ children }: ShellLayoutProps) {
   const { query, setQuery, filtered } = useSearchFilter(tools)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
-        collapsed={false}
-        onToggle={() => {}}
+        collapsed={collapsed}
+        onToggle={() => setCollapsed((c) => !c)}
         items={filtered}
         onNavigate={() => {
           setQuery("")

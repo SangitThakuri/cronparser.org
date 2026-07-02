@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Code2, X } from "lucide-react"
+import { ChevronLeft, ChevronRight, Clock, Code2, Grid2x2, X } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import type { RegistryEntry } from "../../registry/types"
 
@@ -54,12 +54,14 @@ export function Sidebar({
       >
         {/* Header */}
         <div className="flex h-14 shrink-0 items-center gap-2 border-b border-gray-200 px-4 dark:border-gray-800">
-          <Code2 className="h-6 w-6 shrink-0 text-blue-600" />
-          {!collapsed && (
-            <span className="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-              DevBits
-            </span>
-          )}
+          <NavLink to="/" onClick={onNavigate} className="flex min-w-0 items-center gap-2">
+            <Code2 className="h-6 w-6 shrink-0 text-blue-600" />
+            {!collapsed && (
+              <span className="truncate text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                DevBits
+              </span>
+            )}
+          </NavLink>
           <button
             type="button"
             onClick={onMobileClose}
@@ -72,6 +74,45 @@ export function Sidebar({
 
         {/* Nav */}
         <div className="flex-1 overflow-y-auto py-2">
+          {/* Pinned: home tool + full catalog */}
+          <div className="mb-2 border-b border-gray-100 pb-2 dark:border-gray-800">
+            <NavLink
+              to="/"
+              end
+              onClick={onNavigate}
+              title={collapsed ? "Cron Parser" : undefined}
+              className={({ isActive }) =>
+                `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                }`
+              }
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                <Clock className="h-4 w-4" />
+              </span>
+              {!collapsed && <span className="font-medium">Cron Parser</span>}
+            </NavLink>
+            <NavLink
+              to="/all-tools"
+              onClick={onNavigate}
+              title={collapsed ? "All Tools" : undefined}
+              className={({ isActive }) =>
+                `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                }`
+              }
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                <Grid2x2 className="h-4 w-4" />
+              </span>
+              {!collapsed && <span className="font-medium">All Tools</span>}
+            </NavLink>
+          </div>
+
           {groups.map(([category, catItems]) => (
             <div key={category}>
               {/* Category label — only when expanded and there are multiple categories */}

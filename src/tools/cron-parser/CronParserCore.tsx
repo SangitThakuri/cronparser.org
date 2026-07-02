@@ -1,15 +1,16 @@
 import { useState, useMemo } from "react"
-import { Helmet } from "react-helmet-async"
 import cronstrue from "cronstrue"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
+import { CronTemplateButtons, type CronTemplate } from "./CronTemplateButtons"
+import { NextRunsPanel } from "./NextRunsPanel"
 
-const EXAMPLES = [
-  { cron: "* * * * *", label: "Every minute" },
-  { cron: "*/15 * * * *", label: "Every 15 min" },
-  { cron: "0 9 * * 1-5", label: "Weekdays 9 AM" },
-  { cron: "0 0 1 * *", label: "1st of month" },
-] as const
+const TEMPLATES: readonly CronTemplate[] = [
+  { cron: "0 0 * * *", label: "Every Midnight" },
+  { cron: "*/15 * * * *", label: "Every 15 Minutes" },
+  { cron: "0 0 * * 6,0", label: "Weekends Only" },
+  { cron: "0 0 1 * *", label: "Every 1st of the Month" },
+]
 
 const FIELDS = [
   { label: "Minute", range: "0–59" },
@@ -33,7 +34,7 @@ function parseCron(expression: string): { description: string | null; error: str
   }
 }
 
-export default function CronParser() {
+export function CronParserCore() {
   const [expression, setExpression] = useState("")
   const { description, error } = useMemo(() => parseCron(expression), [expression])
 
@@ -44,21 +45,14 @@ export default function CronParser() {
       : "border-gray-200 bg-white focus:border-blue-400 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:focus:border-blue-500 dark:focus:ring-blue-900"
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <Helmet>
-        <title>Human-Readable Cron Expression Descriptor | DevBits</title>
-        <meta
-          name="description"
-          content="Parse and translate complex cron job schedules into clear, easy-to-read sentences. Verify your crontabs instantly."
-        />
-      </Helmet>
-
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="mx-auto max-w-3xl">
+      <div className="mb-6 text-center">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
           Cron Expression Parser
         </h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Translate any cron schedule into plain English instantly.
+        <p className="mt-2 text-gray-500 dark:text-gray-400">
+          Translate any 5 or 6-part crontab schedule into plain English — instantly, entirely in
+          your browser.
         </p>
       </div>
 
@@ -74,26 +68,16 @@ export default function CronParser() {
             onChange={(e) => setExpression(e.target.value)}
             placeholder="e.g. */15 0 1 * *"
             spellCheck={false}
-            className={`flex-1 rounded-lg border p-3 font-mono text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 dark:text-gray-100 dark:placeholder:text-gray-500 transition-colors ${inputClass}`}
+            autoFocus
+            className={`flex-1 rounded-xl border p-4 font-mono text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 dark:text-gray-100 dark:placeholder:text-gray-500 transition-colors ${inputClass}`}
           />
           {expression && <CopyButton text={expression} />}
         </div>
       </div>
 
-      {/* Examples */}
-      <div className="mb-6 flex flex-wrap items-center gap-2">
-        <span className="text-xs text-gray-400 dark:text-gray-500">Examples:</span>
-        {EXAMPLES.map(({ cron, label }) => (
-          <button
-            key={cron}
-            type="button"
-            onClick={() => setExpression(cron)}
-            className="rounded-md border border-gray-200 bg-white px-3 py-1 text-xs transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-blue-700 dark:hover:bg-blue-950 dark:hover:text-blue-300"
-          >
-            <span className="font-mono">{cron}</span>
-            <span className="ml-1.5 text-gray-400 dark:text-gray-500">— {label}</span>
-          </button>
-        ))}
+      {/* Quick templates */}
+      <div className="mb-6">
+        <CronTemplateButtons templates={TEMPLATES} onSelect={setExpression} />
       </div>
 
       {/* Result */}
@@ -112,6 +96,11 @@ export default function CronParser() {
           <p className="font-mono text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
+
+      {/* Next 5 upcoming runs */}
+      <div className="mb-6">
+        <NextRunsPanel expression={expression} isValid={!!description && !error} />
+      </div>
 
       {/* Field reference */}
       <div className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900">
@@ -137,8 +126,9 @@ export default function CronParser() {
       <ToolSeoSection
         steps={[
           "Paste a cron expression (5 or 6 space-separated fields) into the input. The description updates on every keystroke.",
-          "Use the example buttons to load common schedules for reference or testing.",
+          "Use the quick template buttons to load common schedules for reference or testing.",
           "The input border turns green for a valid expression, red for an invalid one.",
+          "Scroll to the \"Next 5 Upcoming Execution Runs\" panel to see the exact upcoming timestamps, calculated in your local timezone.",
           "Copy the expression with the Copy button next to the input.",
         ]}
         faqs={[
@@ -155,8 +145,12 @@ export default function CronParser() {
             a: "Yes. When six fields are provided, the first field is treated as seconds (0–59). This is common in Spring Boot, Quartz Scheduler, and AWS EventBridge cron syntax.",
           },
           {
+            q: "How are the next 5 run times calculated?",
+            a: "Entirely client-side, using your browser's local system clock and timezone. We walk forward from the current moment and find the next timestamps that satisfy every field of your expression — nothing is sent to a server.",
+          },
+          {
             q: "Is any data sent to a server?",
-            a: "No. Translation runs entirely in your browser using the cronstrue library. No cron expressions or schedule data leave your machine.",
+            a: "No. Translation and next-run calculation run entirely in your browser using the cronstrue library and local JavaScript logic. No cron expressions or schedule data leave your machine.",
           },
         ]}
       />
