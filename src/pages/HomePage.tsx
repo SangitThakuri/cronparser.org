@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { Grid2x2 } from "lucide-react"
 import { CronParserCore } from "../tools/cron-parser/CronParserCore"
+import { HomeFaqSection } from "./HomeFaqSection"
 
 export function HomePage() {
   return (
@@ -15,6 +16,8 @@ export function HomePage() {
       </Helmet>
 
       <CronParserCore />
+
+      <HomeFaqSection />
 
       <div className="mx-auto mt-10 max-w-3xl text-center">
         <Link

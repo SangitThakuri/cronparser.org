@@ -23,6 +23,9 @@ export default function App() {
           <Route path="/dashboard" element={<Navigate to="/all-tools" replace />} />
           {/* Cron Parser now lives on the home page — redirect the old tool URL */}
           <Route path="/cron-parser" element={<Navigate to="/" replace />} />
+          {/* Retired combined tools — split into dedicated single-purpose pages */}
+          <Route path="/codec" element={<Navigate to="/base64-converter" replace />} />
+          <Route path="/text-inspector" element={<Navigate to="/case-converter" replace />} />
           {tools.map((tool) => (
             <Route
               key={tool.id}

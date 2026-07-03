@@ -1,14 +1,15 @@
-import { CopyButton } from "../../components/ui/CopyButton"
+import { CopyButton } from "./CopyButton"
 
-interface CodecOutputProps {
+interface EncodedOutputProps {
   value: string
+  label?: string
 }
 
-export function CodecOutput({ value }: CodecOutputProps) {
+export function EncodedOutput({ value, label = "Output" }: EncodedOutputProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Output</label>
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
         <CopyButton text={value} />
       </div>
       <textarea

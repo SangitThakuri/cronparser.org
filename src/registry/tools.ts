@@ -1,7 +1,8 @@
 import { lazy } from "react"
 import {
-  ArrowLeftRight,
+  Binary,
   Braces,
+  Calculator,
   Code2,
   Database,
   Diff,
@@ -12,9 +13,12 @@ import {
   Globe,
   Hash,
   KeyRound,
+  Link2,
   ListChecks,
   Lock,
+  Minimize2,
   Network,
+  Palette,
   Search,
   Shield,
   Tag,
@@ -42,32 +46,8 @@ export const tools: RegistryEntry[] = [
     icon: Braces,
     component: lazy(() => import("../tools/json-escaper/JsonEscaper")),
   },
-  {
-    id: "text-inspector",
-    name: "Case Converter",
-    description: "Convert case and inspect text statistics",
-    category: "Text & Comparison",
-    icon: Type,
-    component: lazy(() => import("../tools/text-inspector/TextInspector")),
-  },
 
   // ── Encoding & Formatting ─────────────────────────────────────────────────
-  {
-    id: "codec",
-    name: "Base64 & URL Codec",
-    description: "Encode and decode Base64 and URL strings",
-    category: "Encoding & Formatting",
-    icon: ArrowLeftRight,
-    component: lazy(() => import("../tools/codec/Codec")),
-  },
-  {
-    id: "html-entities",
-    name: "HTML Entity Encoder",
-    description: "Encode and decode HTML entities",
-    category: "Encoding & Formatting",
-    icon: Tag,
-    component: lazy(() => import("../tools/html-entities/HtmlEntities")),
-  },
   {
     id: "html-xml-formatter",
     name: "HTML / XML Formatter",
@@ -103,14 +83,6 @@ export const tools: RegistryEntry[] = [
 
   // ── Cryptography & Security ───────────────────────────────────────────────
   {
-    id: "hash-generator",
-    name: "Hash Generator",
-    description: "Generate MD5, SHA-1, SHA-256, SHA-512 hashes",
-    category: "Cryptography & Security",
-    icon: Hash,
-    component: lazy(() => import("../tools/hash-generator/HashGenerator")),
-  },
-  {
     id: "jwt-debugger",
     name: "JWT Debugger",
     description: "Decode and inspect JSON Web Tokens",
@@ -144,14 +116,6 @@ export const tools: RegistryEntry[] = [
     icon: FileText,
     component: lazy(() => import("../tools/markdown-preview/MarkdownPreview")),
   },
-  {
-    id: "uuid-generator",
-    name: "UUID Generator",
-    description: "Bulk generate Version 4 UUIDs / GUIDs",
-    category: "Development Tools",
-    icon: Fingerprint,
-    component: lazy(() => import("../tools/uuid-generator/UuidGenerator")),
-  },
 
   // ── Network & DevOps ──────────────────────────────────────────────────────
   {
@@ -169,14 +133,6 @@ export const tools: RegistryEntry[] = [
     category: "Network & DevOps",
     icon: Network,
     component: lazy(() => import("../tools/subnet-calculator/SubnetCalculator")),
-  },
-  {
-    id: "timestamp-converter",
-    name: "Timestamp Converter",
-    description: "Convert Unix timestamps to dates and back",
-    category: "Network & DevOps",
-    icon: Timer,
-    component: lazy(() => import("../tools/timestamp-converter/TimestampConverter")),
   },
 
   // ── DevOps & System Utilities ─────────────────────────────────────────────
@@ -203,5 +159,89 @@ export const tools: RegistryEntry[] = [
     category: "DevOps & System Utilities",
     icon: Terminal,
     component: lazy(() => import("../tools/curl-converter/CurlConverter")),
+  },
+
+  // ── Security & Web Utilities ──────────────────────────────────────────────
+  {
+    id: "hash-generator",
+    name: "Hash Generator",
+    description: "Generate MD5, SHA-1, SHA-256, SHA-512 hashes",
+    category: "Security & Web Utilities",
+    icon: Hash,
+    component: lazy(() => import("../tools/hash-generator/HashGenerator")),
+  },
+  {
+    id: "uuid-generator",
+    name: "UUID Generator",
+    description: "Bulk generate Version 4 UUIDs / GUIDs",
+    category: "Security & Web Utilities",
+    icon: Fingerprint,
+    component: lazy(() => import("../tools/uuid-generator/UuidGenerator")),
+  },
+  {
+    id: "html-entities",
+    name: "HTML Entity Encoder",
+    description: "Encode and decode HTML entities",
+    category: "Security & Web Utilities",
+    icon: Tag,
+    component: lazy(() => import("../tools/html-entities/HtmlEntities")),
+  },
+  {
+    id: "url-encoder",
+    name: "URL Encoder / Decoder",
+    description: "Percent-encode or decode URL strings",
+    category: "Security & Web Utilities",
+    icon: Link2,
+    component: lazy(() => import("../tools/url-encoder/UrlEncoder")),
+  },
+  {
+    id: "base64-converter",
+    name: "Base64 Encoder / Decoder",
+    description: "Encode and decode Base64 text and images",
+    category: "Security & Web Utilities",
+    icon: Binary,
+    component: lazy(() => import("../tools/base64-converter/Base64Converter")),
+  },
+
+  // ── Text & Data Processors ────────────────────────────────────────────────
+  {
+    id: "case-converter",
+    name: "Case Converter",
+    description: "Convert text to camelCase, snake_case, kebab-case, and more",
+    category: "Text & Data Processors",
+    icon: Type,
+    component: lazy(() => import("../tools/case-converter/CaseConverter")),
+  },
+  {
+    id: "text-counter",
+    name: "Word & Character Counter",
+    description: "Count words, characters, lines, and bytes in real-time",
+    category: "Text & Data Processors",
+    icon: Calculator,
+    component: lazy(() => import("../tools/text-counter/TextCounter")),
+  },
+  {
+    id: "color-converter",
+    name: "Color Converter",
+    description: "Convert hex colors to RGB, RGBA, and HSL",
+    category: "Text & Data Processors",
+    icon: Palette,
+    component: lazy(() => import("../tools/color-converter/ColorConverter")),
+  },
+  {
+    id: "json-minifier",
+    name: "JSON Minifier",
+    description: "Minify or beautify JSON with size savings stats",
+    category: "Text & Data Processors",
+    icon: Minimize2,
+    component: lazy(() => import("../tools/json-minifier/JsonMinifier")),
+  },
+  {
+    id: "timestamp-converter",
+    name: "Timestamp Converter",
+    description: "Convert Unix timestamps to dates and back",
+    category: "Text & Data Processors",
+    icon: Timer,
+    component: lazy(() => import("../tools/timestamp-converter/TimestampConverter")),
   },
 ]

@@ -1,14 +1,15 @@
 import { Upload, CloudUpload } from "lucide-react"
 import { useFileDropZone } from "../../hooks/useFileDropZone"
 
-interface CodecInputProps {
+interface EncodedInputProps {
   value: string
   hasError: boolean
   onChange: (value: string) => void
   placeholder: string
+  label?: string
 }
 
-export function CodecInput({ value, hasError, onChange, placeholder }: CodecInputProps) {
+export function EncodedInput({ value, hasError, onChange, placeholder, label = "Input" }: EncodedInputProps) {
   const { isDragging, onDragEnter, onDragLeave, onDragOver, onDrop, onFileInput } =
     useFileDropZone(onChange)
 
@@ -27,7 +28,7 @@ export function CodecInput({ value, hasError, onChange, placeholder }: CodecInpu
       onDrop={onDrop}
     >
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Input</label>
+        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
         <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-300">
           <Upload className="h-3.5 w-3.5" />
           Upload file
