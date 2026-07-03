@@ -1,3 +1,19 @@
+const FLAG_OPTIONS = [
+  { char: "g", label: "Global (g)" },
+  { char: "i", label: "Case-insensitive (i)" },
+  { char: "m", label: "Multiline (m)" },
+  { char: "s", label: "Dot-all (s)" },
+] as const
+
+function toggleFlag(flags: string, char: string): string {
+  const set = new Set(flags.split(""))
+  if (set.has(char)) set.delete(char)
+  else set.add(char)
+  return FLAG_OPTIONS.map((f) => f.char)
+    .filter((c) => set.has(c))
+    .join("")
+}
+
 interface RegexInputProps {
   pattern: string
   flags: string
@@ -36,33 +52,41 @@ export function RegexInput({
         <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
           Regular Expression
         </label>
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-gray-400">
-              /
-            </span>
-            <input
-              type="text"
-              value={pattern}
-              onChange={(e) => onPatternChange(e.target.value)}
-              placeholder="[a-z]+"
-              className={`w-full rounded-lg border py-2 pl-7 pr-3 font-mono text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 dark:text-gray-100 dark:placeholder:text-gray-500 transition-colors ${patternClass}`}
-            />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 font-mono text-sm text-gray-400">
-              /
-            </span>
-          </div>
+        <div className="relative">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm text-gray-400">
+            /
+          </span>
           <input
             type="text"
-            value={flags}
-            onChange={(e) => onFlagsChange(e.target.value.replace(/[^gimsuyd]/g, ""))}
-            placeholder="gim"
-            className="w-16 rounded-lg border border-gray-200 bg-white py-2 text-center font-mono text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500 dark:focus:border-blue-500 dark:focus:ring-blue-900 transition-colors"
+            value={pattern}
+            onChange={(e) => onPatternChange(e.target.value)}
+            placeholder="[a-z]+"
+            className={`w-full rounded-lg border py-2 pl-7 pr-3 font-mono text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 dark:text-gray-100 dark:placeholder:text-gray-500 transition-colors ${patternClass}`}
           />
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 font-mono text-sm text-gray-400">
+            /
+          </span>
         </div>
         {regexError && (
           <p className="mt-1.5 font-mono text-xs text-red-500">{regexError}</p>
         )}
+
+        <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5">
+          {FLAG_OPTIONS.map(({ char, label }) => (
+            <label
+              key={char}
+              className="flex cursor-pointer items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400"
+            >
+              <input
+                type="checkbox"
+                checked={flags.includes(char)}
+                onChange={() => onFlagsChange(toggleFlag(flags, char))}
+                className="h-4 w-4 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-100 dark:border-gray-600 dark:bg-gray-800 dark:focus:ring-blue-900"
+              />
+              {label}
+            </label>
+          ))}
+        </div>
       </div>
 
       <div>

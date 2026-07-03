@@ -19,8 +19,11 @@ export default function RegexTester() {
   return (
     <div className="mx-auto max-w-5xl">
       <Helmet>
-        <title>Real-Time Regex Tester &amp; Cheat Sheet | DevBits</title>
-        <meta name="description" content="Test and debug regular expressions with live regex match highlighting. Includes a quick reference cheat sheet for standard expression patterns." />
+        <title>Interactive Regex Tester — Live JavaScript Pattern Matching | CronParser</title>
+        <meta
+          name="description"
+          content="Test JavaScript regular expressions with live match highlighting, toggleable g/i/m/s flags, and a match count breakdown. Includes a quick reference cheat sheet — entirely client-side."
+        />
       </Helmet>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -59,7 +62,7 @@ export default function RegexTester() {
       <ToolSeoSection
         steps={[
           "Type your regex pattern in the pattern field — the border turns green when the expression is valid, red if it has a syntax error.",
-          "Add optional flags in the flags box: g (global), i (case-insensitive), m (multiline), s (dotAll).",
+          "Toggle the g (global), i (case-insensitive), m (multiline), and s (dot-all) checkboxes to adjust matching behavior.",
           "Enter your test string in the Test Text area. Matches are highlighted in real-time in the output panel.",
           "Refer to the cheat sheet above the editor for a quick reference of common tokens, quantifiers, and anchors.",
         ]}

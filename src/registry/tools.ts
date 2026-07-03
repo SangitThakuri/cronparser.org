@@ -12,11 +12,13 @@ import {
   Globe,
   Hash,
   KeyRound,
+  ListChecks,
   Lock,
   Network,
   Search,
   Shield,
   Tag,
+  Terminal,
   Timer,
   Type,
 } from "lucide-react"
@@ -143,14 +145,6 @@ export const tools: RegistryEntry[] = [
     component: lazy(() => import("../tools/markdown-preview/MarkdownPreview")),
   },
   {
-    id: "regex-tester",
-    name: "Regex Tester",
-    description: "Test patterns with real-time match highlighting",
-    category: "Development Tools",
-    icon: Search,
-    component: lazy(() => import("../tools/regex-tester/RegexTester")),
-  },
-  {
     id: "uuid-generator",
     name: "UUID Generator",
     description: "Bulk generate Version 4 UUIDs / GUIDs",
@@ -183,5 +177,31 @@ export const tools: RegistryEntry[] = [
     category: "Network & DevOps",
     icon: Timer,
     component: lazy(() => import("../tools/timestamp-converter/TimestampConverter")),
+  },
+
+  // ── DevOps & System Utilities ─────────────────────────────────────────────
+  {
+    id: "dotenv-validator",
+    name: ".env Validator",
+    description: "Validate and format dotenv configuration files",
+    category: "DevOps & System Utilities",
+    icon: ListChecks,
+    component: lazy(() => import("../tools/dotenv-validator/DotenvValidator")),
+  },
+  {
+    id: "regex-tester",
+    name: "Regex Tester",
+    description: "Test patterns with real-time match highlighting",
+    category: "DevOps & System Utilities",
+    icon: Search,
+    component: lazy(() => import("../tools/regex-tester/RegexTester")),
+  },
+  {
+    id: "curl-converter",
+    name: "cURL ⇄ JS Fetch Converter",
+    description: "Convert curl commands to JavaScript fetch() code",
+    category: "DevOps & System Utilities",
+    icon: Terminal,
+    component: lazy(() => import("../tools/curl-converter/CurlConverter")),
   },
 ]
