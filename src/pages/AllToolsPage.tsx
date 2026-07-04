@@ -1,7 +1,10 @@
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
+import { SearchX } from "lucide-react"
 import { tools } from "../registry/tools"
 import type { RegistryEntry } from "../registry/types"
+import { useSearchQuery } from "../context/SearchContext"
+import { filterTools } from "../hooks/useSearchFilter"
 
 function groupByCategory(items: RegistryEntry[]): [string, RegistryEntry[]][] {
   const map = new Map<string, RegistryEntry[]>()
@@ -14,7 +17,9 @@ function groupByCategory(items: RegistryEntry[]): [string, RegistryEntry[]][] {
 }
 
 export function AllToolsPage() {
-  const groups = groupByCategory(tools)
+  const { query } = useSearchQuery()
+  const filtered = filterTools(tools, query)
+  const groups = groupByCategory(filtered)
 
   return (
     <div className="mx-auto max-w-5xl py-10">
@@ -40,6 +45,14 @@ export function AllToolsPage() {
         </p>
       </div>
 
+      {filtered.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-200 py-16 text-center dark:border-gray-800">
+          <SearchX className="h-8 w-8 text-gray-300 dark:text-gray-600" />
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            No tools match <span className="font-medium text-gray-700 dark:text-gray-300">"{query}"</span>
+          </p>
+        </div>
+      ) : (
       <div className="flex flex-col gap-10">
         {groups.map(([category, catTools]) => (
           <section key={category}>
@@ -70,6 +83,7 @@ export function AllToolsPage() {
           </section>
         ))}
       </div>
+      )}
     </div>
   )
 }

@@ -3,16 +3,17 @@ import { useJsonFormatter } from "./useJsonFormatter"
 import { JsonInput } from "./JsonInput"
 import { JsonOutput } from "./JsonOutput"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
+import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 
 export default function JsonFormatter() {
-  const { state, handleInputChange, handleFormat } = useJsonFormatter()
+  const { state, handleInputChange, handleFormat, handleClear } = useJsonFormatter()
 
   const status = state.error ? "error" : state.formatted ? "success" : "idle"
 
   return (
     <div className="mx-auto max-w-4xl">
       <Helmet>
-        <title>Best Online JSON Formatter &amp; Validator | DevBits</title>
+        <title>Best Online JSON Formatter &amp; Validator | CronParser</title>
         <meta name="description" content="Format, beautify, and validate raw JSON strings instantly. Detects syntax errors in real-time with line highlighting. 100% private and client-side." />
       </Helmet>
       <div className="mb-6">
@@ -30,6 +31,7 @@ export default function JsonFormatter() {
           status={status}
           onChange={handleInputChange}
           onFormat={handleFormat}
+          onClear={handleClear}
         />
         <JsonOutput formatted={state.formatted} error={state.error} />
       </div>
@@ -60,6 +62,8 @@ export default function JsonFormatter() {
           },
         ]}
       />
+
+      <RelatedToolsFooter toolIds={["json-minifier", "json-escaper", "yaml-json"]} />
     </div>
   )
 }

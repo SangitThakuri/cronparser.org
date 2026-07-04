@@ -1,4 +1,5 @@
 import { CopyButton } from "../../components/ui/CopyButton"
+import { ErrorBadge } from "../../components/ui/ErrorBadge"
 
 interface JsonOutputProps {
   formatted: string | null
@@ -9,9 +10,12 @@ export function JsonOutput({ formatted, error }: JsonOutputProps) {
   if (error) {
     return (
       <div className="flex flex-col gap-3">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Output
-        </label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Output
+          </label>
+          <ErrorBadge message="Invalid JSON syntax" />
+        </div>
         <div className="overflow-x-auto rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
           <p className="font-mono text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>

@@ -1,6 +1,9 @@
 import { useState, useMemo } from "react"
 import cronstrue from "cronstrue"
 import { CopyButton } from "../../components/ui/CopyButton"
+import { ClearInputButton } from "../../components/ui/ClearInputButton"
+import { ErrorBadge } from "../../components/ui/ErrorBadge"
+import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { CronTemplateButtons, type CronTemplate } from "./CronTemplateButtons"
 import { NextRunsPanel } from "./NextRunsPanel"
@@ -58,9 +61,15 @@ export function CronParserCore() {
 
       {/* Input */}
       <div className="mb-4">
-        <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
-          Cron Expression
-        </label>
+        <div className="mb-1.5 flex items-center justify-between">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Cron Expression
+          </label>
+          <div className="flex items-center gap-2">
+            {error && <ErrorBadge message="Invalid cron expression" />}
+            {expression && <ClearInputButton onClear={() => setExpression("")} />}
+          </div>
+        </div>
         <div className="flex gap-2">
           <input
             type="text"
@@ -154,6 +163,8 @@ export function CronParserCore() {
           },
         ]}
       />
+
+      <RelatedToolsFooter toolIds={["timestamp-converter", "dotenv-validator", "curl-converter"]} />
     </div>
   )
 }

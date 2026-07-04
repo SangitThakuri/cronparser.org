@@ -22,9 +22,14 @@ export function useJsonFormatter() {
     }))
   }, [state.input])
 
+  const handleClear = useCallback(() => {
+    setState({ input: "", formatted: null, error: null })
+  }, [])
+
   return {
     state,
     handleInputChange,
     handleFormat,
+    handleClear,
   }
 }

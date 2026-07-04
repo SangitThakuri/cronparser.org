@@ -1,3 +1,4 @@
+import type { RefObject } from "react"
 import { Menu } from "lucide-react"
 import { SearchBar } from "./SearchBar"
 import { ThemeToggle } from "./ThemeToggle"
@@ -6,9 +7,10 @@ interface TopBarProps {
   searchQuery: string
   onSearchChange: (value: string) => void
   onMenuToggle: () => void
+  searchInputRef?: RefObject<HTMLInputElement | null>
 }
 
-export function TopBar({ searchQuery, onSearchChange, onMenuToggle }: TopBarProps) {
+export function TopBar({ searchQuery, onSearchChange, onMenuToggle, searchInputRef }: TopBarProps) {
   return (
     <header className="flex h-14 items-center gap-3 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-900 md:px-6">
       <button
@@ -20,7 +22,7 @@ export function TopBar({ searchQuery, onSearchChange, onMenuToggle }: TopBarProp
         <Menu className="h-5 w-5" />
       </button>
       <div className="flex flex-1 items-center justify-between">
-        <SearchBar value={searchQuery} onChange={onSearchChange} />
+        <SearchBar ref={searchInputRef} value={searchQuery} onChange={onSearchChange} />
         <ThemeToggle />
       </div>
     </header>

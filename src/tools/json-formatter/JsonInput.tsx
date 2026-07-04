@@ -1,5 +1,6 @@
 import { Upload, CloudUpload } from "lucide-react"
 import { useFileDropZone } from "../../hooks/useFileDropZone"
+import { ClearInputButton } from "../../components/ui/ClearInputButton"
 
 type Status = "idle" | "error" | "success"
 
@@ -8,6 +9,7 @@ interface JsonInputProps {
   status: Status
   onChange: (value: string) => void
   onFormat: () => void
+  onClear: () => void
 }
 
 const textareaClass: Record<Status, string> = {
@@ -16,7 +18,7 @@ const textareaClass: Record<Status, string> = {
   success: "border-green-300 bg-white focus:border-green-400 focus:ring-green-100 dark:border-green-700 dark:bg-gray-800 dark:focus:border-green-500 dark:focus:ring-green-900",
 }
 
-export function JsonInput({ value, status, onChange, onFormat }: JsonInputProps) {
+export function JsonInput({ value, status, onChange, onFormat, onClear }: JsonInputProps) {
   const { isDragging, onDragEnter, onDragLeave, onDragOver, onDrop, onFileInput } =
     useFileDropZone(onChange)
 
@@ -32,16 +34,19 @@ export function JsonInput({ value, status, onChange, onFormat }: JsonInputProps)
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Input JSON
         </label>
-        <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-300">
-          <Upload className="h-3.5 w-3.5" />
-          Upload file
-          <input
-            type="file"
-            accept=".json,.txt"
-            className="sr-only"
-            onChange={onFileInput}
-          />
-        </label>
+        <div className="flex items-center gap-1">
+          {value && <ClearInputButton onClear={onClear} />}
+          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-800 dark:hover:text-gray-300">
+            <Upload className="h-3.5 w-3.5" />
+            Upload file
+            <input
+              type="file"
+              accept=".json,.txt"
+              className="sr-only"
+              onChange={onFileInput}
+            />
+          </label>
+        </div>
       </div>
 
       <textarea

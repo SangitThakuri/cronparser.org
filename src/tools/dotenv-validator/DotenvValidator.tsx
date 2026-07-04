@@ -2,6 +2,8 @@ import { useMemo, useState } from "react"
 import { Helmet } from "react-helmet-async"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { CopyButton } from "../../components/ui/CopyButton"
+import { ClearInputButton } from "../../components/ui/ClearInputButton"
+import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { parseDotenv, formatDotenv } from "./parseDotenv"
 
@@ -45,9 +47,12 @@ export default function DotenvValidator() {
       </div>
 
       <div className="mb-6">
-        <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
-          .env Contents
-        </label>
+        <div className="mb-1.5 flex items-center justify-between">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            .env Contents
+          </label>
+          {input && <ClearInputButton onClear={() => setInput("")} />}
+        </div>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -181,6 +186,8 @@ export default function DotenvValidator() {
           },
         ]}
       />
+
+      <RelatedToolsFooter toolIds={["regex-tester", "curl-converter", "home"]} />
     </div>
   )
 }
