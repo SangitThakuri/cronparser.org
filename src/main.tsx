@@ -4,12 +4,11 @@ import { HelmetProvider } from "react-helmet-async"
 import "./index.css"
 import App from "./App.tsx"
 
+// Dark mode is the default appearance; only an explicit "light" choice opts out.
 const savedTheme = localStorage.getItem("devbits-theme")
-if (savedTheme === "dark") {
-  document.documentElement.classList.add("dark")
-} else if (savedTheme === "light") {
+if (savedTheme === "light") {
   document.documentElement.classList.remove("dark")
-} else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+} else {
   document.documentElement.classList.add("dark")
 }
 

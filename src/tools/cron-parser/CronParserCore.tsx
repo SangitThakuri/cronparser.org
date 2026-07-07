@@ -1,12 +1,21 @@
-import { useState, useMemo } from "react"
+import { useMemo, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import cronstrue from "cronstrue"
+import { CalendarCheck2, ShieldCheck, Zap } from "lucide-react"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { ClearInputButton } from "../../components/ui/ClearInputButton"
 import { ErrorBadge } from "../../components/ui/ErrorBadge"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { ShareButton } from "../../components/ui/ShareButton"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { CronTemplateButtons, type CronTemplate } from "./CronTemplateButtons"
 import { NextRunsPanel } from "./NextRunsPanel"
+
+const TRUST_BADGES = [
+  { icon: ShieldCheck, label: "100% Client-Side" },
+  { icon: Zap, label: "Instant Results" },
+  { icon: CalendarCheck2, label: "No Sign-up" },
+] as const
 
 const TEMPLATES: readonly CronTemplate[] = [
   { cron: "0 0 * * *", label: "Every Midnight" },
@@ -38,8 +47,14 @@ function parseCron(expression: string): { description: string | null; error: str
 }
 
 export function CronParserCore() {
-  const [expression, setExpression] = useState("")
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [expression, setExpression] = useState(() => searchParams.get("expr") ?? "")
   const { description, error } = useMemo(() => parseCron(expression), [expression])
+
+  const updateExpression = (value: string) => {
+    setExpression(value)
+    setSearchParams(value ? { expr: value } : {}, { replace: true })
+  }
 
   const inputClass = error
     ? "border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100 dark:border-red-700 dark:bg-red-950 dark:focus:border-red-500 dark:focus:ring-red-900"
@@ -50,13 +65,24 @@ export function CronParserCore() {
   return (
     <div className="mx-auto max-w-3xl">
       <div className="mb-6 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 sm:text-4xl">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
           Cron Expression Parser
         </h1>
-        <p className="mt-2 text-gray-500 dark:text-gray-400">
+        <p className="mx-auto mt-3 max-w-xl text-base text-gray-500 dark:text-gray-400">
           Translate any 5 or 6-part crontab schedule into plain English — instantly, entirely in
           your browser.
         </p>
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          {TRUST_BADGES.map(({ icon: Icon, label }) => (
+            <span
+              key={label}
+              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400"
+            >
+              <Icon className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400" />
+              {label}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Input */}
@@ -67,37 +93,43 @@ export function CronParserCore() {
           </label>
           <div className="flex items-center gap-2">
             {error && <ErrorBadge message="Invalid cron expression" />}
-            {expression && <ClearInputButton onClear={() => setExpression("")} />}
+            {expression && <ClearInputButton onClear={() => updateExpression("")} />}
           </div>
         </div>
         <div className="flex gap-2">
           <input
             type="text"
             value={expression}
-            onChange={(e) => setExpression(e.target.value)}
+            onChange={(e) => updateExpression(e.target.value)}
             placeholder="e.g. */15 0 1 * *"
             spellCheck={false}
             autoFocus
             className={`flex-1 rounded-xl border p-4 font-mono text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 dark:text-gray-100 dark:placeholder:text-gray-500 transition-colors ${inputClass}`}
           />
           {expression && <CopyButton text={expression} />}
+          {expression && <ShareButton getUrl={() => window.location.href} />}
         </div>
       </div>
 
       {/* Quick templates */}
       <div className="mb-6">
-        <CronTemplateButtons templates={TEMPLATES} onSelect={setExpression} />
+        <CronTemplateButtons templates={TEMPLATES} onSelect={updateExpression} />
       </div>
 
       {/* Result */}
       {description && (
-        <div className="mb-5 rounded-xl border border-green-200 bg-green-50 p-6 dark:border-green-800 dark:bg-green-950">
-          <p className="text-xs font-semibold uppercase tracking-wider text-green-600 dark:text-green-500 mb-1">
-            Schedule
-          </p>
-          <p className="text-lg font-semibold text-green-800 dark:text-green-200">
-            {description}
-          </p>
+        <div className="mb-5 flex items-start gap-4 rounded-2xl border border-green-200 bg-green-50 p-6 shadow-sm dark:border-green-800 dark:bg-green-950">
+          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+            <CalendarCheck2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+          </span>
+          <div className="min-w-0">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-green-600 dark:text-green-500">
+              Schedule
+            </p>
+            <p className="text-lg font-semibold text-green-800 dark:text-green-200">
+              {description}
+            </p>
+          </div>
         </div>
       )}
       {error && (
@@ -155,7 +187,7 @@ export function CronParserCore() {
           },
           {
             q: "How are the next 5 run times calculated?",
-            a: "Entirely client-side, using your browser's local system clock and timezone. We walk forward from the current moment and find the next timestamps that satisfy every field of your expression — nothing is sent to a server.",
+            a: "Entirely client-side, using your browser's local system clock and timezone. We walk forward from the current moment and find the next timestamps that satisfy every field of your expression — nothing is sent to a server. Use the timezone dropdown above the results to view those same instants converted into another timezone.",
           },
           {
             q: "Is any data sent to a server?",
