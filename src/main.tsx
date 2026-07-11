@@ -5,7 +5,7 @@ import "./index.css"
 import App from "./App.tsx"
 
 // Dark mode is the default appearance; only an explicit "light" choice opts out.
-const savedTheme = localStorage.getItem("devbits-theme")
+const savedTheme = localStorage.getItem("cronparser-theme")
 if (savedTheme === "light") {
   document.documentElement.classList.remove("dark")
 } else {

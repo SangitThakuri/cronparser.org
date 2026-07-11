@@ -3,7 +3,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { ShellLayout } from "./components/layout/ShellLayout"
 import { HomePage } from "./pages/HomePage"
 import { AllToolsPage } from "./pages/AllToolsPage"
+import { IntervalLandingPage } from "./pages/IntervalLandingPage"
 import { tools } from "./registry/tools"
+import { INTERVAL_PAGES } from "./data/intervalPages"
 
 function LoadingSpinner() {
   return (
@@ -23,9 +25,9 @@ export default function App() {
           <Route path="/dashboard" element={<Navigate to="/all-tools" replace />} />
           {/* Cron Parser now lives on the home page — redirect the old tool URL */}
           <Route path="/cron-parser" element={<Navigate to="/" replace />} />
-          {/* Retired combined tools — split into dedicated single-purpose pages */}
-          <Route path="/codec" element={<Navigate to="/base64-converter" replace />} />
-          <Route path="/text-inspector" element={<Navigate to="/case-converter" replace />} />
+          {INTERVAL_PAGES.map((page) => (
+            <Route key={page.slug} path={`/${page.slug}`} element={<IntervalLandingPage page={page} />} />
+          ))}
           {tools.map((tool) => (
             <Route
               key={tool.id}

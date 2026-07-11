@@ -196,7 +196,7 @@ export function CronParserCore() {
         ]}
       />
 
-      <RelatedToolsFooter toolIds={["timestamp-converter", "dotenv-validator", "curl-converter"]} />
+      <RelatedToolsFooter toolIds={["cheat-sheet", "examples"]} />
     </div>
   )
 }

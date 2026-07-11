@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? "/devbits.tools/" : "/",
+  base: process.env.GITHUB_ACTIONS ? "/cronparser.org/" : "/",
   plugins: [react(), tailwindcss()],
 })

@@ -1,5 +1,5 @@
 {
-  "name": "devbits.tools",
+  "name": "cronparser.org",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,15 +11,12 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
-    "@types/js-yaml": "^4.0.9",
     "cronstrue": "^3.24.0",
-    "js-yaml": "^5.2.0",
     "lucide-react": "^1.22.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-helmet-async": "^3.0.0",
     "react-router-dom": "^7.18.1",
-    "sql-formatter": "^15.8.2",
     "tailwindcss": "^4.3.2"
   },
   "devDependencies": {

@@ -48,23 +48,28 @@ const FAQS: FaqItem[] = [
       "Yes. Every tool on CronParser — including the cron parser itself — runs 100% client-side, entirely in your browser. Nothing you type is ever uploaded to a remote backend server: API keys, .env configuration values, JWTs, and raw strings are parsed, validated, and transformed locally with native JavaScript, then discarded the moment you close or refresh the tab. There's no server round-trip to intercept and no database quietly storing your input.",
   },
   {
-    id: "other-devops-tools",
-    question: "What other DevOps tools are available on CronParser?",
+    id: "more-cron-tools",
+    question: "Is CronParser adding more cron tools?",
     answer: (
       <>
-        Beyond cron scheduling, CronParser bundles a full DevOps toolkit: convert between formats
-        with the <Link to="/json-formatter" className="font-medium text-blue-600 hover:underline dark:text-blue-400">JSON Formatter</Link>{" "}
-        and <Link to="/yaml-json" className="font-medium text-blue-600 hover:underline dark:text-blue-400">YAML ⇄ JSON converter</Link>,
-        debug patterns with the{" "}
-        <Link to="/regex-tester" className="font-medium text-blue-600 hover:underline dark:text-blue-400">Regex Tester</Link>,
-        or turn any terminal command into ready-to-use code with the{" "}
-        <Link to="/curl-converter" className="font-medium text-blue-600 hover:underline dark:text-blue-400">cURL ⇄ JS Fetch Converter</Link>.
-        See the full lineup on the{" "}
-        <Link to="/all-tools" className="font-medium text-blue-600 hover:underline dark:text-blue-400">All Tools page</Link>.
+        Yes. CronParser is being built out into a complete cron platform. Start with the{" "}
+        <Link to="/cheat-sheet" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+          Cron Cheat Sheet
+        </Link>{" "}
+        for a quick syntax reference, or browse the{" "}
+        <Link to="/examples" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+          Cron Examples Library
+        </Link>
+        . A visual cron builder, validator, timezone converter, and platform-specific guides for
+        Linux, Kubernetes, GitHub Actions, and AWS are on the way — check the{" "}
+        <Link to="/all-tools" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+          Cron Tools page
+        </Link>{" "}
+        as new tools ship.
       </>
     ),
     plainAnswer:
-      "Beyond cron scheduling, CronParser bundles a full DevOps toolkit: convert between formats with the JSON Formatter and YAML ⇄ JSON converter, debug patterns with the Regex Tester, or turn any terminal command into ready-to-use code with the cURL ⇄ JS Fetch Converter. See the full lineup on the All Tools page.",
+      "Yes. CronParser is being built out into a complete cron platform. Start with the Cron Cheat Sheet for a quick syntax reference, or browse the Cron Examples Library. A visual cron builder, validator, timezone converter, and platform-specific guides for Linux, Kubernetes, GitHub Actions, and AWS are on the way — check the Cron Tools page as new tools ship.",
   },
 ]
 

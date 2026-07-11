@@ -20,21 +20,24 @@ export function AllToolsPage() {
   const { query } = useSearchQuery()
   const filtered = filterTools(tools, query)
   const groups = groupByCategory(filtered)
+  const isSearching = query.trim().length > 0
 
   return (
     <div className="mx-auto max-w-5xl py-10">
       <Helmet>
-        <title>All Developer Tools | DevBits</title>
+        <title>Cron Tools | CronParser</title>
         <meta
           name="description"
-          content="Browse the full DevBits toolkit — JSON formatting, diffing, hashing, JWT debugging, encoding, and more. Free, fast, and private developer utilities that run entirely in your browser."
+          content="A growing library of free, client-side cron tools — generators, validators, calculators, and guides. Nothing ever leaves your browser."
         />
       </Helmet>
 
       <div className="mb-10 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">All Tools</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Cron Tools</h1>
         <p className="mt-2 text-gray-500 dark:text-gray-400">
-          {tools.length} free developer utilities — all run locally in your browser.
+          {tools.length > 0
+            ? `${tools.length} free cron tools — all run locally in your browser.`
+            : "New cron tools are on the way — check back soon."}
         </p>
         <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
           Looking for the Cron Parser?{" "}
@@ -49,7 +52,13 @@ export function AllToolsPage() {
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-200 py-16 text-center dark:border-gray-800">
           <SearchX className="h-8 w-8 text-gray-300 dark:text-gray-600" />
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            No tools match <span className="font-medium text-gray-700 dark:text-gray-300">"{query}"</span>
+            {isSearching ? (
+              <>
+                No tools match <span className="font-medium text-gray-700 dark:text-gray-300">"{query}"</span>
+              </>
+            ) : (
+              "No additional cron tools yet — this page will fill up as they ship."
+            )}
           </p>
         </div>
       ) : (

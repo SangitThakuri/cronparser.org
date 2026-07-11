@@ -1,6 +1,6 @@
 import { useCallback, useSyncExternalStore } from "react"
 
-const STORAGE_KEY = "devbits-theme"
+const STORAGE_KEY = "cronparser-theme"
 
 function getSnapshot() {
   if (typeof document === "undefined") return "light"
