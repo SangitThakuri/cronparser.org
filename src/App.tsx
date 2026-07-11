@@ -4,8 +4,10 @@ import { ShellLayout } from "./components/layout/ShellLayout"
 import { HomePage } from "./pages/HomePage"
 import { AllToolsPage } from "./pages/AllToolsPage"
 import { IntervalLandingPage } from "./pages/IntervalLandingPage"
+import { PlatformGuidePage } from "./pages/PlatformGuidePage"
 import { tools } from "./registry/tools"
 import { INTERVAL_PAGES } from "./data/intervalPages"
+import { PLATFORM_GUIDES } from "./data/platformGuides"
 
 function LoadingSpinner() {
   return (
@@ -27,6 +29,9 @@ export default function App() {
           <Route path="/cron-parser" element={<Navigate to="/" replace />} />
           {INTERVAL_PAGES.map((page) => (
             <Route key={page.slug} path={`/${page.slug}`} element={<IntervalLandingPage page={page} />} />
+          ))}
+          {PLATFORM_GUIDES.map((guide) => (
+            <Route key={guide.slug} path={`/${guide.slug}`} element={<PlatformGuidePage guide={guide} />} />
           ))}
           {tools.map((tool) => (
             <Route

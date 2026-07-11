@@ -5,6 +5,7 @@ import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { CRON_EXAMPLES } from "../../data/cronExamples"
+import { PLATFORM_GUIDES } from "../../data/platformGuides"
 
 const FIELDS = [
   { field: "Minute", values: "0–59", special: "* , - / " },
@@ -175,6 +176,24 @@ export default function CheatSheet() {
                 </Link>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Platform guides */}
+      <section className="mb-8">
+        <h2 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600">
+          Platform Guides
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {PLATFORM_GUIDES.map((guide) => (
+            <Link
+              key={guide.slug}
+              to={`/${guide.slug}`}
+              className="rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-sm text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:hover:border-blue-700 dark:hover:bg-blue-950 dark:hover:text-blue-300"
+            >
+              {guide.h1}
+            </Link>
           ))}
         </div>
       </section>
