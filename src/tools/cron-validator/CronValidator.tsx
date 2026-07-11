@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react"
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import cronstrue from "cronstrue"
 import { CheckCircle2, XCircle } from "lucide-react"
@@ -7,6 +6,7 @@ import { Breadcrumbs } from "../../components/ui/Breadcrumbs"
 import { ClearInputButton } from "../../components/ui/ClearInputButton"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { validateCron } from "./validateCron"
 
@@ -26,13 +26,11 @@ export default function CronValidator() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Helmet>
-        <title>Cron Validator — Validate &amp; Normalize Cron Expressions | CronParser</title>
-        <meta
-          name="description"
-          content="Validate a cron expression field-by-field, catch out-of-range values and malformed steps, and get a clean normalized version — entirely client-side."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Validator — Validate & Normalize Cron Expressions | CronParser"
+        description="Validate a cron expression field-by-field, catch out-of-range values and malformed steps, and get a clean normalized version — entirely client-side."
+        path="/validator"
+      />
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: "Cron Validator" }]} />
 

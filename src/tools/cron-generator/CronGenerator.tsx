@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react"
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { Sparkles, XCircle } from "lucide-react"
 import { Breadcrumbs } from "../../components/ui/Breadcrumbs"
 import { ClearInputButton } from "../../components/ui/ClearInputButton"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { generateCron, EXAMPLE_PHRASES } from "./generateCron"
 
@@ -16,13 +16,11 @@ export default function CronGenerator() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Helmet>
-        <title>Cron Generator — Plain English to Cron Expression | CronParser</title>
-        <meta
-          name="description"
-          content="Describe a schedule in plain English — 'every weekday at 9am', 'every 15 minutes' — and get the matching cron expression instantly, entirely client-side."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Generator — Plain English to Cron Expression | CronParser"
+        description="Describe a schedule in plain English — 'every weekday at 9am', 'every 15 minutes' — and get the matching cron expression instantly, entirely client-side."
+        path="/generator"
+      />
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: "Cron Generator" }]} />
 

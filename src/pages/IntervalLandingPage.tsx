@@ -1,9 +1,11 @@
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { AlertTriangle, CalendarClock, CheckCircle2 } from "lucide-react"
+import { AdSlot } from "../components/ui/AdSlot"
 import { Breadcrumbs } from "../components/ui/Breadcrumbs"
 import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../components/ui/SeoMeta"
 import type { IntervalPage } from "../data/intervalPages"
 
 export function IntervalLandingPage({ page }: { page: IntervalPage }) {
@@ -19,9 +21,8 @@ export function IntervalLandingPage({ page }: { page: IntervalPage }) {
 
   return (
     <div className="mx-auto max-w-3xl">
+      <SeoMeta title={page.title} description={page.metaDescription} path={`/${page.slug}`} />
       <Helmet>
-        <title>{page.title}</title>
-        <meta name="description" content={page.metaDescription} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
@@ -114,6 +115,10 @@ export function IntervalLandingPage({ page }: { page: IntervalPage }) {
             ))}
           </ul>
         </section>
+      </div>
+
+      <div className="mb-8">
+        <AdSlot />
       </div>
 
       {/* FAQs */}

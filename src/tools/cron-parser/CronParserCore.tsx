@@ -9,6 +9,7 @@ import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 import { ShareButton } from "../../components/ui/ShareButton"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { CronTemplateButtons, type CronTemplate } from "./CronTemplateButtons"
+import { HistoryPanel } from "./HistoryPanel"
 import { NextRunsPanel } from "./NextRunsPanel"
 
 const TRUST_BADGES = [
@@ -101,6 +102,9 @@ export function CronParserCore() {
             type="text"
             value={expression}
             onChange={(e) => updateExpression(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" && expression) updateExpression("")
+            }}
             placeholder="e.g. */15 0 1 * *"
             spellCheck={false}
             autoFocus
@@ -114,6 +118,15 @@ export function CronParserCore() {
       {/* Quick templates */}
       <div className="mb-6">
         <CronTemplateButtons templates={TEMPLATES} onSelect={updateExpression} />
+      </div>
+
+      {/* Recent & favorites */}
+      <div className="mb-6">
+        <HistoryPanel
+          currentExpression={expression}
+          isValid={!!description && !error}
+          onSelect={updateExpression}
+        />
       </div>
 
       {/* Result */}
@@ -170,7 +183,8 @@ export function CronParserCore() {
           "Use the quick template buttons to load common schedules for reference or testing.",
           "The input border turns green for a valid expression, red for an invalid one.",
           "Scroll to the \"Next 5 Upcoming Execution Runs\" panel to see the exact upcoming timestamps, calculated in your local timezone.",
-          "Copy the expression with the Copy button next to the input.",
+          "Copy the expression with the Copy button next to the input, or press Escape while the input is focused to clear it.",
+          "Star a valid expression to save it to Favorites, or revisit anything you've recently parsed under the Recent tab — both are stored locally in your browser.",
         ]}
         faqs={[
           {
@@ -192,6 +206,10 @@ export function CronParserCore() {
           {
             q: "Is any data sent to a server?",
             a: "No. Translation and next-run calculation run entirely in your browser using the cronstrue library and local JavaScript logic. No cron expressions or schedule data leave your machine.",
+          },
+          {
+            q: "Where are my Favorites and Recent history stored?",
+            a: "Entirely in your browser's local storage — there's no account or server sync. Clearing your browser data (or using a different browser/device) will reset both lists.",
           },
         ]}
       />

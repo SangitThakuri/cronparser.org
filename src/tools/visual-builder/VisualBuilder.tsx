@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react"
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import cronstrue from "cronstrue"
 import { Breadcrumbs } from "../../components/ui/Breadcrumbs"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { getNextCronRuns } from "../../lib/cronNextRuns"
 import { FieldCard } from "./FieldCard"
@@ -42,13 +42,11 @@ export default function VisualBuilder() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Helmet>
-        <title>Visual Cron Builder — Build Cron Expressions Field by Field | CronParser</title>
-        <meta
-          name="description"
-          content="Build a cron expression visually — pick every, specific, range, or step values for each field with a live preview and next-run calculation."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Visual Cron Builder — Build Cron Expressions Field by Field | CronParser"
+        description="Build a cron expression visually — pick every, specific, range, or step values for each field with a live preview and next-run calculation."
+        path="/visual-builder"
+      />
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: "Visual Cron Builder" }]} />
 

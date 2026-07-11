@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react"
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { Search, SearchX } from "lucide-react"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { CRON_EXAMPLES, CRON_EXAMPLE_CATEGORIES } from "../../data/cronExamples"
 
@@ -32,13 +32,11 @@ export default function ExamplesLibrary() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <Helmet>
-        <title>Cron Examples Library — Searchable Cron Expression Examples | CronParser</title>
-        <meta
-          name="description"
-          content="Browse and search dozens of common cron expression examples — intervals, daily/weekly/monthly schedules, business hours, DevOps, and backup jobs — with instant copy and try-it links."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Examples Library — Searchable Cron Expression Examples | CronParser"
+        description="Browse and search dozens of common cron expression examples — intervals, daily/weekly/monthly schedules, business hours, DevOps, and backup jobs — with instant copy and try-it links."
+        path="/examples"
+      />
 
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Cron Examples Library</h1>

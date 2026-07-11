@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react"
-import { Helmet } from "react-helmet-async"
 import cronstrue from "cronstrue"
 import { Breadcrumbs } from "../../components/ui/Breadcrumbs"
 import { ClearInputButton } from "../../components/ui/ClearInputButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { getNextCronRuns } from "../../lib/cronNextRuns"
 
@@ -50,13 +50,11 @@ export default function FrequencyCalculator() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Helmet>
-        <title>Cron Frequency Calculator — How Often Does a Cron Job Run? | CronParser</title>
-        <meta
-          name="description"
-          content="Calculate exactly how many times a cron expression runs per day, week, month, and year — entirely client-side, based on real upcoming run times."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Frequency Calculator — How Often Does a Cron Job Run? | CronParser"
+        description="Calculate exactly how many times a cron expression runs per day, week, month, and year — entirely client-side, based on real upcoming run times."
+        path="/frequency-calculator"
+      />
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: "Frequency Calculator" }]} />
 

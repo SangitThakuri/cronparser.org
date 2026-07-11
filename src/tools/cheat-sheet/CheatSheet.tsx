@@ -1,8 +1,8 @@
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { ArrowRight } from "lucide-react"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { CRON_EXAMPLES } from "../../data/cronExamples"
 import { PLATFORM_GUIDES } from "../../data/platformGuides"
@@ -40,13 +40,11 @@ const QUICK_EXAMPLES = CRON_EXAMPLES.filter((_, i) => i % 4 === 0).slice(0, 10)
 export default function CheatSheet() {
   return (
     <div className="mx-auto max-w-4xl">
-      <Helmet>
-        <title>Cron Cheat Sheet — Syntax, Special Characters &amp; Shortcuts | CronParser</title>
-        <meta
-          name="description"
-          content="A quick-reference cron cheat sheet: field ranges, special characters (* , - / ? L W #), @nicknames like @daily and @hourly, and common expression examples."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Cheat Sheet — Syntax, Special Characters & Shortcuts | CronParser"
+        description="A quick-reference cron cheat sheet: field ranges, special characters (* , - / ? L W #), @nicknames like @daily and @hourly, and common expression examples."
+        path="/cheat-sheet"
+      />
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Cron Cheat Sheet</h1>

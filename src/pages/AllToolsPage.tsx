@@ -1,6 +1,6 @@
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { SearchX } from "lucide-react"
+import { SeoMeta } from "../components/ui/SeoMeta"
 import { tools } from "../registry/tools"
 import type { RegistryEntry } from "../registry/types"
 import { useSearchQuery } from "../context/SearchContext"
@@ -24,13 +24,11 @@ export function AllToolsPage() {
 
   return (
     <div className="mx-auto max-w-5xl py-10">
-      <Helmet>
-        <title>Cron Tools | CronParser</title>
-        <meta
-          name="description"
-          content="A growing library of free, client-side cron tools — generators, validators, calculators, and guides. Nothing ever leaves your browser."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Tools | CronParser"
+        description="A growing library of free, client-side cron tools — generators, validators, calculators, and guides. Nothing ever leaves your browser."
+        path="/all-tools"
+      />
 
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Cron Tools</h1>

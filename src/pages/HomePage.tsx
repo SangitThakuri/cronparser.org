@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
-import { Helmet } from "react-helmet-async"
 import { Grid2x2 } from "lucide-react"
+import { AdSlot } from "../components/ui/AdSlot"
+import { SeoMeta } from "../components/ui/SeoMeta"
 import { CronParserCore } from "../tools/cron-parser/CronParserCore"
 import { HomeFaqSection } from "./HomeFaqSection"
 import { PopularSchedules } from "./PopularSchedules"
@@ -8,17 +9,19 @@ import { PopularSchedules } from "./PopularSchedules"
 export function HomePage() {
   return (
     <div>
-      <Helmet>
-        <title>Online Cron Expression Parser & Crontab Descriptor | CronParser</title>
-        <meta
-          name="description"
-          content="Translate complex crontab schedule expressions into plain, human-readable language instantly. View upcoming job execution times entirely client-side."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Online Cron Expression Parser & Crontab Descriptor | CronParser"
+        description="Translate complex crontab schedule expressions into plain, human-readable language instantly. View upcoming job execution times entirely client-side."
+        path="/"
+      />
 
       <CronParserCore />
 
       <PopularSchedules />
+
+      <div className="mx-auto mt-10 max-w-3xl">
+        <AdSlot />
+      </div>
 
       <HomeFaqSection />
 

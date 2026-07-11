@@ -1,8 +1,10 @@
 import { Helmet } from "react-helmet-async"
 import { AlertTriangle, CheckCircle2, Info } from "lucide-react"
+import { AdSlot } from "../components/ui/AdSlot"
 import { Breadcrumbs } from "../components/ui/Breadcrumbs"
 import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../components/ui/SeoMeta"
 import type { PlatformGuide } from "../data/platformGuides"
 
 export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
@@ -18,9 +20,8 @@ export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
 
   return (
     <div className="mx-auto max-w-3xl">
+      <SeoMeta title={guide.title} description={guide.metaDescription} path={`/${guide.slug}`} />
       <Helmet>
-        <title>{guide.title}</title>
-        <meta name="description" content={guide.metaDescription} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
@@ -101,6 +102,10 @@ export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
             ))}
           </ul>
         </section>
+      </div>
+
+      <div className="mb-8">
+        <AdSlot />
       </div>
 
       {/* FAQs */}

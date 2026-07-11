@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react"
-import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { ArrowRight, TriangleAlert } from "lucide-react"
 import { Breadcrumbs } from "../../components/ui/Breadcrumbs"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
+import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { convertCronTimezone, TIMEZONE_OPTIONS } from "./convertTimezone"
 
@@ -17,13 +17,11 @@ export default function TimezoneConverter() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Helmet>
-        <title>Cron Timezone Converter — Convert Cron Schedules Between Timezones | CronParser</title>
-        <meta
-          name="description"
-          content="Convert a cron expression's fixed hour and minute from one timezone to another — see exactly what time your job actually runs elsewhere."
-        />
-      </Helmet>
+      <SeoMeta
+        title="Cron Timezone Converter — Convert Cron Schedules Between Timezones | CronParser"
+        description="Convert a cron expression's fixed hour and minute from one timezone to another — see exactly what time your job actually runs elsewhere."
+        path="/timezone-converter"
+      />
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: "Timezone Converter" }]} />
 
