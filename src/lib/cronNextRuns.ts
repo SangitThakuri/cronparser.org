@@ -15,6 +15,17 @@ interface ParsedField {
   wildcard: boolean
 }
 
+interface ParsedCron {
+  hasSeconds: boolean
+  seconds: ParsedField
+  minutes: ParsedField
+  hours: ParsedField
+  doms: ParsedField
+  months: ParsedField
+  dows: ParsedField
+  dayMatches: (d: Date) => boolean
+}
+
 function resolveToken(
   token: string,
   min: number,
@@ -76,6 +87,35 @@ function parseField(
   return { set, wildcard }
 }
 
+export function parseCronExpression(expression: string): ParsedCron {
+  const trimmed = expression.trim()
+  const parts = trimmed.split(/\s+/)
+  if (parts.length !== 5 && parts.length !== 6) {
+    throw new Error("Expression must have 5 or 6 space-separated fields")
+  }
+
+  const hasSeconds = parts.length === 6
+  const [secStr, minStr, hourStr, domStr, monthStr, dowStr] = hasSeconds ? parts : ["0", ...parts]
+
+  const seconds = parseField(secStr, 0, 59)
+  const minutes = parseField(minStr, 0, 59)
+  const hours = parseField(hourStr, 0, 23)
+  const doms = parseField(domStr, 1, 31)
+  const months = parseField(monthStr, 1, 12, MONTH_ALIASES)
+  const dows = parseField(dowStr, 0, 7, DOW_ALIASES, (v) => (v === 7 ? 0 : v))
+
+  const dayMatches = (d: Date): boolean => {
+    const domMatch = doms.set.has(d.getDate())
+    const dowMatch = dows.set.has(d.getDay())
+    if (doms.wildcard && dows.wildcard) return true
+    if (doms.wildcard) return dowMatch
+    if (dows.wildcard) return domMatch
+    return domMatch || dowMatch
+  }
+
+  return { hasSeconds, seconds, minutes, hours, doms, months, dows, dayMatches }
+}
+
 export interface CronNextRunsResult {
   runs: Date[]
   error: string | null
@@ -89,32 +129,8 @@ export function getNextCronRuns(
   const trimmed = expression.trim()
   if (!trimmed) return { runs: [], error: null }
 
-  const parts = trimmed.split(/\s+/)
-  if (parts.length !== 5 && parts.length !== 6) {
-    return { runs: [], error: "Expression must have 5 or 6 space-separated fields" }
-  }
-
   try {
-    const hasSeconds = parts.length === 6
-    const [secStr, minStr, hourStr, domStr, monthStr, dowStr] = hasSeconds
-      ? parts
-      : ["0", ...parts]
-
-    const seconds = parseField(secStr, 0, 59)
-    const minutes = parseField(minStr, 0, 59)
-    const hours = parseField(hourStr, 0, 23)
-    const doms = parseField(domStr, 1, 31)
-    const months = parseField(monthStr, 1, 12, MONTH_ALIASES)
-    const dows = parseField(dowStr, 0, 7, DOW_ALIASES, (v) => (v === 7 ? 0 : v))
-
-    const dayMatches = (d: Date): boolean => {
-      const domMatch = doms.set.has(d.getDate())
-      const dowMatch = dows.set.has(d.getDay())
-      if (doms.wildcard && dows.wildcard) return true
-      if (doms.wildcard) return dowMatch
-      if (dows.wildcard) return domMatch
-      return domMatch || dowMatch
-    }
+    const { hasSeconds, seconds, minutes, hours, months, dayMatches } = parseCronExpression(trimmed)
 
     const t = new Date(from.getTime())
     t.setMilliseconds(0)
@@ -175,4 +191,49 @@ export function getNextCronRuns(
   } catch (e) {
     return { runs: [], error: e instanceof Error ? e.message : String(e) }
   }
+}
+
+export interface MatchingDaysResult {
+  days: number[]
+  error: string | null
+}
+
+/** Which calendar days (1-31) in the given month have at least one matching run. */
+export function getMatchingDaysInMonth(expression: string, year: number, month: number): MatchingDaysResult {
+  const trimmed = expression.trim()
+  if (!trimmed) return { days: [], error: null }
+
+  try {
+    const { months, dayMatches } = parseCronExpression(trimmed)
+
+    if (!months.set.has(month + 1)) return { days: [], error: null }
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    const days: number[] = []
+    for (let day = 1; day <= daysInMonth; day++) {
+      const d = new Date(year, month, day)
+      if (dayMatches(d)) days.push(day)
+    }
+    return { days, error: null }
+  } catch (e) {
+    return { days: [], error: e instanceof Error ? e.message : String(e) }
+  }
+}
+
+/** All matching run times on one specific calendar date. */
+export function getRunsOnDate(expression: string, date: Date): CronNextRunsResult {
+  const trimmed = expression.trim()
+  if (!trimmed) return { runs: [], error: null }
+
+  const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
+  const { runs, error } = getNextCronRuns(trimmed, 1500, new Date(startOfDay.getTime() - 1000))
+  if (error) return { runs: [], error }
+
+  const sameDay = runs.filter(
+    (r) =>
+      r.getFullYear() === date.getFullYear() &&
+      r.getMonth() === date.getMonth() &&
+      r.getDate() === date.getDate(),
+  )
+  return { runs: sameDay, error: null }
 }

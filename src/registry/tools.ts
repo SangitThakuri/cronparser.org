@@ -1,5 +1,15 @@
 import { lazy } from "react"
-import { BookOpen, Gauge, Globe2, Library, ShieldCheck, SlidersHorizontal, Sparkles } from "lucide-react"
+import {
+  BookOpen,
+  CalendarDays,
+  Gauge,
+  GitCompareArrows,
+  Globe2,
+  Library,
+  ShieldCheck,
+  SlidersHorizontal,
+  Sparkles,
+} from "lucide-react"
 import type { RegistryEntry } from "./types"
 
 export const tools: RegistryEntry[] = [
@@ -59,5 +69,21 @@ export const tools: RegistryEntry[] = [
     category: "Cron Tools",
     icon: Gauge,
     component: lazy(() => import("../tools/frequency-calculator/FrequencyCalculator")),
+  },
+  {
+    id: "visualizer",
+    name: "Schedule Visualizer",
+    description: "See a cron schedule on a calendar or as a 100-run timeline",
+    category: "Cron Tools",
+    icon: CalendarDays,
+    component: lazy(() => import("../tools/schedule-visualizer/ScheduleVisualizer")),
+  },
+  {
+    id: "compare",
+    name: "Compare Expressions",
+    description: "Check whether two cron expressions produce the same schedule",
+    category: "Cron Tools",
+    icon: GitCompareArrows,
+    component: lazy(() => import("../tools/compare/CompareExpressions")),
   },
 ]
