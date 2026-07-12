@@ -7,6 +7,9 @@ import { AllToolsPage } from "./pages/AllToolsPage"
 import { PlatformGuidesIndex } from "./pages/PlatformGuidesIndex"
 import { IntervalLandingPage } from "./pages/IntervalLandingPage"
 import { PlatformGuidePage } from "./pages/PlatformGuidePage"
+import { AboutPage } from "./pages/AboutPage"
+import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage"
+import { NotFoundPage } from "./pages/NotFoundPage"
 import { tools } from "./registry/tools"
 import { INTERVAL_PAGES } from "./data/intervalPages"
 import { PLATFORM_GUIDES } from "./data/platformGuides"
@@ -31,6 +34,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/all-tools" element={<AllToolsPage />} />
           <Route path="/platforms" element={<PlatformGuidesIndex />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/dashboard" element={<Navigate to="/all-tools" replace />} />
           {/* Cron Parser now lives on the home page — redirect the old tool URL */}
           <Route path="/cron-parser" element={<Navigate to="/" replace />} />
@@ -51,7 +56,7 @@ export default function App() {
               }
             />
           ))}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ShellLayout>
     </BrowserRouter>

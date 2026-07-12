@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import type { ReactNode } from "react"
+import { Footer } from "./Footer"
 import { Sidebar } from "./Sidebar"
 import { TopBar } from "./TopBar"
 import { useSearchFilter } from "../../hooks/useSearchFilter"
@@ -41,8 +42,9 @@ export function ShellLayout({ children }: ShellLayoutProps) {
             onMenuToggle={() => setMobileSidebarOpen(true)}
             searchInputRef={searchInputRef}
           />
-          <main className="flex-1 overflow-y-auto bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
-            {children}
+          <main className="flex flex-1 flex-col overflow-y-auto bg-gray-50 p-4 dark:bg-gray-950 md:p-6">
+            <div className="flex-1">{children}</div>
+            <Footer />
           </main>
         </div>
       </div>

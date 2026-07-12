@@ -38,6 +38,8 @@ const entries = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
   { loc: "/all-tools", changefreq: "monthly", priority: "0.6" },
   { loc: "/platforms", changefreq: "monthly", priority: "0.8" },
+  { loc: "/about", changefreq: "yearly", priority: "0.3" },
+  { loc: "/privacy", changefreq: "yearly", priority: "0.2" },
   ...toolIds.map((id) => ({
     loc: `/${id}`,
     ...(TOOL_OVERRIDES[id] ?? { changefreq: "monthly", priority: "0.8" }),

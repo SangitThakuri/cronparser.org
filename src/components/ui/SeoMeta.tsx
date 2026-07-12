@@ -4,18 +4,19 @@ interface SeoMetaProps {
   title: string
   description: string
   path: string
+  noindex?: boolean
 }
 
 const SITE_URL = "https://cronparser.org"
 
-export function SeoMeta({ title, description, path }: SeoMetaProps) {
+export function SeoMeta({ title, description, path, noindex }: SeoMetaProps) {
   const url = `${SITE_URL}${path}`
 
   return (
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={url} />
+      {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={url} />}
 
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="CronParser" />
