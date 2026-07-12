@@ -958,4 +958,394 @@ export const INTERVAL_PAGES: IntervalPage[] = [
       },
     ],
   },
+  {
+    slug: "every-45-minutes",
+    title: "Cron Job Every 45 Minutes — Expression & The */45 Gotcha | CronParser",
+    metaDescription:
+      "*/45 * * * * does NOT run every 45 minutes on a rolling basis — it only matches minutes 0 and 45. See why, and how to actually get even 45-minute spacing.",
+    h1: "Cron: Every 45 Minutes",
+    cron: "*/45 * * * *",
+    intro:
+      "*/45 * * * * is one of cron's most common traps: because 45 doesn't divide evenly into 60, the step syntax doesn't produce a rolling 45-minute interval. It only expands to minutes 0 and 45 — so the gap alternates between 45 minutes (0 → 45) and 15 minutes (45 → the next hour's 0), not a consistent 45-minute cadence.",
+    examples: [
+      { cron: "*/45 * * * *", label: "Fires at :00 and :45 — NOT evenly spaced" },
+      { cron: "0 */1 * * *", label: "True even interval alternative: hourly" },
+      { cron: "*/15 * * * *", label: "True even interval alternative: every 15 minutes" },
+    ],
+    mistakes: [
+      "Assuming */45 behaves like */5 or */15 — step values only produce evenly-spaced results when the step evenly divides the field's range (60 for minutes). 45 does not divide 60, so the pattern breaks after the first hour.",
+      "Not noticing the alternating 45/15-minute gap in monitoring output, which can look like a flaky job when it's actually cron behaving exactly as specified.",
+      "Trying to fix it with a 6-field seconds-based expression — the same divisibility problem applies at any field, not just minutes.",
+    ],
+    bestPractices: [
+      "For a genuinely rolling N-minute interval, only use step values where N evenly divides 60 (1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30) or 24 for hours (1, 2, 3, 4, 6, 8, 12).",
+      "If you specifically need 45-minute spacing, implement it in application code — have the job re-schedule its own next run 45 minutes out — rather than relying on cron's field syntax.",
+      "Document the alternating-gap behavior explicitly if you intentionally keep */45 for a non-critical task, so the next engineer doesn't 'fix' it into something else.",
+    ],
+    faqs: [
+      {
+        q: "Why doesn't */45 run every 45 minutes?",
+        a: "Cron step values expand within a field's fixed range by repeatedly adding the step from the minimum — for minutes, that's 0 to 59. Starting at 0 and adding 45 gives 0, 45, then 90, which is out of range and dropped, leaving only {0, 45}. It's not a rolling window, it's two fixed minutes per hour.",
+      },
+      {
+        q: "What cron expression actually gives evenly-spaced 45-minute runs?",
+        a: "None — standard cron can't express it, because 45 doesn't evenly divide 60. The only way to get a true rolling 45-minute cadence is to handle the scheduling in application code instead of a single cron field.",
+      },
+      {
+        q: "Are there other step values with this same problem?",
+        a: "Yes — any step that doesn't evenly divide the field's range behaves the same way. In the minute field (0–59), steps like 7, 8, 9, 11, 13, 14, and 45 all produce uneven gaps rather than a true rolling interval.",
+      },
+    ],
+  },
+  {
+    slug: "every-2-hours",
+    title: "Cron Job Every 2 Hours — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 2 hours is 0 */2 * * *, firing at midnight, 2 AM, 4 AM, and so on. See examples, mistakes, and best practices.",
+    h1: "Cron: Every 2 Hours",
+    cron: "0 */2 * * *",
+    intro:
+      "0 */2 * * * fires twelve times a day, on the even hour — 00:00, 02:00, 04:00, and so on through 22:00. Since 2 evenly divides 24, this step value produces a genuinely consistent, rolling interval, unlike odd step values such as 45 minutes.",
+    examples: [
+      { cron: "0 */2 * * *", label: "Every 2 hours, all day" },
+      { cron: "0 8-20/2 * * *", label: "Every 2 hours, 8 AM–8 PM only" },
+      { cron: "0 1-23/2 * * *", label: "Every 2 hours, odd hours instead (1, 3, 5...)" },
+    ],
+    mistakes: [
+      "Assuming */2 in the hour field starts counting from deploy time — like all step values, it's anchored to hour 0 (midnight), not to whenever the cron entry was created.",
+      "Using 2-hour polling for something that needs faster feedback — this interval suits periodic sync and light maintenance, not anything user-facing that needs near-real-time updates.",
+      "Forgetting that 0 */2 * * * still fires overnight — add an hour range (like 8-20/2) if the job should only run during waking hours.",
+    ],
+    bestPractices: [
+      "This is a solid default for moderate-cost jobs that don't need hourly freshness — cache refreshes, periodic exports, or non-urgent sync tasks.",
+      "Combine with an hour range to restrict to business hours if the job supports a feature nobody uses overnight.",
+      "If two different jobs both run every 2 hours, offset one to odd hours (1-23/2) so they don't compete for the same resources simultaneously.",
+    ],
+    faqs: [
+      {
+        q: "Does 0 */2 * * * run at exactly midnight?",
+        a: "Yes — step values in the hour field start from 0, so */2 always includes hour 0 (midnight) as its first match, then every 2 hours after.",
+      },
+      {
+        q: "How do I run every 2 hours starting from 1 AM instead?",
+        a: "Use a range with a step: 0 1-23/2 * * * produces 1 AM, 3 AM, 5 AM, and so on — odd hours instead of even ones.",
+      },
+      {
+        q: "Is every 2 hours a good interval for health checks?",
+        a: "It's on the slower end for health checks — most uptime monitoring wants 1–5 minute intervals to catch outages quickly. Every 2 hours suits periodic maintenance more than availability monitoring.",
+      },
+    ],
+  },
+  {
+    slug: "every-3-hours",
+    title: "Cron Job Every 3 Hours — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 3 hours is 0 */3 * * *, firing 8 times a day. See examples, mistakes, and best practices for this schedule.",
+    h1: "Cron: Every 3 Hours",
+    cron: "0 */3 * * *",
+    intro:
+      "0 */3 * * * fires eight times a day — 00:00, 03:00, 06:00, and onward through 21:00. Since 3 evenly divides 24, the interval is perfectly consistent around the clock, making it a clean choice for moderate-frequency jobs that don't need to run every hour or two.",
+    examples: [
+      { cron: "0 */3 * * *", label: "Every 3 hours, all day" },
+      { cron: "0 6-21/3 * * *", label: "Every 3 hours, 6 AM–9 PM only" },
+      { cron: "0 0,3,6,9,12,15,18,21 * * *", label: "Same schedule, written as an explicit list" },
+    ],
+    mistakes: [
+      "Writing an uneven step (like */5 in the hour field) expecting the same clean behavior — 5 doesn't divide 24, so it would produce an inconsistent, shrinking cycle the same way */45 does in minutes.",
+      "Not accounting for eight daily invocations when estimating API usage or costs — three-hour polling adds up faster than it sounds over a month.",
+      "Assuming this interval is 'business hours friendly' by default — it runs overnight too unless you explicitly restrict the hour range.",
+    ],
+    bestPractices: [
+      "Good default for periodic reports, moderate-cost external API polling, or refreshing data that doesn't change minute-to-minute.",
+      "Use the explicit list form (0,3,6,9,...) if you want the schedule to be immediately readable without mental math, at the cost of a longer expression.",
+      "Pair with monitoring if a missed run matters — at only 8 runs a day, a single silent failure represents a meaningful gap in coverage.",
+    ],
+    faqs: [
+      {
+        q: "How many times a day does every 3 hours run?",
+        a: "Eight times — 24 hours divided by a 3-hour step gives exactly 8 evenly-spaced runs, starting at midnight.",
+      },
+      {
+        q: "Is 0 */3 * * * the same as 0 0,3,6,9,12,15,18,21 * * *?",
+        a: "Yes, functionally identical — the step syntax is shorthand for that exact explicit list.",
+      },
+      {
+        q: "How do I restrict every-3-hours to daytime only?",
+        a: "Add an hour range before the step: 0 6-21/3 * * * only fires between 6 AM and 9 PM, still spaced 3 hours apart within that window.",
+      },
+    ],
+  },
+  {
+    slug: "every-4-hours",
+    title: "Cron Job Every 4 Hours — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 4 hours is 0 */4 * * *, firing 6 times a day. See examples, mistakes, and best practices for this schedule.",
+    h1: "Cron: Every 4 Hours",
+    cron: "0 */4 * * *",
+    intro:
+      "0 */4 * * * fires six times a day — midnight, 4 AM, 8 AM, noon, 4 PM, and 8 PM. Four is one of the most common hour-based intervals in production systems, striking a balance between the overhead of frequent polling and the staleness of once- or twice-daily jobs.",
+    examples: [
+      { cron: "0 */4 * * *", label: "Every 4 hours, all day" },
+      { cron: "0 8-20/4 * * *", label: "Every 4 hours, 8 AM–8 PM only" },
+      { cron: "30 */4 * * *", label: "Every 4 hours, offset to :30" },
+    ],
+    mistakes: [
+      "Assuming '4 hours' means 4 hours from whenever the job last ran — cron always anchors to midnight, so a manually-triggered run doesn't shift the schedule.",
+      "Running multiple unrelated 4-hour jobs all at :00 — six simultaneous invocations a day is enough to create a noticeable load spike if several heavy jobs share that exact schedule.",
+      "Not considering whether the underlying data actually changes on a 4-hour cadence — matching the job's frequency to the data's actual update rate avoids wasted work.",
+    ],
+    bestPractices: [
+      "A dependable default for sync jobs, cache invalidation, and periodic reports where near-real-time freshness isn't required.",
+      "Offset the minute field (30 */4 * * * instead of 0 */4 * * *) if you need to avoid colliding with other jobs pinned to the top of the hour.",
+      "Six runs a day is frequent enough to catch problems within a reasonable window — pair with basic failure alerting for anything business-relevant.",
+    ],
+    faqs: [
+      {
+        q: "What times does every 4 hours run at?",
+        a: "Midnight, 4 AM, 8 AM, noon, 4 PM, and 8 PM — six evenly-spaced runs starting from hour 0.",
+      },
+      {
+        q: "Why is every 4 hours such a common default?",
+        a: "It divides the day into a manageable number of checkpoints (6) without the overhead of hourly runs, making it a practical middle ground for periodic maintenance and sync tasks across many platforms and tools.",
+      },
+      {
+        q: "How do I shift every-4-hours to start at 2 AM instead of midnight?",
+        a: "Use an explicit list instead of a step: 0 2,6,10,14,18,22 * * * keeps the same 4-hour spacing but starts at 2 AM.",
+      },
+    ],
+  },
+  {
+    slug: "every-6-hours",
+    title: "Cron Job Every 6 Hours — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 6 hours is 0 */6 * * *, firing 4 times a day. See examples, mistakes, and best practices for this schedule.",
+    h1: "Cron: Every 6 Hours",
+    cron: "0 */6 * * *",
+    intro:
+      "0 */6 * * * fires four times a day — midnight, 6 AM, noon, and 6 PM. It's a common choice for periodic backups, digest generation, and sync jobs that need to run more than once daily but don't need hourly attention.",
+    examples: [
+      { cron: "0 */6 * * *", label: "Every 6 hours, all day" },
+      { cron: "0 0,6,12,18 * * *", label: "Same schedule, explicit list form" },
+      { cron: "0 */6 * * 1-5", label: "Every 6 hours, weekdays only" },
+    ],
+    mistakes: [
+      "Confusing 'every 6 hours' with 'four times a day at hours I choose' — the step form always includes midnight and spaces evenly from there; use an explicit list if you need different specific hours.",
+      "Running heavy batch jobs at all four slots without staggering, causing the same load spike four times a day instead of once.",
+      "Overlooking that this interval crosses both AM and PM — a job assuming 'business hours only' behavior needs an explicit hour range, not just the step value.",
+    ],
+    bestPractices: [
+      "Solid default for quarter-day summaries, periodic backups, or sync jobs where 4 checkpoints a day is enough coverage.",
+      "Use 0,6,12,18 explicitly if the exact hours matter to readers of the crontab and you want to avoid step-syntax mental math.",
+      "Restrict to weekdays (add * * 1-5) for anything tied to business operations that shouldn't run on weekends.",
+    ],
+    faqs: [
+      {
+        q: "What four times does every 6 hours run?",
+        a: "Midnight, 6 AM, noon, and 6 PM — a quarter-day cadence starting from hour 0.",
+      },
+      {
+        q: "Is every 6 hours a good interval for backups?",
+        a: "Yes, it's a common choice for systems that want more frequent recovery points than a single daily backup without the overhead of hourly snapshots.",
+      },
+      {
+        q: "How do I run every 6 hours but only on weekdays?",
+        a: "Add a day-of-week restriction: 0 */6 * * 1-5 keeps the 6-hour cadence but skips Saturday and Sunday entirely.",
+      },
+    ],
+  },
+  {
+    slug: "every-8-hours",
+    title: "Cron Job Every 8 Hours — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 8 hours is 0 */8 * * *, firing 3 times a day — matching a classic 8-hour shift pattern. See examples and best practices.",
+    h1: "Cron: Every 8 Hours",
+    cron: "0 */8 * * *",
+    intro:
+      "0 */8 * * * fires three times a day — midnight, 8 AM, and 4 PM — evenly dividing the day into thirds. It naturally lines up with classic 8-hour shift patterns, making it a familiar cadence for operations and monitoring tasks tied to shift handoffs.",
+    examples: [
+      { cron: "0 */8 * * *", label: "Every 8 hours, all day" },
+      { cron: "0 6,14,22 * * *", label: "Every 8 hours, aligned to a 6 AM shift start" },
+      { cron: "0 */8 * * 1-5", label: "Every 8 hours, weekdays only" },
+    ],
+    mistakes: [
+      "Assuming the three run times automatically align with your team's actual shift schedule — the step form starts at midnight; use an explicit list (like 6,14,22) if shifts start at a different hour.",
+      "Treating three-times-daily as 'infrequent enough to skip monitoring' — a missed run here represents a third of the day's coverage, larger than it sounds.",
+      "Running resource-intensive jobs at all three slots without considering that one of them always lands overnight, potentially colliding with other nightly maintenance.",
+    ],
+    bestPractices: [
+      "If this schedule is meant to mirror real shift handoffs, use the explicit hour list rather than the step syntax so the crontab entry documents the actual shift start times.",
+      "A reasonable default for reports or sync jobs that need same-day freshness without hourly overhead.",
+      "Restrict to weekdays if the job supports a Monday–Friday operation and shouldn't run on weekend shifts.",
+    ],
+    faqs: [
+      {
+        q: "What three times does every 8 hours run?",
+        a: "Midnight, 8 AM, and 4 PM by default — an even three-way split of the 24-hour day starting from hour 0.",
+      },
+      {
+        q: "How do I align every-8-hours with a 7 AM shift start instead?",
+        a: "Use an explicit list: 0 7,15,23 * * * keeps the 8-hour spacing but starts at 7 AM instead of midnight.",
+      },
+      {
+        q: "Is 0 */8 * * * the same as 0 0,8,16 * * *?",
+        a: "Yes, exactly equivalent — the step form is shorthand for that explicit list.",
+      },
+    ],
+  },
+  {
+    slug: "every-12-hours",
+    title: "Cron Job Every 12 Hours — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 12 hours is 0 */12 * * *, firing twice a day at midnight and noon. See examples, mistakes, and best practices.",
+    h1: "Cron: Every 12 Hours",
+    cron: "0 */12 * * *",
+    intro:
+      "0 */12 * * * fires twice a day, at midnight and noon — the largest even hour-step short of once daily. It's the schedule behind most 'twice a day' automation: medication reminders, AM/PM reports, and sync jobs that need morning and evening coverage without full hourly polling.",
+    examples: [
+      { cron: "0 */12 * * *", label: "Every 12 hours: midnight and noon" },
+      { cron: "0 8,20 * * *", label: "Every 12 hours, offset to 8 AM and 8 PM" },
+      { cron: "0 9,21 * * 1-5", label: "Every 12 hours, weekdays, 9 AM and 9 PM" },
+    ],
+    mistakes: [
+      "Assuming every-12-hours automatically means 'morning and evening' in a user-friendly sense — the default midnight/noon split isn't when most people want a reminder or report; use an explicit list for meaningful times.",
+      "Using this interval when 'twice daily' framing (see the dedicated Twice Daily page) would be clearer to whoever reads the crontab later — both produce the same schedule, but explicit hours read better.",
+      "Forgetting that exactly 2 runs a day means a single missed execution is a 50% gap in that day's coverage — worth monitoring for anything important.",
+    ],
+    bestPractices: [
+      "For anything user-facing (reminders, digests), pick explicit AM/PM hours (like 8,20) rather than the midnight/noon default, which rarely matches when people actually want to be reached.",
+      "This is a reliable, low-overhead cadence for sync jobs and reports that need same-day but not real-time freshness.",
+      "Add basic run-tracking or alerting given how few checkpoints exist per day — a silent failure here is proportionally more significant than in a high-frequency schedule.",
+    ],
+    faqs: [
+      {
+        q: "Is 0 */12 * * * the same as twice-daily?",
+        a: "They produce the same two-runs-per-day pattern, but 'twice daily' typically implies specific meaningful hours (like 8 AM and 8 PM) rather than the step form's default midnight/noon split — see the dedicated Twice Daily page for that framing.",
+      },
+      {
+        q: "How do I run every 12 hours at 9 AM and 9 PM instead of midnight/noon?",
+        a: "Use an explicit list: 0 9,21 * * * — the step syntax always starts at 0, so a custom offset needs the list form instead.",
+      },
+      {
+        q: "Is every 12 hours enough for a backup schedule?",
+        a: "For many workloads, yes — it roughly halves the potential data loss window compared to a single daily backup, without the overhead of more frequent snapshots.",
+      },
+    ],
+  },
+  {
+    slug: "twice-daily",
+    title: "Cron Job Twice Daily — Expression & Examples | CronParser",
+    metaDescription:
+      "Run a cron job twice a day with 0 8,20 * * * or similar — see common AM/PM patterns, examples, and best practices for twice-daily schedules.",
+    h1: "Cron: Twice Daily",
+    cron: "0 8,20 * * *",
+    intro:
+      "\"Twice daily\" is less about a specific expression and more about intent — running something at two meaningful points in the day, like a morning and evening reminder, report, or sync. Unlike the raw */12 step (which defaults to midnight and noon), a twice-daily schedule is usually written as an explicit list of the two hours that actually matter.",
+    examples: [
+      { cron: "0 8,20 * * *", label: "8 AM and 8 PM" },
+      { cron: "0 9,17 * * 1-5", label: "9 AM and 5 PM, weekdays (start/end of workday)" },
+      { cron: "0 6,18 * * *", label: "6 AM and 6 PM" },
+    ],
+    mistakes: [
+      "Reaching for */12 out of habit — it works, but silently defaults to midnight and noon, which is rarely when a human-facing 'twice daily' reminder should actually fire.",
+      "Picking two hours without considering timezone — a twice-daily schedule meant for users in a specific region needs its hours computed in that region's local time, not server time.",
+      "Assuming 'twice daily' always means evenly 12 hours apart — a workday-bounded pattern (like 9 AM and 5 PM) is a genuinely different, and very common, twice-daily shape.",
+    ],
+    bestPractices: [
+      "Write the two hours explicitly (0 8,20 * * *) rather than via a step value — it's immediately readable and doesn't default to an arbitrary midnight/noon split.",
+      "For anything reaching real users, pick hours based on when they're actually likely to engage, not just an even 12-hour split.",
+      "If the two runs serve different purposes (like a morning summary and an evening wrap-up), consider whether they're really the same job on one schedule, or two separate cron entries with different logic.",
+    ],
+    faqs: [
+      {
+        q: "What's the difference between 'twice daily' and 0 */12 * * *?",
+        a: "They can produce the same result, but */12 defaults to midnight and noon specifically, while 'twice daily' usually implies you pick two meaningful hours explicitly, like 8 AM and 8 PM.",
+      },
+      {
+        q: "What's a common twice-daily pattern for business reports?",
+        a: "9 AM and 5 PM (0 9,17 * * 1-5) is common for workday start/end summaries, restricted to weekdays with a day-of-week range.",
+      },
+      {
+        q: "Can I run twice daily with different logic each time?",
+        a: "Not from a single cron entry — if the morning and evening runs need different behavior, either branch on the current hour inside your script, or use two separate crontab entries.",
+      },
+    ],
+  },
+  {
+    slug: "every-weeknight",
+    title: "Cron Job Every Weeknight — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every weeknight is 0 18 * * 1-5, running weekday evenings only. See examples, mistakes, and best practices.",
+    h1: "Cron: Every Weeknight",
+    cron: "0 18 * * 1-5",
+    intro:
+      "0 18 * * 1-5 fires at 6 PM, Monday through Friday — a 'weeknight' schedule that explicitly skips weekends. It's a natural fit for end-of-workday automation: nightly builds that shouldn't run on weekends, evening digest emails for a work context, or maintenance windows tied to when an office actually empties out.",
+    examples: [
+      { cron: "0 18 * * 1-5", label: "6 PM, Monday–Friday" },
+      { cron: "0 22 * * 1-5", label: "10 PM, Monday–Friday (later evening)" },
+      { cron: "0 19-23 * * 1-5", label: "Every hour, 7 PM–11 PM, weeknights" },
+    ],
+    mistakes: [
+      "Confusing 'every weeknight' with 'every weekday' — weeknight implies evening hours specifically, not just Monday–Friday at any time; the hour field still needs to reflect an evening time.",
+      "Assuming weeknight automation should skip weekends because 'nobody's working' — verify this is actually true for your system; some workloads (consumer apps, global teams) don't follow a Monday–Friday office rhythm at all.",
+      "Scheduling something at exactly 6 PM without accounting for people who are still finishing up — a slightly later time (7–8 PM) often avoids interrupting anyone still active.",
+    ],
+    bestPractices: [
+      "Good fit for nightly builds, weeknight-only reports, or maintenance windows explicitly tied to an office-hours business rhythm.",
+      "If the exact hour matters for avoiding active users, err later in the evening (9–11 PM) rather than right at typical office close time.",
+      "Document why weekends are excluded — a future engineer debugging a 'missing Saturday run' should be able to see it's intentional, not a bug.",
+    ],
+    faqs: [
+      {
+        q: "What's the difference between 'every weeknight' and 'every weekday'?",
+        a: "Every weekday (0 0 * * 1-5, for example) can fire at any hour, including morning. Every weeknight specifically implies an evening hour — the day-of-week range (1-5) is the same, but the hour field should reflect evening, not just any weekday time.",
+      },
+      {
+        q: "Does 0 18 * * 1-5 run on public holidays that fall on a weekday?",
+        a: "Yes — cron has no concept of holidays, only day-of-week. A weekday holiday still counts as a weekday and the job will still fire unless your script itself checks a holiday calendar.",
+      },
+      {
+        q: "How do I run something every hour throughout weeknight evenings?",
+        a: "Combine an hour range with the weekday restriction: 0 19-23 * * 1-5 fires every hour from 7 PM to 11 PM, Monday through Friday.",
+      },
+    ],
+  },
+  {
+    slug: "every-other-day",
+    title: "Cron Job Every Other Day — Expression & Workaround | CronParser",
+    metaDescription:
+      "Standard cron can't natively express 'every other day' across month boundaries. See the common day-of-month workaround, its limitations, and alternatives.",
+    h1: "Cron: Every Other Day",
+    cron: "0 0 */2 * *",
+    intro:
+      "\"Every other day\" seems like it should be simple, but standard cron can't truly express a rolling 2-day interval — 0 0 */2 * * is the common approximation, using the day-of-month step (1, 3, 5, 7...) instead of a genuine alternating pattern. It works most of the time, but resets at the start of every month, occasionally producing two runs closer together than 2 days apart.",
+    examples: [
+      { cron: "0 0 */2 * *", label: "Common approximation: odd days of the month" },
+      { cron: "0 0 1-31/2 * *", label: "Same thing, written more explicitly" },
+      { cron: "0 0 * * *", label: "True daily, if 'every other day' turns out to be over-optimizing" },
+    ],
+    mistakes: [
+      "Assuming */2 in the day-of-month field gives a true rolling every-other-day pattern — it actually locks onto odd calendar days (1, 3, 5...), which resets at each month boundary rather than counting relative to the last run.",
+      "Not noticing the month-boundary seam: if a month has 31 days, day 31 matches (odd), and the 1st of the next month also matches (odd) — producing two runs on consecutive days instead of the expected 2-day gap.",
+      "Reaching for a step value here out of habit from minute/hour fields, where step syntax behaves more predictably because those fields don't reset on an irregular calendar boundary.",
+    ],
+    bestPractices: [
+      "If the occasional consecutive-day seam at month boundaries is acceptable, 0 0 */2 * * (or the equivalent 1-31/2 form) is the standard, widely-used approximation — most teams use it despite the edge case.",
+      "For a truly rolling every-other-day interval with no exceptions, track the last run date in application state and have the script exit early if fewer than 2 days have passed — this moves the logic out of cron entirely.",
+      "Before reaching for every-other-day, double check whether true daily (0 0 * * *) would actually serve the underlying goal just as well with less complexity.",
+    ],
+    faqs: [
+      {
+        q: "Why isn't there a clean cron expression for 'every other day'?",
+        a: "Cron's day-of-month field is calendar-based, not relative — it has no concept of 'days since last run.' The closest approximation (odd or even calendar days) inevitably has a seam at month boundaries where the actual gap is 1 day instead of 2.",
+      },
+      {
+        q: "How often does the month-boundary issue actually occur?",
+        a: "It depends on whether the month has an odd or even number of days. With the odd-day approximation, a 31-day month causes back-to-back runs on the 31st and the 1st of the next month; a 30-day month does not.",
+      },
+      {
+        q: "What's the most reliable way to guarantee exactly 2 days between runs?",
+        a: "Run the job daily via cron (0 0 * * *) and have the script itself check whether at least 2 days have passed since the last successful run, exiting immediately if not — this guarantees a true rolling interval regardless of calendar boundaries.",
+      },
+    ],
+  },
 ]
