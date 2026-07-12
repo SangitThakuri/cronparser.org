@@ -26,6 +26,7 @@ export function ShellLayout({ children }: ShellLayoutProps) {
           collapsed={collapsed}
           onToggle={() => setCollapsed((c) => !c)}
           items={filtered}
+          query={query}
           onNavigate={() => {
             setQuery("")
             setMobileSidebarOpen(false)

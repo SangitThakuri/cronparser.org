@@ -1,11 +1,13 @@
-import { ChevronLeft, ChevronRight, Clock, Code2, Grid2x2, X } from "lucide-react"
+import { CalendarClock, ChevronLeft, ChevronRight, Clock, Code2, Grid2x2, Server, X } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import type { RegistryEntry } from "../../registry/types"
+import { searchIntervalPages, searchPlatformGuides } from "../../lib/searchIndex"
 
 interface SidebarProps {
   collapsed: boolean
   onToggle: () => void
   items: RegistryEntry[]
+  query: string
   onNavigate?: () => void
   mobileOpen: boolean
   onMobileClose: () => void
@@ -25,12 +27,15 @@ export function Sidebar({
   collapsed,
   onToggle,
   items,
+  query,
   onNavigate,
   mobileOpen,
   onMobileClose,
 }: SidebarProps) {
   const groups = groupByCategory(items)
   const singleGroup = groups.length === 1
+  const scheduleMatches = searchIntervalPages(query)
+  const guideMatches = searchPlatformGuides(query)
 
   return (
     <>
@@ -153,6 +158,70 @@ export function Sidebar({
               ))}
             </div>
           ))}
+
+          {scheduleMatches.length > 0 && (
+            <div>
+              {!collapsed && (
+                <div className="px-4 pb-1 pt-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600">
+                    Cron Schedules
+                  </span>
+                </div>
+              )}
+              {scheduleMatches.map((m) => (
+                <NavLink
+                  key={m.path}
+                  to={m.path}
+                  onClick={onNavigate}
+                  title={collapsed ? m.name : undefined}
+                  className={({ isActive }) =>
+                    `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    }`
+                  }
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                    <CalendarClock className="h-4 w-4" />
+                  </span>
+                  {!collapsed && <div className="min-w-0 flex-1 truncate font-medium">{m.name}</div>}
+                </NavLink>
+              ))}
+            </div>
+          )}
+
+          {guideMatches.length > 0 && (
+            <div>
+              {!collapsed && (
+                <div className="px-4 pb-1 pt-3">
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600">
+                    Platform Guides
+                  </span>
+                </div>
+              )}
+              {guideMatches.map((m) => (
+                <NavLink
+                  key={m.path}
+                  to={m.path}
+                  onClick={onNavigate}
+                  title={collapsed ? m.name : undefined}
+                  className={({ isActive }) =>
+                    `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                      isActive
+                        ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                    }`
+                  }
+                >
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                    <Server className="h-4 w-4" />
+                  </span>
+                  {!collapsed && <div className="min-w-0 flex-1 truncate font-medium">{m.name}</div>}
+                </NavLink>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Collapse toggle (desktop only) */}

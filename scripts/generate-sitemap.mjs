@@ -37,6 +37,7 @@ const platformSlugs = extractValues("src/data/platformGuides.ts", "slug")
 const entries = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
   { loc: "/all-tools", changefreq: "monthly", priority: "0.6" },
+  { loc: "/platforms", changefreq: "monthly", priority: "0.8" },
   ...toolIds.map((id) => ({
     loc: `/${id}`,
     ...(TOOL_OVERRIDES[id] ?? { changefreq: "monthly", priority: "0.8" }),

@@ -5,10 +5,14 @@ import { Breadcrumbs } from "../components/ui/Breadcrumbs"
 import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../components/ui/SeoMeta"
-import type { PlatformGuide } from "../data/platformGuides"
+import { PLATFORM_GUIDES, type PlatformGuide } from "../data/platformGuides"
 import { buildTechArticleJsonLd } from "../lib/seoSchema"
 
 export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
+  const guideIndex = PLATFORM_GUIDES.findIndex((g) => g.slug === guide.slug)
+  const sibling1 = PLATFORM_GUIDES[(guideIndex + 1) % PLATFORM_GUIDES.length]
+  const sibling2 = PLATFORM_GUIDES[(guideIndex + 2) % PLATFORM_GUIDES.length]
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -32,7 +36,7 @@ export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
         <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
 
-      <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: guide.h1 }]} />
+      <Breadcrumbs items={[{ label: "Platform Guides", path: "/platforms" }, { label: guide.h1 }]} />
 
       <div className="mb-2">
         <span className="rounded-full border border-gray-200 bg-gray-50 px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400">
@@ -130,7 +134,7 @@ export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
         </dl>
       </section>
 
-      <RelatedToolsFooter toolIds={["home", "cheat-sheet", "validator"]} />
+      <RelatedToolsFooter toolIds={["platforms", sibling1.slug, sibling2.slug]} />
     </div>
   )
 }

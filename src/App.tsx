@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async"
 import { ShellLayout } from "./components/layout/ShellLayout"
 import { HomePage } from "./pages/HomePage"
 import { AllToolsPage } from "./pages/AllToolsPage"
+import { PlatformGuidesIndex } from "./pages/PlatformGuidesIndex"
 import { IntervalLandingPage } from "./pages/IntervalLandingPage"
 import { PlatformGuidePage } from "./pages/PlatformGuidePage"
 import { tools } from "./registry/tools"
@@ -29,6 +30,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/all-tools" element={<AllToolsPage />} />
+          <Route path="/platforms" element={<PlatformGuidesIndex />} />
           <Route path="/dashboard" element={<Navigate to="/all-tools" replace />} />
           {/* Cron Parser now lives on the home page — redirect the old tool URL */}
           <Route path="/cron-parser" element={<Navigate to="/" replace />} />

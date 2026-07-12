@@ -1,13 +1,21 @@
 import { Link } from "react-router-dom"
-import { BookMarked, Clock } from "lucide-react"
+import { BookMarked, CalendarClock, Clock, Server } from "lucide-react"
 import { tools } from "../../registry/tools"
 import { PLATFORM_GUIDES } from "../../data/platformGuides"
+import { INTERVAL_PAGES } from "../../data/intervalPages"
 
 const HOME_ENTRY = {
   path: "/",
   name: "Cron Parser",
   description: "Translate cron expressions to plain English",
   icon: Clock,
+}
+
+const PLATFORMS_ENTRY = {
+  path: "/platforms",
+  name: "Platform Guides",
+  description: "Cron syntax for Linux, Kubernetes, AWS, and more",
+  icon: Server,
 }
 
 interface RelatedToolsFooterProps {
@@ -18,10 +26,13 @@ export function RelatedToolsFooter({ toolIds }: RelatedToolsFooterProps) {
   const related = toolIds
     .map((id) => {
       if (id === "home") return HOME_ENTRY
+      if (id === "platforms") return PLATFORMS_ENTRY
       const tool = tools.find((t) => t.id === id)
       if (tool) return { path: `/${tool.id}`, name: tool.name, description: tool.description, icon: tool.icon }
       const guide = PLATFORM_GUIDES.find((g) => g.slug === id)
       if (guide) return { path: `/${guide.slug}`, name: guide.h1, description: guide.metaDescription, icon: BookMarked }
+      const interval = INTERVAL_PAGES.find((p) => p.slug === id)
+      if (interval) return { path: `/${interval.slug}`, name: interval.h1, description: interval.metaDescription, icon: CalendarClock }
       return null
     })
     .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
