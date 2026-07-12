@@ -12,6 +12,7 @@ export const CRON_EXAMPLE_CATEGORIES = [
   "Business Hours",
   "DevOps & CI/CD",
   "Backups & Maintenance",
+  "Monitoring & Heartbeat",
 ] as const
 
 export const CRON_EXAMPLES: CronExample[] = [
@@ -70,4 +71,12 @@ export const CRON_EXAMPLES: CronExample[] = [
   { cron: "0 0 1 * *", label: "Monthly archive, 1st at midnight", category: "Backups & Maintenance" },
   { cron: "0 */6 * * *", label: "Log rotation every 6 hours", category: "Backups & Maintenance" },
   { cron: "0 4 * * 0", label: "Weekly database vacuum, Sunday 4:00 AM", category: "Backups & Maintenance" },
+
+  // Monitoring & Heartbeat
+  { cron: "* * * * *", label: "Heartbeat ping every minute", category: "Monitoring & Heartbeat" },
+  { cron: "*/2 * * * *", label: "Uptime check every 2 minutes", category: "Monitoring & Heartbeat" },
+  { cron: "*/5 * * * *", label: "Health check every 5 minutes", category: "Monitoring & Heartbeat" },
+  { cron: "0 * * * *", label: "Hourly status check-in", category: "Monitoring & Heartbeat" },
+  { cron: "0 8 * * *", label: "Daily monitoring summary at 8:00 AM", category: "Monitoring & Heartbeat" },
+  { cron: "0 9 * * 1", label: "Weekly SSL certificate expiry check, Monday 9:00 AM", category: "Monitoring & Heartbeat" },
 ]

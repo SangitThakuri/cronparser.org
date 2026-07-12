@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
-import { Clock } from "lucide-react"
+import { BookMarked, Clock } from "lucide-react"
 import { tools } from "../../registry/tools"
+import { PLATFORM_GUIDES } from "../../data/platformGuides"
 
 const HOME_ENTRY = {
   path: "/",
@@ -18,7 +19,10 @@ export function RelatedToolsFooter({ toolIds }: RelatedToolsFooterProps) {
     .map((id) => {
       if (id === "home") return HOME_ENTRY
       const tool = tools.find((t) => t.id === id)
-      return tool ? { path: `/${tool.id}`, name: tool.name, description: tool.description, icon: tool.icon } : null
+      if (tool) return { path: `/${tool.id}`, name: tool.name, description: tool.description, icon: tool.icon }
+      const guide = PLATFORM_GUIDES.find((g) => g.slug === id)
+      if (guide) return { path: `/${guide.slug}`, name: guide.h1, description: guide.metaDescription, icon: BookMarked }
+      return null
     })
     .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
 

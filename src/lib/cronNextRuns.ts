@@ -237,3 +237,83 @@ export function getRunsOnDate(expression: string, date: Date): CronNextRunsResul
   )
   return { runs: sameDay, error: null }
 }
+
+/** Walks backward in time to find the most recent matching run(s) before `from`. */
+export function getPreviousCronRuns(
+  expression: string,
+  count: number,
+  from: Date = new Date(),
+): CronNextRunsResult {
+  const trimmed = expression.trim()
+  if (!trimmed) return { runs: [], error: null }
+
+  try {
+    const { hasSeconds, seconds, minutes, hours, months, dayMatches } = parseCronExpression(trimmed)
+
+    const t = new Date(from.getTime())
+    t.setMilliseconds(0)
+    if (hasSeconds) {
+      t.setSeconds(t.getSeconds() - 1)
+    } else {
+      t.setSeconds(0)
+      t.setMinutes(t.getMinutes() - 1)
+    }
+
+    const minYear = t.getFullYear() - MAX_LOOKAHEAD_YEARS
+    const runs: Date[] = []
+    let iterations = 0
+
+    while (runs.length < count && iterations < MAX_ITERATIONS) {
+      iterations++
+      if (t.getFullYear() < minYear) break
+
+      if (!months.set.has(t.getMonth() + 1)) {
+        // Roll back to the last day of the previous month (day 0 of the
+        // current month resolves to that date).
+        t.setDate(0)
+        t.setHours(23, 59, 59, 0)
+        continue
+      }
+      if (!dayMatches(t)) {
+        t.setDate(t.getDate() - 1)
+        t.setHours(23, 59, 59, 0)
+        continue
+      }
+      if (!hours.set.has(t.getHours())) {
+        t.setHours(t.getHours() - 1, 59, 59, 0)
+        continue
+      }
+      if (!minutes.set.has(t.getMinutes())) {
+        t.setMinutes(t.getMinutes() - 1, 59, 0)
+        continue
+      }
+      if (hasSeconds && !seconds.set.has(t.getSeconds())) {
+        t.setSeconds(t.getSeconds() - 1, 0)
+        continue
+      }
+      if (!hasSeconds) {
+        // Rollback steps above park seconds at :59 while searching for a
+        // matching minute — normalize back to :00 before recording a match.
+        t.setSeconds(0, 0)
+      }
+
+      runs.push(new Date(t.getTime()))
+      if (hasSeconds) {
+        t.setSeconds(t.getSeconds() - 1)
+      } else {
+        t.setMinutes(t.getMinutes() - 1)
+      }
+    }
+
+    if (runs.length === 0) {
+      return {
+        runs: [],
+        error: `No matching run found within the past ${MAX_LOOKAHEAD_YEARS} years`,
+      }
+    }
+
+    return { runs, error: null }
+  } catch (e) {
+    return { runs: [], error: e instanceof Error ? e.message : String(e) }
+  }
+}

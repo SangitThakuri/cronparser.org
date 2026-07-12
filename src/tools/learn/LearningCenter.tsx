@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
-import { AlertTriangle, ArrowLeftRight, FileCode2, ShieldCheck, Terminal } from "lucide-react"
+import { AlertTriangle, ArrowLeftRight, FileCode2, Gauge, Lock, ShieldCheck, Terminal } from "lucide-react"
 import { Breadcrumbs } from "../../components/ui/Breadcrumbs"
 import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
@@ -14,6 +14,8 @@ const SECTIONS = [
   { id: "cron-syntax", label: "Cron Syntax", icon: FileCode2 },
   { id: "best-practices", label: "Best Practices", icon: ShieldCheck },
   { id: "common-mistakes", label: "Common Mistakes", icon: AlertTriangle },
+  { id: "performance", label: "Performance", icon: Gauge },
+  { id: "security", label: "Security", icon: Lock },
 ]
 
 const FAQS = [
@@ -257,6 +259,68 @@ export default function LearningCenter() {
               className="rounded-lg border border-red-100 bg-red-50/50 p-3 leading-relaxed text-gray-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-gray-300"
             >
               {mistake}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Performance */}
+      <section id="performance" className="mb-10 scroll-mt-20">
+        <div className="mb-3 flex items-center gap-2">
+          <Gauge className="h-4 w-4 text-blue-500 dark:text-blue-400" />
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Performance</h2>
+        </div>
+        <div className="mb-3 flex flex-col gap-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p>
+            Cron itself is nearly free — the daemon's per-minute check is negligible overhead. Performance
+            problems almost always come from the jobs it triggers, not from cron scheduling them. A few
+            patterns matter more than they might seem to at first:
+          </p>
+        </div>
+        <ul className="flex flex-col gap-2.5 text-sm">
+          {[
+            "Stagger jobs instead of clustering them at round numbers — dozens of jobs all firing at exactly midnight or the top of the hour compete for the same CPU, disk I/O, and database connections at once.",
+            "Match the interval to the actual freshness requirement — polling every minute when every 15 minutes would be indistinguishable to users wastes resources for no real benefit.",
+            "Keep each job's typical runtime well under its interval — a job that takes 50 seconds on a 60-second schedule has almost no safety margin before overlapping runs become a real risk.",
+            "For anything with variable or unbounded runtime (crawling an API, processing a growing queue), prefer an interval with generous headroom, or move to an event-driven trigger instead of tightening the cron schedule.",
+            "Profile the job itself before assuming the schedule is the bottleneck — a slow query or unindexed table inside the job will dominate runtime far more than anything cron controls.",
+          ].map((tip, i) => (
+            <li
+              key={i}
+              className="rounded-lg border border-blue-100 bg-blue-50/50 p-3 leading-relaxed text-gray-700 dark:border-blue-900/50 dark:bg-blue-950/20 dark:text-gray-300"
+            >
+              {tip}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Security */}
+      <section id="security" className="mb-10 scroll-mt-20">
+        <div className="mb-3 flex items-center gap-2">
+          <Lock className="h-4 w-4 text-gray-700 dark:text-gray-300" />
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Security</h2>
+        </div>
+        <div className="mb-3 flex flex-col gap-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          <p>
+            Cron jobs frequently run with elevated privileges and touch sensitive systems (databases,
+            credentials, production infrastructure), which makes them worth securing deliberately rather
+            than as an afterthought.
+          </p>
+        </div>
+        <ul className="flex flex-col gap-2.5 text-sm">
+          {[
+            "Run each job as the least-privileged user that can do the work — avoid root cron entries for tasks that don't genuinely need root access.",
+            "Never hardcode secrets (API keys, database passwords) directly in a crontab entry or script — crontab files and job output are often more widely readable than people expect. Use a secrets manager or environment file with restricted permissions instead.",
+            "Restrict who can edit the crontab — cron entries run with the owning user's full privileges, so write access to a crontab is equivalent to code execution as that user.",
+            "Validate and sanitize any external input a scheduled script consumes (a downloaded file, an API response) exactly as carefully as you would for user-facing code — a cron job is still an execution path an attacker can potentially influence.",
+            "Log what each job does without logging the secrets it uses — verbose debug output that includes credentials in a log file is a common, avoidable leak.",
+          ].map((tip, i) => (
+            <li
+              key={i}
+              className="rounded-lg border border-gray-200 bg-gray-50 p-3 leading-relaxed text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
+            >
+              {tip}
             </li>
           ))}
         </ul>
