@@ -6,9 +6,10 @@ import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../components/ui/SeoMeta"
 import type { PlatformGuide } from "../data/platformGuides"
+import { buildTechArticleJsonLd } from "../lib/seoSchema"
 
 export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
-  const jsonLd = {
+  const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: guide.faqs.map((f) => ({
@@ -17,12 +18,18 @@ export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
       acceptedAnswer: { "@type": "Answer", text: f.a },
     })),
   }
+  const articleJsonLd = buildTechArticleJsonLd({
+    headline: guide.h1,
+    description: guide.metaDescription,
+    path: `/${guide.slug}`,
+  })
 
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta title={guide.title} description={guide.metaDescription} path={`/${guide.slug}`} />
       <Helmet>
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: guide.h1 }]} />

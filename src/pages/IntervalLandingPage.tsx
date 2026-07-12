@@ -7,9 +7,10 @@ import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../components/ui/SeoMeta"
 import type { IntervalPage } from "../data/intervalPages"
+import { buildTechArticleJsonLd } from "../lib/seoSchema"
 
 export function IntervalLandingPage({ page }: { page: IntervalPage }) {
-  const jsonLd = {
+  const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: page.faqs.map((f) => ({
@@ -18,12 +19,18 @@ export function IntervalLandingPage({ page }: { page: IntervalPage }) {
       acceptedAnswer: { "@type": "Answer", text: f.a },
     })),
   }
+  const articleJsonLd = buildTechArticleJsonLd({
+    headline: page.h1,
+    description: page.metaDescription,
+    path: `/${page.slug}`,
+  })
 
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta title={page.title} description={page.metaDescription} path={`/${page.slug}`} />
       <Helmet>
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: page.h1 }]} />

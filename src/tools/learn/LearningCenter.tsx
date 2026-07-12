@@ -6,6 +6,7 @@ import { CopyButton } from "../../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ShareButton } from "../../components/ui/ShareButton"
+import { buildTechArticleJsonLd } from "../../lib/seoSchema"
 
 const SECTIONS = [
   { id: "what-is-cron", label: "What is Cron?", icon: Terminal },
@@ -30,7 +31,11 @@ const FAQS = [
   },
 ]
 
-const jsonLd = {
+const LEARN_TITLE = "Cron Learning Center — What is Cron, Syntax & Best Practices | CronParser"
+const LEARN_DESCRIPTION =
+  "A complete beginner-to-practitioner guide to cron: what it is, how it differs from crontab, how the syntax works, and the best practices and common mistakes that matter in production."
+
+const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: FAQS.map((f) => ({
@@ -39,17 +44,19 @@ const jsonLd = {
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 }
+const articleJsonLd = buildTechArticleJsonLd({
+  headline: "Cron Learning Center",
+  description: LEARN_DESCRIPTION,
+  path: "/learn",
+})
 
 export default function LearningCenter() {
   return (
     <div className="mx-auto max-w-3xl">
-      <SeoMeta
-        title="Cron Learning Center — What is Cron, Syntax & Best Practices | CronParser"
-        description="A complete beginner-to-practitioner guide to cron: what it is, how it differs from crontab, how the syntax works, and the best practices and common mistakes that matter in production."
-        path="/learn"
-      />
+      <SeoMeta title={LEARN_TITLE} description={LEARN_DESCRIPTION} path="/learn" />
       <Helmet>
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(articleJsonLd)}</script>
       </Helmet>
 
       <Breadcrumbs items={[{ label: "Cron Tools", path: "/all-tools" }, { label: "Learning Center" }]} />

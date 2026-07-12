@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { Helmet } from "react-helmet-async"
 import { ShellLayout } from "./components/layout/ShellLayout"
 import { HomePage } from "./pages/HomePage"
 import { AllToolsPage } from "./pages/AllToolsPage"
@@ -8,6 +9,7 @@ import { PlatformGuidePage } from "./pages/PlatformGuidePage"
 import { tools } from "./registry/tools"
 import { INTERVAL_PAGES } from "./data/intervalPages"
 import { PLATFORM_GUIDES } from "./data/platformGuides"
+import { WEB_APPLICATION_JSON_LD } from "./lib/seoSchema"
 
 function LoadingSpinner() {
   return (
@@ -20,6 +22,9 @@ function LoadingSpinner() {
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(WEB_APPLICATION_JSON_LD)}</script>
+      </Helmet>
       <ShellLayout>
         <Routes>
           <Route path="/" element={<HomePage />} />
