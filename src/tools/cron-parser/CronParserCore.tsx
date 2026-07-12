@@ -33,6 +33,34 @@ const FIELDS = [
   { label: "Weekday", range: "0–6 (Sun=0)" },
 ]
 
+const FIELD_COLOR_CLASSES = [
+  "border-slate-300 bg-slate-50 text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300",
+  "border-blue-300 bg-blue-50 text-blue-700 dark:border-blue-700 dark:bg-blue-950 dark:text-blue-300",
+  "border-purple-300 bg-purple-50 text-purple-700 dark:border-purple-700 dark:bg-purple-950 dark:text-purple-300",
+  "border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950 dark:text-green-300",
+  "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300",
+  "border-pink-300 bg-pink-50 text-pink-700 dark:border-pink-700 dark:bg-pink-950 dark:text-pink-300",
+] as const
+
+interface FieldChip {
+  label: string
+  value: string
+  colorClass: string
+}
+
+function getFieldBreakdown(expression: string): FieldChip[] | null {
+  const tokens = expression.trim().split(/\s+/)
+  if (tokens.length !== 5 && tokens.length !== 6) return null
+
+  const labels =
+    tokens.length === 6
+      ? ["Second", "Minute", "Hour", "Day", "Month", "Weekday"]
+      : ["Minute", "Hour", "Day", "Month", "Weekday"]
+  const colors = tokens.length === 6 ? FIELD_COLOR_CLASSES : FIELD_COLOR_CLASSES.slice(1)
+
+  return tokens.map((value, i) => ({ label: labels[i], value, colorClass: colors[i] }))
+}
+
 function parseCron(expression: string): { description: string | null; error: string | null } {
   const trimmed = expression.trim()
   if (!trimmed) return { description: null, error: null }
@@ -51,6 +79,10 @@ export function CronParserCore() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [expression, setExpression] = useState(() => searchParams.get("expr") ?? "")
   const { description, error } = useMemo(() => parseCron(expression), [expression])
+  const fieldBreakdown = useMemo(
+    () => (description && !error ? getFieldBreakdown(expression) : null),
+    [expression, description, error],
+  )
 
   const updateExpression = (value: string) => {
     setExpression(value)
@@ -113,6 +145,20 @@ export function CronParserCore() {
           {expression && <CopyButton text={expression} />}
           {expression && <ShareButton getUrl={() => window.location.href} />}
         </div>
+        {fieldBreakdown && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5">
+            {fieldBreakdown.map((field, i) => (
+              <div
+                key={i}
+                className={`rounded-lg border px-2.5 py-1.5 ${field.colorClass}`}
+                title={field.label}
+              >
+                <p className="text-[9px] font-semibold uppercase tracking-wide opacity-70">{field.label}</p>
+                <p className="font-mono text-sm font-semibold leading-tight">{field.value}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Quick templates */}
@@ -182,6 +228,7 @@ export function CronParserCore() {
           "Paste a cron expression (5 or 6 space-separated fields) into the input. The description updates on every keystroke.",
           "Use the quick template buttons to load common schedules for reference or testing.",
           "The input border turns green for a valid expression, red for an invalid one.",
+          "Once valid, a color-coded chip appears under the input for every field — Minute, Hour, Day, Month, Weekday (and Second for 6-field expressions) — so you can see exactly which part of the expression maps to which unit of time.",
           "Scroll to the \"Next 5 Upcoming Execution Runs\" panel to see the exact upcoming timestamps, calculated in your local timezone.",
           "Copy the expression with the Copy button next to the input, or press Escape while the input is focused to clear it.",
           "Star a valid expression to save it to Favorites, or revisit anything you've recently parsed under the Recent tab — both are stored locally in your browser.",

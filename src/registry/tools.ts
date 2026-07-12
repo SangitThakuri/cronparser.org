@@ -5,6 +5,7 @@ import {
   Gauge,
   GitCompareArrows,
   Globe2,
+  GraduationCap,
   Library,
   ShieldCheck,
   SlidersHorizontal,
@@ -85,5 +86,13 @@ export const tools: RegistryEntry[] = [
     category: "Cron Tools",
     icon: GitCompareArrows,
     component: lazy(() => import("../tools/compare/CompareExpressions")),
+  },
+  {
+    id: "learn",
+    name: "Cron Learning Center",
+    description: "What is cron, cron vs crontab, syntax, best practices, and common mistakes",
+    category: "Cron Tools",
+    icon: GraduationCap,
+    component: lazy(() => import("../tools/learn/LearningCenter")),
   },
 ]

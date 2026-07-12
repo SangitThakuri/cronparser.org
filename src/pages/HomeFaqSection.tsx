@@ -49,27 +49,31 @@ const FAQS: FaqItem[] = [
   },
   {
     id: "more-cron-tools",
-    question: "Is CronParser adding more cron tools?",
+    question: "What other cron tools does CronParser offer?",
     answer: (
       <>
-        Yes. CronParser is being built out into a complete cron platform. Start with the{" "}
+        CronParser is a complete cron platform: a visual builder, validator, generator, timezone
+        converter, schedule visualizer, and expression comparison tool are all live, alongside the{" "}
         <Link to="/cheat-sheet" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
           Cron Cheat Sheet
-        </Link>{" "}
-        for a quick syntax reference, or browse the{" "}
+        </Link>
+        , the{" "}
         <Link to="/examples" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
           Cron Examples Library
         </Link>
-        . A visual cron builder, validator, timezone converter, and platform-specific guides for
-        Linux, Kubernetes, GitHub Actions, and AWS are on the way — check the{" "}
+        , platform-specific guides for Linux, Kubernetes, GitHub Actions, and AWS, and the{" "}
+        <Link to="/learn" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
+          Cron Learning Center
+        </Link>{" "}
+        for a from-scratch introduction. See the full lineup on the{" "}
         <Link to="/all-tools" className="font-medium text-blue-600 hover:underline dark:text-blue-400">
           Cron Tools page
-        </Link>{" "}
-        as new tools ship.
+        </Link>
+        .
       </>
     ),
     plainAnswer:
-      "Yes. CronParser is being built out into a complete cron platform. Start with the Cron Cheat Sheet for a quick syntax reference, or browse the Cron Examples Library. A visual cron builder, validator, timezone converter, and platform-specific guides for Linux, Kubernetes, GitHub Actions, and AWS are on the way — check the Cron Tools page as new tools ship.",
+      "CronParser is a complete cron platform: a visual builder, validator, generator, timezone converter, schedule visualizer, and expression comparison tool are all live, alongside the Cron Cheat Sheet, the Cron Examples Library, platform-specific guides for Linux, Kubernetes, GitHub Actions, and AWS, and the Cron Learning Center for a from-scratch introduction. See the full lineup on the Cron Tools page.",
   },
 ]
 
