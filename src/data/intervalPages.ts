@@ -1348,4 +1348,121 @@ export const INTERVAL_PAGES: IntervalPage[] = [
       },
     ],
   },
+  {
+    slug: "every-20-minutes",
+    title: "Cron Job Every 20 Minutes — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every 20 minutes is */20 * * * *, firing at :00, :20, and :40 — a true evenly-spaced interval. See examples and best practices.",
+    h1: "Cron: Every 20 Minutes",
+    cron: "*/20 * * * *",
+    intro:
+      "*/20 * * * * fires three times an hour — at :00, :20, and :40. Unlike step values such as */45 that don't evenly divide 60, 20 divides cleanly into 60, so this produces a genuinely consistent, rolling interval rather than an uneven alternating gap.",
+    examples: [
+      { cron: "*/20 * * * *", label: "Every 20 minutes, all day" },
+      { cron: "*/20 9-17 * * *", label: "Every 20 minutes, 9 AM–5 PM only" },
+      { cron: "*/20 * * * 1-5", label: "Every 20 minutes, weekdays only" },
+    ],
+    mistakes: [
+      "Assuming */20 needs the same 'does it divide evenly' caution as */45 — it doesn't. 20 is one of the clean divisors of 60 (along with 1, 2, 3, 4, 5, 6, 10, 12, 15, 30), so the interval is genuinely even.",
+      "Using every-20-minutes for something that needs true real-time responsiveness — three checks an hour is a moderate polling cadence, not a substitute for a push-based or event-driven trigger.",
+      "Not accounting for three-per-hour when estimating API rate limits or costs over a full day (72 runs) or month.",
+    ],
+    bestPractices: [
+      "A solid middle-ground interval when every 15 minutes feels too frequent and every 30 minutes feels too sparse — common for polling jobs with a moderate freshness requirement.",
+      "Restrict to business hours (9-17) if the job supports a feature nobody needs monitored overnight, cutting the daily run count roughly in half.",
+      "Pair with basic alerting if a missed run matters — a gap noticeably longer than 20 minutes between runs is easy to detect and usually indicates a stuck or failed job.",
+    ],
+    faqs: [
+      {
+        q: "Does */20 * * * * really run every 20 minutes evenly?",
+        a: "Yes — since 20 divides evenly into 60, the step value produces a genuinely consistent rolling interval: :00, :20, :40 every hour, with no drift or uneven gaps.",
+      },
+      {
+        q: "How is */20 different from */45?",
+        a: "20 divides 60 evenly (three equal 20-minute slices), while 45 doesn't (60 ÷ 45 leaves a remainder), so */45 only fires at :00 and :45 — an uneven 45/15-minute alternating gap rather than a true rolling interval. */20 doesn't have this problem.",
+      },
+      {
+        q: "What's a good use case for every 20 minutes?",
+        a: "Moderate-frequency polling or sync jobs — checking a queue, refreshing a semi-live dashboard, or syncing external data — where every 15 minutes is unnecessarily frequent but every 30 minutes feels too stale.",
+      },
+    ],
+  },
+  {
+    slug: "every-quarter",
+    title: "Cron Job Every Quarter — Expression & Examples | CronParser",
+    metaDescription:
+      "The cron expression for every quarter is 0 0 1 1,4,7,10 *, firing at midnight on the 1st of January, April, July, and October.",
+    h1: "Cron: Every Quarter",
+    cron: "0 0 1 1,4,7,10 *",
+    intro:
+      "0 0 1 1,4,7,10 * fires four times a year — midnight on January 1st, April 1st, July 1st, and October 1st, the standard calendar-quarter boundaries. It's the natural schedule for quarterly reports, billing cycles, and infrequent maintenance that only needs to run a handful of times a year.",
+    examples: [
+      { cron: "0 0 1 1,4,7,10 *", label: "Every quarter, midnight on the 1st" },
+      { cron: "0 6 1 1,4,7,10 *", label: "Every quarter, 6 AM instead of midnight" },
+      { cron: "0 0 2 1,4,7,10 *", label: "Every quarter, on the 2nd instead of the 1st" },
+    ],
+    mistakes: [
+      "Assuming there's a single 'every quarter' shortcut nickname — unlike @daily or @monthly, cron has no @quarterly alias; the month list (1,4,7,10) has to be written out explicitly.",
+      "Confusing calendar quarters with a company's fiscal quarters — if your organization's fiscal year doesn't start in January, the month list needs to reflect your actual fiscal quarter-start months, not the calendar-quarter defaults.",
+      "Adding a day-of-week restriction expecting it to mean 'the closest weekday to the 1st' — cron's OR semantics between day-of-month and day-of-week means restricting both fields runs the job on the 1st of those months OR any matching weekday, not a combined condition. Leave day-of-week as * for a genuinely quarterly schedule.",
+    ],
+    bestPractices: [
+      "Write out the month list explicitly (1,4,7,10) since there's no quarterly shortcut nickname to fall back on.",
+      "Keep day-of-week as * for a genuinely quarterly schedule — restricting it introduces cron's OR-based day-of-month/day-of-week interaction, which rarely does what's intuitively expected.",
+      "Document which quarter-start convention (calendar vs. fiscal) the schedule follows directly in a comment above the crontab entry, since '1,4,7,10' alone doesn't communicate that context to the next person reading it.",
+    ],
+    faqs: [
+      {
+        q: "Is there an @quarterly shortcut like @daily or @monthly?",
+        a: "No — standard cron's nickname shortcuts (@yearly, @monthly, @weekly, @daily, @hourly) don't include a quarterly option. Use the explicit month list (0 0 1 1,4,7,10 *) instead.",
+      },
+      {
+        q: "What if my fiscal year doesn't start in January?",
+        a: "The expression itself just runs on whichever calendar months you list — if your fiscal quarters start on different months than January/April/July/October, adjust the month list to match your organization's actual fiscal quarter-start months.",
+      },
+      {
+        q: "Can I restrict this to weekdays only, skipping weekend quarter-starts?",
+        a: "Not directly with a day-of-week field, because of cron's day-of-month/day-of-week OR semantics — adding 1-5 to the day-of-week field would make the job also run on every weekday, not just weekday quarter-starts. Handle that specific check inside the job itself instead.",
+      },
+    ],
+  },
+  {
+    slug: "nth-weekday-of-month",
+    title: "Cron: First Monday (or Nth Weekday) of the Month | CronParser",
+    metaDescription:
+      "Standard cron can't natively express 'first Monday of the month' — see why the common day-range trick is actually wrong, and the correct workaround.",
+    h1: "Cron: First Monday (Nth Weekday) of the Month",
+    cron: "0 0 * * 1",
+    intro:
+      "Cron has no native way to express 'the first Monday of the month' or any Nth-weekday-of-month pattern — and the trick you'll see in a lot of blog posts and Stack Overflow answers (something like 0 0 1-7 * 1) is actually wrong, due to how cron's day-of-month and day-of-week fields interact. The correct approach schedules the job weekly and pushes the 'which week' check into the job itself.",
+    examples: [
+      { cron: "0 0 * * 1", label: "Every Monday at midnight — building block for 'first Monday'" },
+      { cron: "0 0 * * 5", label: "Every Friday at midnight — building block for 'last Friday'" },
+      { cron: "0 9 * * 2", label: "Every Tuesday at 9 AM — building block for 'second Tuesday'" },
+    ],
+    mistakes: [
+      "Using 0 0 1-7 * 1 expecting it to mean 'the first Monday of the month' — it doesn't. When both day-of-month and day-of-week are restricted (non-*), standard cron treats them as OR, not AND: this expression actually runs on every day 1 through 7 of the month AND on every Monday all month long — a much broader schedule than intended.",
+      "Not realizing this OR-semantics gotcha applies to any attempt to combine day-of-month and day-of-week restrictions in standard cron — it's one of the most consistently miswritten patterns in cron usage, including in a fair number of published tutorials.",
+      "Trying to solve 'last Friday of the month' with a fixed day-of-month range (like 24-31) — the last Friday's date shifts between the 24th and 31st depending on the month and year, so no fixed day-of-month range covers it correctly for every month.",
+    ],
+    bestPractices: [
+      "Schedule the job to run every week on the target weekday (0 0 * * 1 for every Monday), then have the job itself check the date and exit immediately unless it's the intended occurrence (first, second, last, etc.) of that weekday in the current month.",
+      "For 'last' occurrences (last Friday of the month), check whether adding 7 days to the current date would roll into the next month — if so, the current date is the last occurrence of that weekday.",
+      "If your platform is Quartz-based (Jenkins, Spring Scheduler) rather than standard cron, use Quartz's native # syntax instead — for example 1#1 means 'the first Monday' directly in a single field, no in-script check required. See the Quartz Scheduler guide for the full day-of-week numbering.",
+    ],
+    faqs: [
+      {
+        q: "Why doesn't 0 0 1-7 * 1 mean 'the first Monday of the month'?",
+        a: "Because standard cron treats day-of-month and day-of-week as an OR condition whenever both are restricted, not an AND. That expression actually fires on every day from the 1st through the 7th (regardless of weekday) plus every Monday of the month (regardless of date) — a much broader schedule than 'just the first Monday'.",
+      },
+      {
+        q: "What's the actual correct way to run something on the first Monday of the month?",
+        a: "Schedule the job to run every Monday (0 0 * * 1), then add a check inside the script itself: if the day of the month is 7 or less, it's the first occurrence of that weekday in the month — proceed; otherwise, exit without doing anything.",
+      },
+      {
+        q: "Does any cron-like system support this natively?",
+        a: "Quartz (used by Jenkins, Spring Scheduler, and others) supports a # character specifically for this: 1#1 means 'the first Monday of the month' directly, with no in-script logic needed. Standard 5-field cron has no equivalent.",
+      },
+    ],
+  },
 ]
