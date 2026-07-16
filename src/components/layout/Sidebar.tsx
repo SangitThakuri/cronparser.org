@@ -116,6 +116,23 @@ export function Sidebar({
               </span>
               {!collapsed && <span className="font-medium">All Tools</span>}
             </NavLink>
+            <NavLink
+              to="/platforms"
+              onClick={onNavigate}
+              title={collapsed ? "Platform Guides" : undefined}
+              className={({ isActive }) =>
+                `flex w-full items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
+                }`
+              }
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                <Server className="h-4 w-4" />
+              </span>
+              {!collapsed && <span className="font-medium">Platform Guides</span>}
+            </NavLink>
           </div>
 
           {groups.map(([category, catItems]) => (
