@@ -10,22 +10,33 @@
 // plain static tags that shipped in the initial HTML, so without this they'd persist
 // as duplicates alongside Helmet's client-rendered ones.
 //
-// Route data is imported directly from the same .ts source files the app itself
-// uses (Node's native TS type-stripping handles these since they contain no JSX),
+// Route data is loaded directly from the same .ts source files the app itself
+// uses (transpiled at runtime via the TypeScript compiler API — these three files
+// have zero JSX and zero cross-file imports, so a single-file transpile is enough,
+// and it works on any Node version rather than depending on native TS support),
 // so this can never drift out of sync with the real data. Per-tool titles/descriptions
 // live inside JSX component files and are extracted by regex instead, mirroring the
 // approach already used in generate-sitemap.mjs.
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs"
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
+import { tmpdir } from "node:os"
 import { fileURLToPath, pathToFileURL } from "node:url"
 import { dirname, join } from "node:path"
+import ts from "typescript"
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const SITE_URL = "https://cronparser.org"
 const distDir = join(root, "dist")
 
 function importTs(relPath) {
-  return import(pathToFileURL(join(root, relPath)).href)
+  const source = readFileSync(join(root, relPath), "utf8")
+  const { outputText } = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+  })
+  const tmpDir = mkdtempSync(join(tmpdir(), "cronparser-prerender-"))
+  const tmpFile = join(tmpDir, "mod.mjs")
+  writeFileSync(tmpFile, outputText)
+  return import(pathToFileURL(tmpFile).href)
 }
 
 const { INTERVAL_PAGES } = await importTs("src/data/intervalPages.ts")
