@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react"
 import { Link } from "react-router-dom"
-import { Box, Cloud, GitBranch, Monitor, Puzzle, Search, SearchX, Server } from "lucide-react"
+import { Box, Cloud, GitBranch, LayoutDashboard, Monitor, Puzzle, Search, SearchX, Server } from "lucide-react"
 import { Breadcrumbs } from "../components/ui/Breadcrumbs"
 import { SeoMeta } from "../components/ui/SeoMeta"
 import { PLATFORM_GUIDES } from "../data/platformGuides"
@@ -11,6 +11,7 @@ const CATEGORY_ICONS: Record<string, typeof Monitor> = {
   "CI/CD": GitBranch,
   "Cloud Scheduler": Cloud,
   "Application Framework": Puzzle,
+  "Control Panel": LayoutDashboard,
 }
 
 export function PlatformGuidesIndex() {

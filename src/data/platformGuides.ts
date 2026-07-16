@@ -704,4 +704,297 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
       },
     ],
   },
+  {
+    slug: "cpanel-cron",
+    title: "cPanel Cron Jobs Guide — Setup via the UI & Common Issues | CronParser",
+    metaDescription:
+      "How to add, edit, and troubleshoot cron jobs in cPanel: the Cron Jobs UI, email notification pitfalls, PHP path issues, and standard intervals.",
+    h1: "cPanel Cron Jobs Guide",
+    category: "Control Panel",
+    intro:
+      "cPanel exposes standard Linux cron through a web UI (Advanced > Cron Jobs) for shared and managed hosting accounts that don't have shell access — the same cron daemon and 5-field syntax underneath, but the most common problems are specific to how cPanel wraps it: PHP path ambiguity, email spam, and relative-path failures.",
+    syntaxNotes:
+      "cPanel's Cron Jobs page offers dropdown presets (Once Per Minute, Once Per Hour, etc.) or a 'Common Settings' selector, but underneath it's still standard 5-field minute/hour/day/month/weekday cron — the five input fields map directly to those fields and accept the same wildcards, ranges, and steps.",
+    codeExamples: [
+      { label: "Typical PHP script cron command in cPanel", code: "/usr/local/bin/php -q /home/username/public_html/cron.php" },
+      { label: "Silence output from a wget-triggered cron job", code: "wget -q -O - https://example.com/cron.php >/dev/null 2>&1" },
+      { label: "Run a script every 15 minutes", code: "*/15 * * * * /home/username/scripts/task.sh" },
+    ],
+    gotchas: [
+      "cPanel emails the account's owner every single run by default unless the command's output is redirected or suppressed — a 5-minute job with no redirection can flood an inbox with hundreds of emails a day.",
+      "The PHP binary path varies by hosting provider and by the PHP version selected in MultiPHP Manager — a bare `php script.php` command often fails silently because the shell's default PHP CLI doesn't match the site's configured web-facing PHP version. Use the full version-specific path (e.g. /usr/local/bin/php81) or whatever `which php` returns in cPanel's Terminal.",
+      "Relative paths fail under cron because cPanel cron jobs execute from the account's home directory, not the script's own directory — always cd into the directory first or use absolute paths for the script and anything it references.",
+    ],
+    bestPractices: [
+      "Always append `>/dev/null 2>&1` (or redirect to a log file) to the end of every cron command to stop cPanel's default per-run email notifications.",
+      "Confirm the exact PHP CLI path and version with `which php` or MultiPHP Manager rather than assuming the PATH's `php` matches your site's configured PHP version.",
+      "Use the Cron Jobs UI's built-in next-run preview to sanity-check an expression before saving, especially for less common day-of-week or day-of-month combinations.",
+    ],
+    faqs: [
+      {
+        q: "Why am I getting an email every time my cPanel cron job runs?",
+        a: "cPanel emails the account holder any output — including warnings and notices — from every cron execution by default. Redirect both stdout and stderr (append >/dev/null 2>&1 to the command) to stop the emails, or redirect to a log file if you want to keep the output.",
+      },
+      {
+        q: "Why does my PHP script work when I run it manually but fail under cPanel cron?",
+        a: "cPanel cron jobs often invoke a different PHP binary or version than your site's web-facing PHP, and the command runs with the account's home directory as its working directory rather than the script's folder. Use the full path to the correct php binary (from MultiPHP Manager or `which php`) and absolute paths throughout.",
+      },
+      {
+        q: "Does cPanel support the same cron syntax as regular Linux cron?",
+        a: "Yes — cPanel's Cron Jobs UI is a front-end for the same underlying cron daemon and standard 5-field syntax. Anything valid in a normal crontab works identically when entered through cPanel.",
+      },
+    ],
+  },
+  {
+    slug: "systemd-timers",
+    title: "systemd Timers vs Cron — Syntax, Setup & When to Switch | CronParser",
+    metaDescription:
+      "How systemd timers work as a modern alternative to cron: OnCalendar syntax, unit file setup, and when timers are actually worth switching to.",
+    h1: "systemd Timers vs Cron",
+    category: "Operating System",
+    intro:
+      "systemd timers are the built-in scheduling mechanism on nearly every modern Linux distribution that uses systemd as its init system, offering dependency management, structured logging via journald, and a more expressive calendar syntax than cron's 5 fields — at the cost of needing two unit files instead of one crontab line.",
+    syntaxNotes:
+      "Timers use OnCalendar= expressions, a different (and more expressive) syntax than cron: DayOfWeek Year-Month-Day Hour:Minute:Second, with wildcards (*), ranges, and steps (/) similar in spirit to cron but not directly interchangeable — for example '*-*-* 02:00:00' for daily at 2 AM, or 'Mon..Fri 09:00' for weekdays at 9 AM.",
+    codeExamples: [
+      { label: "mybackup.service", code: "[Unit]\nDescription=Run backup script\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/backup.sh" },
+      { label: "mybackup.timer (daily at 2 AM)", code: "[Unit]\nDescription=Run backup daily\n\n[Timer]\nOnCalendar=*-*-* 02:00:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target" },
+      { label: "Enable and start the timer", code: "sudo systemctl enable --now mybackup.timer" },
+    ],
+    gotchas: [
+      "A timer file alone does nothing — it must reference a matching .service file with Type=oneshot, and both files need matching base names (mybackup.timer + mybackup.service) or an explicit Unit= directive pointing to the service.",
+      "OnCalendar syntax looks similar to cron at a glance but isn't compatible with it — porting a crontab entry means translating the expression, not copying it verbatim. Use `systemd-analyze calendar 'EXPRESSION'` to preview and validate before deploying.",
+      "Without Persistent=true in the [Timer] section, a missed run (machine was off at the scheduled time) is simply skipped rather than caught up on next boot — the closest systemd equivalent to anacron's catch-up behavior.",
+    ],
+    bestPractices: [
+      "Validate any OnCalendar expression with `systemd-analyze calendar 'your-expression' --iterations=5` before enabling the timer — it prints the next several run times so a typo shows up before it causes a missed job.",
+      "Use Persistent=true for anything that should catch up after downtime (backups, cleanup jobs) — it's the direct equivalent of cron+anacron's missed-job behavior, and it's off by default.",
+      "Check timer status and history with `systemctl list-timers` and `journalctl -u mybackup.service` — systemd's built-in logging is a genuine advantage over plain cron, which requires the job itself to handle its own logging.",
+    ],
+    faqs: [
+      {
+        q: "Should I switch from cron to systemd timers?",
+        a: "If cron is already meeting your needs, there's little reason to switch. Timers are worth it specifically when you need dependency ordering (run after another service starts), built-in catch-up for missed runs, or centralized logging via journald without setting any of that up yourself.",
+      },
+      {
+        q: "Can I just paste my crontab entry's schedule into OnCalendar?",
+        a: "No — the syntaxes aren't compatible. A 5-field cron expression needs to be translated into systemd's OnCalendar format, which uses a different field order and wildcard style, not copied as-is.",
+      },
+      {
+        q: "How do I see when a systemd timer will next run?",
+        a: "Run `systemctl list-timers` to see every active timer's next scheduled run, or `systemd-analyze calendar 'OnCalendar-expression'` to preview run times for an expression before deploying it.",
+      },
+    ],
+  },
+  {
+    slug: "gitlab-ci-cron",
+    title: "GitLab CI Scheduled Pipelines — Cron Syntax & Setup | CronParser",
+    metaDescription:
+      "How to schedule GitLab CI/CD pipelines with cron syntax: the Schedules UI, timezone handling, rules:if conditions, and common gotchas.",
+    h1: "GitLab CI Scheduled Pipelines",
+    category: "CI/CD",
+    intro:
+      "GitLab CI/CD supports scheduled pipeline triggers configured through a project's Schedules UI (CI/CD > Schedules), using standard cron syntax under the hood to define when a pipeline runs automatically without a push or merge request event.",
+    syntaxNotes:
+      "Standard 5-field cron syntax (minute, hour, day-of-month, month, day-of-week), entered directly in the Schedules UI's 'Interval Pattern' field, with a separate timezone dropdown — the schedule always runs against whatever timezone is selected there, not necessarily UTC or the runner's local time.",
+    codeExamples: [
+      { label: "Restrict a job to only run on the scheduled pipeline", code: "job:\n  rules:\n    - if: '$CI_PIPELINE_SOURCE == \"schedule\"'" },
+      { label: "Exclude a job from scheduled pipelines", code: "job:\n  rules:\n    - if: '$CI_PIPELINE_SOURCE == \"schedule\"'\n      when: never\n    - when: on_success" },
+      { label: "Common schedule: nightly at 2 AM", code: "0 2 * * *" },
+    ],
+    gotchas: [
+      'Creating a schedule alone doesn\'t limit which jobs run — every job in .gitlab-ci.yml still executes on a scheduled pipeline unless it has an explicit rules: condition checking $CI_PIPELINE_SOURCE == "schedule".',
+      "Scheduled pipelines run against the branch or ref configured in the schedule, not necessarily the default branch — a schedule left pointed at an outdated branch keeps running against stale code indefinitely.",
+      "GitLab may skip or delay scheduled pipelines under heavy runner load — GitLab's own docs are explicit that schedule times are a target, not a guarantee, the same caveat that applies to GitHub Actions' cron schedules.",
+    ],
+    bestPractices: [
+      'Always gate schedule-only logic behind an explicit if: \'$CI_PIPELINE_SOURCE == "schedule"\' rule rather than assuming a job won\'t run outside the schedule.',
+      "Double-check the schedule's target branch after creating it, and again after any branch renaming or restructuring — a schedule silently pointing at a stale or deleted branch is a common source of 'why didn't this run' confusion.",
+      "Set the schedule's timezone explicitly rather than assuming UTC, especially for anything tied to business hours or a specific region's off-peak window.",
+    ],
+    faqs: [
+      {
+        q: "Do I need cron syntax knowledge to schedule a GitLab pipeline?",
+        a: "Yes — the Schedules UI's Interval Pattern field expects standard 5-field cron syntax directly (e.g. 0 2 * * * for nightly at 2 AM), with a separate dropdown for timezone.",
+      },
+      {
+        q: "Why did every job run on my scheduled pipeline, not just the one I wanted?",
+        a: 'By default, all jobs in .gitlab-ci.yml run on any pipeline trigger, including scheduled ones. Add a rules: condition checking $CI_PIPELINE_SOURCE == "schedule" to jobs that should only run on the schedule, or use when: never to exclude jobs from it.',
+      },
+      {
+        q: "Is a GitLab scheduled pipeline guaranteed to run at the exact time?",
+        a: "No — GitLab documents scheduled pipeline times as approximate, and heavy runner load can delay or occasionally skip a scheduled trigger, the same caveat that applies to GitHub Actions' cron schedules.",
+      },
+    ],
+  },
+  {
+    slug: "celery-beat-cron",
+    title: "Celery Beat Schedule Guide — crontab() Syntax & Setup | CronParser",
+    metaDescription:
+      "Schedule periodic tasks in Celery with Beat: the crontab() schedule helper, beat_schedule dict syntax, common pitfalls, and Django integration.",
+    h1: "Celery Beat Schedule Guide",
+    category: "Application Framework",
+    intro:
+      "Celery Beat is the scheduler component for Celery, Python's most widely used distributed task queue — it periodically kicks off tasks according to a schedule defined in code rather than a separate crontab file, using either simple interval schedules or a crontab()-style helper that mirrors standard cron fields.",
+    syntaxNotes:
+      "Celery's crontab() helper takes keyword arguments (minute=, hour=, day_of_week=, day_of_month=, month_of_year=) that each accept the same wildcards, ranges, steps, and lists as standard cron fields — just expressed as Python keyword arguments instead of a single 5-field string.",
+    codeExamples: [
+      {
+        label: "Run a task every day at 2:30 AM",
+        code: "from celery.schedules import crontab\n\napp.conf.beat_schedule = {\n    'nightly-cleanup': {\n        'task': 'myapp.tasks.cleanup',\n        'schedule': crontab(hour=2, minute=30),\n    },\n}",
+      },
+      { label: "Run every 15 minutes", code: "'schedule': crontab(minute='*/15')" },
+      { label: "Run every weekday at 9 AM", code: "'schedule': crontab(hour=9, minute=0, day_of_week='1-5')" },
+    ],
+    gotchas: [
+      "Celery Beat must run as its own separate process (celery -A myapp beat) alongside the worker process — a common mistake is running only celery worker and wondering why scheduled tasks never fire, since the worker executes tasks but never schedules them.",
+      "Running more than one Beat instance simultaneously schedules every task multiple times — Beat is a singleton scheduler by design, so use a single Beat process (or a distributed lock via django-celery-beat's database scheduler) rather than one Beat per worker replica.",
+      "crontab(minute='*/15') has the exact same step-value gotcha as plain cron — it only fires at :00, :15, :30, :45, not truly every 15 minutes from whenever the app started.",
+    ],
+    bestPractices: [
+      "Deploy exactly one Beat process per environment, separate from your worker processes — scaling out worker replicas should never mean scaling out Beat.",
+      "For dynamic, database-editable schedules (rather than ones baked into code that require a redeploy to change), use the django-celery-beat package's DatabaseScheduler instead of the default file-based one.",
+      "Double-check timezone handling — Celery's timezone defaults to UTC unless CELERY_TIMEZONE (or app.conf.timezone) is explicitly set, a common source of schedules firing at unexpected local times.",
+    ],
+    faqs: [
+      {
+        q: "Why isn't my Celery Beat schedule running at all?",
+        a: "The most common cause is not running a Beat process — celery worker alone executes tasks but never schedules them. You need a separate `celery -A myapp beat` process (or `celery -A myapp worker -B` to run both in one process, fine for development but not recommended in production).",
+      },
+      {
+        q: "Can Celery Beat schedules be edited without redeploying code?",
+        a: "Not with the default file-based scheduler, since beat_schedule is defined in application code. Use the django-celery-beat package, which stores schedules in the database and lets you edit them via Django admin or the ORM without a redeploy.",
+      },
+      {
+        q: "Does crontab(minute='*/15') in Celery behave differently from cron's */15?",
+        a: "No — it has the exact same semantics as cron: it fires at fixed clock positions (:00, :15, :30, :45), not on a rolling 15-minute timer from whenever the app started or was last restarted.",
+      },
+    ],
+  },
+  {
+    slug: "rails-whenever-cron",
+    title: "Rails Cron Jobs with Whenever — Schedule.rb Syntax | CronParser",
+    metaDescription:
+      "Schedule background jobs in Ruby on Rails with the whenever gem: schedule.rb syntax, writing a crontab automatically, and common deployment gotchas.",
+    h1: "Rails Cron Jobs with Whenever",
+    category: "Application Framework",
+    intro:
+      "Rails has no built-in scheduler — the de facto standard is the whenever gem, which lets you define jobs in a readable Ruby DSL (config/schedule.rb) and generates an actual crontab from it, rather than requiring you to hand-write cron syntax directly.",
+    syntaxNotes:
+      "Whenever's DSL uses human-readable frequency methods (every 1.day, at: '2:30 am', every :sunday) rather than raw cron fields — it compiles schedule.rb down to a real crontab behind the scenes, viewable by running `whenever` with no arguments before writing it.",
+    codeExamples: [
+      { label: "config/schedule.rb: daily cleanup at 2:30 AM", code: "every 1.day, at: '2:30 am' do\n  runner \"MyModel.cleanup\"\nend" },
+      { label: "Run a rake task every 15 minutes", code: "every 15.minutes do\n  rake \"my_task:run\"\nend" },
+      { label: "Write the compiled schedule to the real crontab", code: "whenever --update-crontab" },
+    ],
+    gotchas: [
+      "Editing config/schedule.rb does nothing to the actual crontab by itself — you must run `whenever --update-crontab` (typically as a deploy step, e.g. via Capistrano's whenever integration) to write the compiled schedule into cron.",
+      "Whenever's generated crontab jobs run outside your application's Bundler/RVM/rbenv context by default — the gem's environment-setting options (set :output, set :environment, and the job_type templates) exist specifically to work around cron's minimal shell environment, and skipping them is the most common cause of 'works locally, silently fails via cron' bugs.",
+      "Deploying without re-running `whenever --update-crontab` leaves the old schedule active — schedule.rb changes have zero effect on a running server until the crontab is regenerated and rewritten.",
+    ],
+    bestPractices: [
+      "Wire `whenever --update-crontab` into your deploy pipeline automatically (Capistrano has an official whenever plugin) rather than remembering to run it by hand after every schedule.rb change.",
+      "Always redirect output in schedule.rb jobs (whenever's set :output config, or add >> log/cron.log 2>&1 to a custom job_type) so failures are visible instead of silently swallowed by cron's minimal environment.",
+      "Run `whenever` with no arguments locally to preview the exact crontab that will be generated before pushing it to a server — it's the fastest way to catch a DSL mistake before it reaches production.",
+    ],
+    faqs: [
+      {
+        q: "Do I need to know cron syntax to use the whenever gem?",
+        a: "Not really — whenever's DSL (every 1.day, at: '2:30 am', every :monday) is designed to be readable without cron knowledge, and it compiles down to a real crontab for you. Understanding cron helps when debugging the generated output, though.",
+      },
+      {
+        q: "Why isn't my updated schedule.rb taking effect on the server?",
+        a: "Editing schedule.rb only changes a Ruby file — it has no effect on the actual system crontab until you run `whenever --update-crontab`, which regenerates and rewrites the real cron entries. This step is often missing from manual, non-Capistrano deploy processes.",
+      },
+      {
+        q: "Why does my whenever-scheduled job fail via cron but work when I run it manually?",
+        a: "Cron jobs run outside your shell's Bundler/rbenv/RVM context by default. Make sure whenever's environment-setting options are configured (set :environment, and the appropriate job_type) so the generated crontab entries load the correct Ruby version and gemset.",
+      },
+    ],
+  },
+  {
+    slug: "vercel-cron-jobs",
+    title: "Vercel Cron Jobs Guide — vercel.json Syntax & Limits | CronParser",
+    metaDescription:
+      "Schedule serverless functions on Vercel with Cron Jobs: vercel.json syntax, plan-based frequency limits, authentication, and common gotchas.",
+    h1: "Vercel Cron Jobs Guide",
+    category: "Cloud Scheduler",
+    intro:
+      "Vercel Cron Jobs let a Next.js (or any Vercel) project trigger a serverless function on a schedule, configured declaratively in vercel.json using standard cron syntax — no separate infrastructure or queue needed, but with plan-based limits on frequency and count that are easy to hit without realizing it.",
+    syntaxNotes:
+      "Standard 5-field cron syntax in the vercel.json 'crons' array, each entry pairing a 'path' (the API route to invoke) with a 'schedule' string — Vercel always evaluates and runs schedules in UTC, regardless of your project or account's regional settings.",
+    codeExamples: [
+      { label: "vercel.json: run /api/cleanup daily at midnight UTC", code: "{\n  \"crons\": [\n    {\n      \"path\": \"/api/cleanup\",\n      \"schedule\": \"0 0 * * *\"\n    }\n  ]\n}" },
+      { label: "Verify the request came from Vercel's cron system", code: "if (req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`) {\n  return new Response('Unauthorized', { status: 401 })\n}" },
+      { label: "Multiple schedules in one project", code: "{\n  \"crons\": [\n    { \"path\": \"/api/hourly-sync\", \"schedule\": \"0 * * * *\" },\n    { \"path\": \"/api/daily-report\", \"schedule\": \"0 8 * * *\" }\n  ]\n}" },
+    ],
+    gotchas: [
+      "Vercel's Hobby (free) plan limits cron jobs to once per day per cron and caps the total number of crons per project — a job configured for */15 * * * * on a Hobby plan is silently limited to a single daily run rather than erroring outright, a frequent source of confusion.",
+      "Any endpoint used as a cron target is a public URL unless you explicitly verify the request — Vercel recommends checking a bearer token (via a CRON_SECRET environment variable) in the handler, since without it, anyone who discovers the endpoint URL can trigger it manually.",
+      "Cron schedules are always evaluated in UTC — there's no per-project timezone setting, so an expression meant for '9 AM local time' needs to be manually offset to the equivalent UTC hour, and that offset shifts with daylight saving time.",
+    ],
+    bestPractices: [
+      "Check your plan's cron limits (frequency and total count) in Vercel's dashboard before deploying a schedule more frequent than daily — Hobby-tier restrictions apply silently rather than with a build-time error.",
+      "Always verify the CRON_SECRET bearer token inside the handler function, since Vercel Cron invokes a normal public API route with no built-in access control of its own.",
+      "Convert the desired local time to UTC manually when writing the schedule string, and re-check it twice a year around daylight saving transitions if the job is time-sensitive.",
+    ],
+    faqs: [
+      {
+        q: "Can I run a Vercel cron job more than once a day on the free plan?",
+        a: "No — the Hobby (free) plan restricts cron jobs to a maximum of once per day, regardless of what schedule string you configure; more frequent schedules require a Pro or Enterprise plan.",
+      },
+      {
+        q: "Are Vercel cron endpoints secure by default?",
+        a: "No — a cron-configured API route is a normal public endpoint. Vercel recommends checking a bearer token against a CRON_SECRET environment variable inside the handler to prevent anyone else from triggering it.",
+      },
+      {
+        q: "What timezone do Vercel cron schedules run in?",
+        a: "Always UTC — there's no per-project timezone configuration, so convert your intended local time to its UTC equivalent when writing the schedule, and account for daylight saving time shifts.",
+      },
+    ],
+  },
+  {
+    slug: "supabase-pg-cron",
+    title: "Supabase Cron (pg_cron) Guide — Scheduling SQL Jobs | CronParser",
+    metaDescription:
+      "Schedule recurring database jobs in Supabase with the pg_cron extension: cron.schedule() syntax, calling Edge Functions, and common gotchas.",
+    h1: "Supabase Cron (pg_cron) Guide",
+    category: "Cloud Scheduler",
+    intro:
+      "Supabase exposes pg_cron, a Postgres extension that runs scheduled jobs directly inside the database using standard cron syntax — useful for periodic SQL maintenance (cleanup, materialized view refreshes) or for triggering a Supabase Edge Function on a schedule via pg_net.",
+    syntaxNotes:
+      "Standard 5-field cron syntax passed as the first argument to cron.schedule(), alongside the SQL command to run — jobs are managed via SQL function calls rather than a config file, and are stored in the cron.job table inside the database itself.",
+    codeExamples: [
+      {
+        label: "Schedule a nightly cleanup at 2 AM",
+        code: "select cron.schedule(\n  'nightly-cleanup',\n  '0 2 * * *',\n  $$ delete from logs where created_at < now() - interval '30 days' $$\n);",
+      },
+      { label: "List all scheduled jobs", code: "select * from cron.job;" },
+      { label: "Unschedule a job by name", code: "select cron.unschedule('nightly-cleanup');" },
+    ],
+    gotchas: [
+      "The pg_cron extension must be explicitly enabled first (via Database > Extensions in the Supabase dashboard, or `create extension pg_cron`) — cron.schedule() calls fail outright on a project where it hasn't been turned on.",
+      "pg_cron schedules always run in UTC against the database's own clock, not any per-project timezone setting — the same daylight-saving-offset caveat that applies to most cloud schedulers applies here too.",
+      "A failed or long-running scheduled job doesn't surface anywhere obvious by default — check the cron.job_run_details table for run history and errors, since there's no dashboard notification for a silently failing scheduled job.",
+    ],
+    bestPractices: [
+      "Query cron.job_run_details periodically (or wire up alerting on it) rather than assuming a scheduled job succeeded — pg_cron doesn't push failure notifications on its own.",
+      "Give every scheduled job an explicit, descriptive name (the first argument to cron.schedule()) rather than leaving it to auto-generate one, since that name is needed to unschedule or look it up later.",
+      "For anything beyond simple SQL maintenance — like calling an external API or an Edge Function — pair pg_cron with the pg_net extension to make an async HTTP request from inside the scheduled job.",
+    ],
+    faqs: [
+      {
+        q: "Do I need to install anything to use pg_cron on Supabase?",
+        a: "You need to enable the pg_cron extension first, either from Database > Extensions in the Supabase dashboard or by running create extension pg_cron via SQL — it isn't enabled by default on a new project.",
+      },
+      {
+        q: "Can pg_cron trigger a Supabase Edge Function, not just SQL?",
+        a: "Yes, indirectly — combine pg_cron with the pg_net extension to make an outbound HTTP request to your Edge Function's URL from inside the scheduled job, since pg_cron itself only executes SQL directly.",
+      },
+      {
+        q: "How do I see if a pg_cron job actually ran successfully?",
+        a: "Query the cron.job_run_details table, which logs every execution attempt along with its status and any error message — there's no dashboard alert for a failing job, so this table is the primary way to check.",
+      },
+    ],
+  },
 ]
