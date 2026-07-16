@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, useLayoutEffect } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import { Helmet } from "react-helmet-async"
 import { ShellLayout } from "./components/layout/ShellLayout"
@@ -24,6 +24,14 @@ function LoadingSpinner() {
 }
 
 export default function App() {
+  // Prerendered pages ship static <title>/<meta>/<link>/<script> tags (marked
+  // data-prerendered) so crawlers that don't run JS see real per-page SEO content.
+  // Once React mounts and Helmet renders the same tags for real, drop the static
+  // ones so they don't linger as duplicates in the live DOM.
+  useLayoutEffect(() => {
+    document.querySelectorAll("[data-prerendered]").forEach((el) => el.remove())
+  }, [])
+
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Helmet>
