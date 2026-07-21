@@ -6,7 +6,7 @@ export function PrivacyPolicyPage() {
     <div className="mx-auto max-w-2xl py-10">
       <SeoMeta
         title="Privacy Policy | CronParser"
-        description="How CronParser.org handles your data: what's stored locally in your browser, what's never collected, and how that could change if ads are added."
+        description="How CronParser.org handles your data: what's stored locally in your browser, what Google Analytics collects, and how that could change if ads are added."
         path="/privacy"
       />
 
@@ -39,7 +39,26 @@ export function PrivacyPolicyPage() {
 
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Analytics and tracking</h2>
         <p>
-          CronParser.org does not currently run any third-party analytics, tracking pixels, or cookies of its own.
+          CronParser.org uses Google Analytics (GA4) to understand which pages and tools are actually useful, so
+          the site can be improved over time. Google Analytics sets cookies and collects standard usage data —
+          pages visited, approximate location (country/region level), device and browser type, and how you got to
+          the site. It does not see the cron expressions or schedules you enter into any tool, since those never
+          leave your browser in the first place.
+        </p>
+        <p>
+          You can opt out of Google Analytics tracking using a browser extension like the{" "}
+          <a
+            href="https://tools.google.com/dlpage/gaoptout"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Google Analytics Opt-out Browser Add-on
+          </a>
+          , or by blocking analytics scripts with an ad/tracker blocker. See{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+            Google's Privacy Policy
+          </a>{" "}
+          for details on how Google itself handles this data.
         </p>
 
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Advertising</h2>
@@ -58,8 +77,8 @@ export function PrivacyPolicyPage() {
 
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Changes to this policy</h2>
         <p>
-          If this site's data practices change — for example, if analytics or ads are added — this page will be
-          updated to reflect that.
+          If this site's data practices change further — for example, if ads are added — this page will be updated
+          to reflect that.
         </p>
 
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Contact</h2>

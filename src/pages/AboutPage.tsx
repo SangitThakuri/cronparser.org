@@ -7,7 +7,7 @@ export function AboutPage() {
     <div className="mx-auto max-w-2xl py-10">
       <SeoMeta
         title="About CronParser | Free Cron Expression Tools"
-        description="CronParser.org is a free, client-side toolkit for reading, building, and debugging cron expressions — no sign-up, no server, no tracking."
+        description="CronParser.org is a free, client-side toolkit for reading, building, and debugging cron expressions — no sign-up, no server, nothing you enter ever leaves your browser."
         path="/about"
       />
 
