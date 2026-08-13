@@ -41,7 +41,8 @@ function importTs(relPath) {
 
 const { INTERVAL_PAGES } = await importTs("src/data/intervalPages.ts")
 const { PLATFORM_GUIDES } = await importTs("src/data/platformGuides.ts")
-const { WEB_APPLICATION_JSON_LD, buildTechArticleJsonLd } = await importTs("src/lib/seoSchema.ts")
+const { BLOG_POSTS } = await importTs("src/data/blogPosts.ts")
+const { WEB_APPLICATION_JSON_LD, buildTechArticleJsonLd, buildBlogPostingJsonLd } = await importTs("src/lib/seoSchema.ts")
 
 function extractSeoMeta(fileContent) {
   const blockMatch = fileContent.match(/<SeoMeta([\s\S]*?)\/>/)
@@ -195,6 +196,12 @@ if (privacyMeta) {
   count++
 }
 
+const blogIndexMeta = extractPageMeta("src/pages/BlogIndexPage.tsx")
+if (blogIndexMeta) {
+  writeRoute("/blog", buildHead({ ...blogIndexMeta, path: "/blog", jsonLdBlocks: [breadcrumbJsonLd([{ label: "Blog" }])] }))
+  count++
+}
+
 for (const page of INTERVAL_PAGES) {
   const path = `/${page.slug}`
   const jsonLdBlocks = [
@@ -219,6 +226,22 @@ for (const guide of PLATFORM_GUIDES) {
 
 for (const tool of toolMeta) {
   writeRoute(tool.path, buildHead({ title: tool.title, description: tool.description, path: tool.path }))
+  count++
+}
+
+for (const post of BLOG_POSTS) {
+  const path = `/blog/${post.slug}`
+  const jsonLdBlocks = [
+    breadcrumbJsonLd([{ label: "Blog", path: "/blog" }, { label: post.h1 }]),
+    faqPageJsonLd(post.faqs),
+    buildBlogPostingJsonLd({
+      headline: post.h1,
+      description: post.metaDescription,
+      path,
+      datePublished: post.publishDate,
+    }),
+  ]
+  writeRoute(path, buildHead({ title: post.title, description: post.metaDescription, path, jsonLdBlocks }))
   count++
 }
 

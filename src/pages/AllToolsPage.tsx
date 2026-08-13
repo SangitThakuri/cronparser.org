@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
-import { CalendarClock, Server, SearchX } from "lucide-react"
+import { CalendarClock, Newspaper, Server, SearchX } from "lucide-react"
 import { SeoMeta } from "../components/ui/SeoMeta"
 import { tools } from "../registry/tools"
 import type { RegistryEntry } from "../registry/types"
 import { useSearchQuery } from "../context/SearchContext"
 import { filterTools } from "../hooks/useSearchFilter"
-import { searchIntervalPages, searchPlatformGuides, type SimpleMatch } from "../lib/searchIndex"
+import { searchBlogPosts, searchIntervalPages, searchPlatformGuides, type SimpleMatch } from "../lib/searchIndex"
 
 function groupByCategory(items: RegistryEntry[]): [string, RegistryEntry[]][] {
   const map = new Map<string, RegistryEntry[]>()
@@ -45,8 +45,10 @@ export function AllToolsPage() {
   const groups = groupByCategory(filtered)
   const scheduleMatches = searchIntervalPages(query)
   const guideMatches = searchPlatformGuides(query)
+  const postMatches = searchBlogPosts(query)
   const isSearching = query.trim().length > 0
-  const hasAnyResults = filtered.length > 0 || scheduleMatches.length > 0 || guideMatches.length > 0
+  const hasAnyResults =
+    filtered.length > 0 || scheduleMatches.length > 0 || guideMatches.length > 0 || postMatches.length > 0
 
   return (
     <div className="mx-auto max-w-5xl py-10">
@@ -135,6 +137,15 @@ export function AllToolsPage() {
                 Platform Guides
               </h2>
               <SimpleMatchGrid matches={guideMatches} icon={Server} />
+            </section>
+          )}
+
+          {postMatches.length > 0 && (
+            <section>
+              <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600">
+                Blog Posts
+              </h2>
+              <SimpleMatchGrid matches={postMatches} icon={Newspaper} />
             </section>
           )}
         </div>

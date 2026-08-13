@@ -1,6 +1,7 @@
 import type { RegistryEntry } from "../registry/types"
 import { INTERVAL_PAGES, type IntervalPage } from "../data/intervalPages"
 import { PLATFORM_GUIDES, type PlatformGuide } from "../data/platformGuides"
+import { BLOG_POSTS, type BlogPost } from "../data/blogPosts"
 
 export interface SimpleMatch {
   path: string
@@ -23,6 +24,11 @@ export function searchPlatformGuides(query: string): SimpleMatch[] {
   return PLATFORM_GUIDES.filter((g) => matches(query, g.h1, g.metaDescription, g.slug, g.category)).map(toGuideMatch)
 }
 
+export function searchBlogPosts(query: string): SimpleMatch[] {
+  if (!query.trim()) return []
+  return BLOG_POSTS.filter((p) => matches(query, p.h1, p.excerpt, p.metaDescription, p.slug)).map(toBlogMatch)
+}
+
 function toIntervalMatch(p: IntervalPage): SimpleMatch {
   return { path: `/${p.slug}`, name: p.h1, description: p.metaDescription }
 }
@@ -31,19 +37,25 @@ function toGuideMatch(g: PlatformGuide): SimpleMatch {
   return { path: `/${g.slug}`, name: g.h1, description: g.category }
 }
 
+function toBlogMatch(p: BlogPost): SimpleMatch {
+  return { path: `/blog/${p.slug}`, name: p.h1, description: p.excerpt }
+}
+
 export interface SiteSearchResults {
   tools: RegistryEntry[]
   schedules: SimpleMatch[]
   guides: SimpleMatch[]
+  posts: SimpleMatch[]
 }
 
-/** Full-site search across interactive tools, schedule pages, and platform guides. */
+/** Full-site search across interactive tools, schedule pages, platform guides, and blog posts. */
 export function searchSite(tools: RegistryEntry[], query: string): SiteSearchResults {
-  if (!query.trim()) return { tools, schedules: [], guides: [] }
+  if (!query.trim()) return { tools, schedules: [], guides: [], posts: [] }
   const q = query.toLowerCase().trim()
   return {
     tools: tools.filter((t) => matches(q, t.name, t.description)),
     schedules: searchIntervalPages(q),
     guides: searchPlatformGuides(q),
+    posts: searchBlogPosts(q),
   }
 }

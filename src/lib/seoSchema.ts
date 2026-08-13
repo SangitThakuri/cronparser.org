@@ -35,3 +35,24 @@ export function buildTechArticleJsonLd({ headline, description, path, dateModifi
     publisher: { "@type": "Organization", name: "CronParser" },
   }
 }
+
+interface BlogPostingParams {
+  headline: string
+  description: string
+  path: string
+  datePublished: string
+}
+
+export function buildBlogPostingJsonLd({ headline, description, path, datePublished }: BlogPostingParams) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline,
+    description,
+    url: `${SITE_URL}${path}`,
+    datePublished,
+    dateModified: datePublished,
+    author: { "@type": "Organization", name: "CronParser" },
+    publisher: { "@type": "Organization", name: "CronParser" },
+  }
+}

@@ -4,6 +4,7 @@ const LINKS: { label: string; to: string }[] = [
   { label: "Cron Parser", to: "/" },
   { label: "All Tools", to: "/all-tools" },
   { label: "Platform Guides", to: "/platforms" },
+  { label: "Blog", to: "/blog" },
   { label: "Cheat Sheet", to: "/cheat-sheet" },
   { label: "About", to: "/about" },
   { label: "Privacy Policy", to: "/privacy" },

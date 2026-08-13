@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Grid2x2, Server } from "lucide-react"
+import { Grid2x2, Newspaper, Server } from "lucide-react"
 import { AdSlot } from "../components/ui/AdSlot"
 import { SeoMeta } from "../components/ui/SeoMeta"
 import { CronParserCore } from "../tools/cron-parser/CronParserCore"
@@ -39,6 +39,13 @@ export function HomePage() {
         >
           <Server className="h-4 w-4" />
           Browse platform guides
+        </Link>
+        <Link
+          to="/blog"
+          className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400 dark:hover:border-blue-700 dark:hover:bg-blue-950 dark:hover:text-blue-300"
+        >
+          <Newspaper className="h-4 w-4" />
+          Read the blog
         </Link>
       </div>
     </div>

@@ -10,9 +10,12 @@ import { PlatformGuidePage } from "./pages/PlatformGuidePage"
 import { AboutPage } from "./pages/AboutPage"
 import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage"
 import { NotFoundPage } from "./pages/NotFoundPage"
+import { BlogIndexPage } from "./pages/BlogIndexPage"
+import { BlogPostPage } from "./pages/BlogPostPage"
 import { tools } from "./registry/tools"
 import { INTERVAL_PAGES } from "./data/intervalPages"
 import { PLATFORM_GUIDES } from "./data/platformGuides"
+import { BLOG_POSTS } from "./data/blogPosts"
 import { WEB_APPLICATION_JSON_LD } from "./lib/seoSchema"
 
 function LoadingSpinner() {
@@ -44,6 +47,10 @@ export default function App() {
           <Route path="/platforms" element={<PlatformGuidesIndex />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/blog" element={<BlogIndexPage />} />
+          {BLOG_POSTS.map((post) => (
+            <Route key={post.slug} path={`/blog/${post.slug}`} element={<BlogPostPage post={post} />} />
+          ))}
           <Route path="/dashboard" element={<Navigate to="/all-tools" replace />} />
           {/* Cron Parser now lives on the home page — redirect the old tool URL */}
           <Route path="/cron-parser" element={<Navigate to="/" replace />} />

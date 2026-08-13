@@ -33,11 +33,13 @@ const TOOL_OVERRIDES = {
 const toolIds = extractValues("src/registry/tools.ts", "id")
 const intervalSlugs = extractValues("src/data/intervalPages.ts", "slug")
 const platformSlugs = extractValues("src/data/platformGuides.ts", "slug")
+const blogSlugs = extractValues("src/data/blogPosts.ts", "slug")
 
 const entries = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
   { loc: "/all-tools", changefreq: "monthly", priority: "0.6" },
   { loc: "/platforms", changefreq: "monthly", priority: "0.8" },
+  { loc: "/blog", changefreq: "weekly", priority: "0.7" },
   { loc: "/about", changefreq: "yearly", priority: "0.3" },
   { loc: "/privacy", changefreq: "yearly", priority: "0.2" },
   ...toolIds.map((id) => ({
@@ -46,6 +48,7 @@ const entries = [
   })),
   ...intervalSlugs.map((slug) => ({ loc: `/${slug}`, changefreq: "monthly", priority: "0.7" })),
   ...platformSlugs.map((slug) => ({ loc: `/${slug}`, changefreq: "monthly", priority: "0.7" })),
+  ...blogSlugs.map((slug) => ({ loc: `/blog/${slug}`, changefreq: "monthly", priority: "0.6" })),
 ]
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
