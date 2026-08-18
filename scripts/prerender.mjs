@@ -151,8 +151,20 @@ if (!existsSync(shellPath)) {
 }
 const shell = readFileSync(shellPath, "utf8")
 
-// Body-prerendered routes (Phase 3 scope: /platforms, /all-tools, /blog only).
-const BODY_PRERENDER_PATHS = new Set(["/platforms", "/all-tools", "/blog"])
+// Body-prerendered routes. Phase 3: /platforms, /all-tools, /blog (index pages).
+// Phase 2A pilot: 5 interval pages, to validate the same approach on data-driven
+// content pages (H1/intro/examples/mistakes/best-practices/FAQs) before extending
+// to the remaining interval pages, platform guides, and individual blog posts.
+const BODY_PRERENDER_PATHS = new Set([
+  "/platforms",
+  "/all-tools",
+  "/blog",
+  "/every-minute",
+  "/every-5-minutes",
+  "/every-10-minutes",
+  "/every-15-minutes",
+  "/every-30-minutes",
+])
 
 const ssrEntryPath = join(root, "dist-ssr/entry-server.js")
 if (!existsSync(ssrEntryPath)) {
@@ -163,11 +175,25 @@ const { renderAppShell } = await import(pathToFileURL(ssrEntryPath).href)
 
 function renderBody(path) {
   const full = renderAppShell(path)
-  // react-helmet-async renders <title>/<meta>/<link>/<script> tags inline as part
-  // of the tree (React 19 head-hoisting) — strip that prefix; buildHead() already
-  // covers the same tags separately, and they aren't valid markup inside #root.
-  const bodyStart = full.indexOf("<div")
-  return bodyStart === -1 ? full : full.slice(bodyStart)
+  // react-helmet-async renders <title>/<meta>/<link>/<script> tags inline, at
+  // whatever point in the tree <Helmet>/<SeoMeta>/<Breadcrumbs> are declared —
+  // there can be several, not just one leading block (every page has its own
+  // <SeoMeta>, and things like <Breadcrumbs> add their own <script> deeper in).
+  //
+  // React 19 natively hoists <title>/<meta>/<link> to <head> on the client (they
+  // qualify as "Resources"), so they never end up as real #root children there —
+  // those must be stripped from every occurrence in this string too, or hydration
+  // expects to find nothing where the server put text.
+  //
+  // <script> tags do NOT qualify for that hoisting (no src / not a Resource) and
+  // DO remain as real #root children client-side, in their original tree position
+  // — stripping those (as an earlier version of this function did, by slicing
+  // everything before the first <div>) removed content the client still renders,
+  // which is exactly what caused the hydration failures this comment replaces.
+  return full
+    .replace(/<title[^>]*>[\s\S]*?<\/title>/g, "")
+    .replace(/<meta[^>]*\/>/g, "")
+    .replace(/<link[^>]*\/>/g, "")
 }
 
 function writeRoute(path, headContent) {
