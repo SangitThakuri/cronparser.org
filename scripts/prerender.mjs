@@ -18,15 +18,22 @@
 // live inside JSX component files and are extracted by regex instead, mirroring the
 // approach already used in generate-sitemap.mjs.
 //
-// A small set of routes (currently /platforms, /all-tools, /blog) additionally get
-// real body markup injected into #root, rendered via src/entry-server.tsx — a Vite
-// SSR build of the app's actual route tree (see the "npm run build" chain, which
-// runs `vite build --ssr src/entry-server.tsx --outDir dist-ssr` before this
-// script). renderAppShell() runs react-helmet-async's <Helmet> calls inline as part
-// of the render tree (React 19's head-hoisting), so the string it returns starts
-// with the same title/meta/link/script tags this script already builds separately
-// via buildHead() — that prefix is stripped before injecting into #root, since the
-// two would otherwise duplicate (and the stripped tags aren't valid outside <head>).
+// A small set of routes (BODY_PRERENDER_PATHS, below) additionally get real body
+// markup injected into #root, rendered via src/entry-server.tsx — a Vite SSR build
+// of the app's actual route tree (see the "npm run build" chain, which runs
+// `vite build --ssr src/entry-server.tsx --outDir dist-ssr` before this script).
+//
+// Those real page components render their own <Helmet> calls (SeoMeta, Breadcrumbs,
+// per-page FAQ/TechArticle JSON-LD) as part of that SSR render — so for those
+// routes, the SSR body is the single source of truth for JSON-LD, not the
+// hand-built jsonLdBlocks this script also constructs for every route. buildHead()
+// takes an includeJsonLd flag (keyed off the same BODY_PRERENDER_PATHS set used to
+// decide body injection) so it emits its own <script> tags only for routes where
+// there's no SSR body to provide them — avoiding two independently-built copies of
+// the same structured data in one document, rather than deduplicating the strings
+// after the fact. <title>/<meta>/<link> stay hand-built even for body-prerendered
+// routes, since renderBody() strips those from the SSR string (React 19 hoists them
+// client-side, so the client's #root never contains them either).
 
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
@@ -119,13 +126,21 @@ function faqPageJsonLd(faqs) {
 
 const escapeHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
 
-function buildHead({ title, description, path, jsonLdBlocks = [], noindex = false }) {
+function buildHead({ title, description, path, jsonLdBlocks = [], noindex = false, includeJsonLd = true }) {
   const url = `${SITE_URL}${toCanonicalPath(path)}`
   const t = escapeHtml(title)
   const d = escapeHtml(description)
-  const scriptTags = [WEB_APPLICATION_JSON_LD, ...jsonLdBlocks]
-    .map((obj) => `    <script type="application/ld+json" data-prerendered="true">${JSON.stringify(obj)}</script>`)
-    .join("\n")
+  // Body-prerendered routes (BODY_PRERENDER_PATHS) already get real JSON-LD
+  // <script> tags from the actual page components, via renderBody()'s SSR render
+  // — those are the single source of truth for that content (built from the same
+  // data these hand-rolled jsonLdBlocks are, just by the real components instead
+  // of a parallel reimplementation). Emitting this hand-built copy too would just
+  // duplicate it in the raw HTML, so callers pass includeJsonLd: false for those.
+  const scriptTags = includeJsonLd
+    ? [WEB_APPLICATION_JSON_LD, ...jsonLdBlocks]
+        .map((obj) => `    <script type="application/ld+json" data-prerendered="true">${JSON.stringify(obj)}</script>`)
+        .join("\n")
+    : ""
   const indexingTag = noindex
     ? `    <meta name="robots" content="noindex, nofollow" data-prerendered="true" />`
     : `    <link rel="canonical" href="${url}" data-prerendered="true" />`
@@ -219,13 +234,16 @@ let count = 0
 
 const homeMeta = extractPageMeta("src/pages/HomePage.tsx")
 if (homeMeta) {
-  writeRoute("/", buildHead({ ...homeMeta, path: "/" }))
+  writeRoute("/", buildHead({ ...homeMeta, path: "/", includeJsonLd: !BODY_PRERENDER_PATHS.has("/") }))
   count++
 }
 
 const allToolsMeta = extractPageMeta("src/pages/AllToolsPage.tsx")
 if (allToolsMeta) {
-  writeRoute("/all-tools", buildHead({ ...allToolsMeta, path: "/all-tools" }))
+  writeRoute(
+    "/all-tools",
+    buildHead({ ...allToolsMeta, path: "/all-tools", includeJsonLd: !BODY_PRERENDER_PATHS.has("/all-tools") }),
+  )
   count++
 }
 
@@ -237,6 +255,7 @@ if (platformsIndexMeta) {
       ...platformsIndexMeta,
       path: "/platforms",
       jsonLdBlocks: [breadcrumbJsonLd([{ label: "Platform Guides" }])],
+      includeJsonLd: !BODY_PRERENDER_PATHS.has("/platforms"),
     }),
   )
   count++
@@ -244,7 +263,15 @@ if (platformsIndexMeta) {
 
 const aboutMeta = extractPageMeta("src/pages/AboutPage.tsx")
 if (aboutMeta) {
-  writeRoute("/about", buildHead({ ...aboutMeta, path: "/about", jsonLdBlocks: [breadcrumbJsonLd([{ label: "About" }])] }))
+  writeRoute(
+    "/about",
+    buildHead({
+      ...aboutMeta,
+      path: "/about",
+      jsonLdBlocks: [breadcrumbJsonLd([{ label: "About" }])],
+      includeJsonLd: !BODY_PRERENDER_PATHS.has("/about"),
+    }),
+  )
   count++
 }
 
@@ -252,14 +279,27 @@ const privacyMeta = extractPageMeta("src/pages/PrivacyPolicyPage.tsx")
 if (privacyMeta) {
   writeRoute(
     "/privacy",
-    buildHead({ ...privacyMeta, path: "/privacy", jsonLdBlocks: [breadcrumbJsonLd([{ label: "Privacy Policy" }])] }),
+    buildHead({
+      ...privacyMeta,
+      path: "/privacy",
+      jsonLdBlocks: [breadcrumbJsonLd([{ label: "Privacy Policy" }])],
+      includeJsonLd: !BODY_PRERENDER_PATHS.has("/privacy"),
+    }),
   )
   count++
 }
 
 const blogIndexMeta = extractPageMeta("src/pages/BlogIndexPage.tsx")
 if (blogIndexMeta) {
-  writeRoute("/blog", buildHead({ ...blogIndexMeta, path: "/blog", jsonLdBlocks: [breadcrumbJsonLd([{ label: "Blog" }])] }))
+  writeRoute(
+    "/blog",
+    buildHead({
+      ...blogIndexMeta,
+      path: "/blog",
+      jsonLdBlocks: [breadcrumbJsonLd([{ label: "Blog" }])],
+      includeJsonLd: !BODY_PRERENDER_PATHS.has("/blog"),
+    }),
+  )
   count++
 }
 
@@ -270,7 +310,8 @@ for (const page of INTERVAL_PAGES) {
     faqPageJsonLd(page.faqs),
     buildTechArticleJsonLd({ headline: page.h1, description: page.metaDescription, path }),
   ]
-  writeRoute(path, buildHead({ title: page.title, description: page.metaDescription, path, jsonLdBlocks }))
+  const includeJsonLd = !BODY_PRERENDER_PATHS.has(path)
+  writeRoute(path, buildHead({ title: page.title, description: page.metaDescription, path, jsonLdBlocks, includeJsonLd }))
   count++
 }
 
@@ -281,7 +322,8 @@ for (const guide of PLATFORM_GUIDES) {
     faqPageJsonLd(guide.faqs),
     buildTechArticleJsonLd({ headline: guide.h1, description: guide.metaDescription, path }),
   ]
-  writeRoute(path, buildHead({ title: guide.title, description: guide.metaDescription, path, jsonLdBlocks }))
+  const includeJsonLd = !BODY_PRERENDER_PATHS.has(path)
+  writeRoute(path, buildHead({ title: guide.title, description: guide.metaDescription, path, jsonLdBlocks, includeJsonLd }))
   count++
 }
 
@@ -302,7 +344,8 @@ for (const post of BLOG_POSTS) {
       datePublished: post.publishDate,
     }),
   ]
-  writeRoute(path, buildHead({ title: post.title, description: post.metaDescription, path, jsonLdBlocks }))
+  const includeJsonLd = !BODY_PRERENDER_PATHS.has(path)
+  writeRoute(path, buildHead({ title: post.title, description: post.metaDescription, path, jsonLdBlocks, includeJsonLd }))
   count++
 }
 
