@@ -17,6 +17,16 @@
 // so this can never drift out of sync with the real data. Per-tool titles/descriptions
 // live inside JSX component files and are extracted by regex instead, mirroring the
 // approach already used in generate-sitemap.mjs.
+//
+// A small set of routes (currently /platforms, /all-tools, /blog) additionally get
+// real body markup injected into #root, rendered via src/entry-server.tsx — a Vite
+// SSR build of the app's actual route tree (see the "npm run build" chain, which
+// runs `vite build --ssr src/entry-server.tsx --outDir dist-ssr` before this
+// script). renderAppShell() runs react-helmet-async's <Helmet> calls inline as part
+// of the render tree (React 19's head-hoisting), so the string it returns starts
+// with the same title/meta/link/script tags this script already builds separately
+// via buildHead() — that prefix is stripped before injecting into #root, since the
+// two would otherwise duplicate (and the stripped tags aren't valid outside <head>).
 
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs"
 import { tmpdir } from "node:os"
@@ -42,7 +52,8 @@ function importTs(relPath) {
 const { INTERVAL_PAGES } = await importTs("src/data/intervalPages.ts")
 const { PLATFORM_GUIDES } = await importTs("src/data/platformGuides.ts")
 const { BLOG_POSTS } = await importTs("src/data/blogPosts.ts")
-const { WEB_APPLICATION_JSON_LD, buildTechArticleJsonLd, buildBlogPostingJsonLd } = await importTs("src/lib/seoSchema.ts")
+const { WEB_APPLICATION_JSON_LD, buildTechArticleJsonLd, buildBlogPostingJsonLd, toCanonicalPath } =
+  await importTs("src/lib/seoSchema.ts")
 
 function extractSeoMeta(fileContent) {
   const blockMatch = fileContent.match(/<SeoMeta([\s\S]*?)\/>/)
@@ -89,7 +100,7 @@ function breadcrumbJsonLd(items) {
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      item: `${SITE_URL}${item.path ?? "/"}`,
+      item: `${SITE_URL}${toCanonicalPath(item.path ?? "/")}`,
     })),
   }
 }
@@ -109,7 +120,7 @@ function faqPageJsonLd(faqs) {
 const escapeHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
 
 function buildHead({ title, description, path, jsonLdBlocks = [], noindex = false }) {
-  const url = `${SITE_URL}${path}`
+  const url = `${SITE_URL}${toCanonicalPath(path)}`
   const t = escapeHtml(title)
   const d = escapeHtml(description)
   const scriptTags = [WEB_APPLICATION_JSON_LD, ...jsonLdBlocks]
@@ -140,10 +151,34 @@ if (!existsSync(shellPath)) {
 }
 const shell = readFileSync(shellPath, "utf8")
 
+// Body-prerendered routes (Phase 3 scope: /platforms, /all-tools, /blog only).
+const BODY_PRERENDER_PATHS = new Set(["/platforms", "/all-tools", "/blog"])
+
+const ssrEntryPath = join(root, "dist-ssr/entry-server.js")
+if (!existsSync(ssrEntryPath)) {
+  console.error("dist-ssr/entry-server.js not found — run `vite build --ssr src/entry-server.tsx --outDir dist-ssr` before prerender.mjs")
+  process.exit(1)
+}
+const { renderAppShell } = await import(pathToFileURL(ssrEntryPath).href)
+
+function renderBody(path) {
+  const full = renderAppShell(path)
+  // react-helmet-async renders <title>/<meta>/<link>/<script> tags inline as part
+  // of the tree (React 19 head-hoisting) — strip that prefix; buildHead() already
+  // covers the same tags separately, and they aren't valid markup inside #root.
+  const bodyStart = full.indexOf("<div")
+  return bodyStart === -1 ? full : full.slice(bodyStart)
+}
+
 function writeRoute(path, headContent) {
-  const html = shell
+  let html = shell
     .replace(/<title>[\s\S]*?<\/title>\n?/, "")
     .replace(/(<meta name="viewport"[^>]*>\n)/, `$1${headContent}\n`)
+
+  if (BODY_PRERENDER_PATHS.has(path)) {
+    const bodyHtml = renderBody(path)
+    html = html.replace('<div id="root"></div>', `<div id="root">${bodyHtml}</div>`)
+  }
 
   if (path === "/") {
     writeFileSync(shellPath, html)

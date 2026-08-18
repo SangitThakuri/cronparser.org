@@ -3,12 +3,15 @@ import { useCallback, useSyncExternalStore } from "react"
 const STORAGE_KEY = "cronparser-theme"
 
 function getSnapshot() {
-  if (typeof document === "undefined") return "light"
+  // Dark mode is the site's default appearance (see index.html's inline theme
+  // script and main.tsx) — only an explicit "light" choice opts out — so the
+  // fallback here must match that, not the inverse.
+  if (typeof document === "undefined") return "dark"
   return document.documentElement.classList.contains("dark") ? "dark" : "light"
 }
 
 function getServerSnapshot() {
-  return "light"
+  return "dark"
 }
 
 function subscribe(callback: () => void) {

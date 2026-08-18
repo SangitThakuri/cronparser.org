@@ -1,5 +1,13 @@
 const SITE_URL = "https://cronparser.org"
 
+// Cloudflare Pages serves directory-style routes (everything except "/") at their
+// trailing-slash form with a genuine 200, and 308-redirects the no-slash form to it.
+// Every canonical/OG/JSON-LD URL must use the trailing-slash form to match what
+// actually gets served, rather than a URL that immediately redirects away from itself.
+export function toCanonicalPath(path: string): string {
+  return path === "/" || path.endsWith("/") ? path : `${path}/`
+}
+
 export const WEB_APPLICATION_JSON_LD = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
@@ -29,7 +37,7 @@ export function buildTechArticleJsonLd({ headline, description, path, dateModifi
     "@type": "TechArticle",
     headline,
     description,
-    url: `${SITE_URL}${path}`,
+    url: `${SITE_URL}${toCanonicalPath(path)}`,
     dateModified: dateModified ?? new Date().toISOString().slice(0, 10),
     author: { "@type": "Organization", name: "CronParser" },
     publisher: { "@type": "Organization", name: "CronParser" },
@@ -49,7 +57,7 @@ export function buildBlogPostingJsonLd({ headline, description, path, datePublis
     "@type": "BlogPosting",
     headline,
     description,
-    url: `${SITE_URL}${path}`,
+    url: `${SITE_URL}${toCanonicalPath(path)}`,
     datePublished,
     dateModified: datePublished,
     author: { "@type": "Organization", name: "CronParser" },

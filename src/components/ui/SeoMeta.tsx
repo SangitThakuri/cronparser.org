@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async"
+import { toCanonicalPath } from "../../lib/seoSchema"
 
 interface SeoMetaProps {
   title: string
@@ -10,7 +11,7 @@ interface SeoMetaProps {
 const SITE_URL = "https://cronparser.org"
 
 export function SeoMeta({ title, description, path, noindex }: SeoMetaProps) {
-  const url = `${SITE_URL}${path}`
+  const url = `${SITE_URL}${toCanonicalPath(path)}`
 
   return (
     <Helmet>

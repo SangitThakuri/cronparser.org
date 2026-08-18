@@ -1,5 +1,5 @@
 import { StrictMode } from "react"
-import { createRoot } from "react-dom/client"
+import { createRoot, hydrateRoot } from "react-dom/client"
 import { HelmetProvider } from "react-helmet-async"
 import "./index.css"
 import App from "./App.tsx"
@@ -12,10 +12,23 @@ if (savedTheme === "light") {
   document.documentElement.classList.add("dark")
 }
 
-createRoot(document.getElementById("root")!).render(
+const rootEl = document.getElementById("root")!
+const app = (
   <StrictMode>
     <HelmetProvider>
       <App />
     </HelmetProvider>
-  </StrictMode>,
+  </StrictMode>
 )
+
+// Only a handful of routes (see BODY_PRERENDER_PATHS in scripts/prerender.mjs) ship
+// real server-rendered markup inside #root — everything else still ships the empty
+// shell it always has. Checking for actual content here (rather than hardcoding
+// that route list a second time on the client) means this can never drift out of
+// sync with what prerender.mjs actually produced: hydrate when there's real markup
+// to attach to, mount fresh otherwise, and never hydrate an empty root.
+if (rootEl.hasChildNodes()) {
+  hydrateRoot(rootEl, app)
+} else {
+  createRoot(rootEl).render(app)
+}

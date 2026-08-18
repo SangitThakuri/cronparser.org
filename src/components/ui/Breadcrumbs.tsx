@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async"
 import { Link } from "react-router-dom"
 import { ChevronRight, Home } from "lucide-react"
+import { toCanonicalPath } from "../../lib/seoSchema"
 
 export interface BreadcrumbItem {
   label: string
@@ -19,7 +20,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      item: `https://cronparser.org${item.path ?? "/"}`,
+      item: `https://cronparser.org${toCanonicalPath(item.path ?? "/")}`,
     })),
   }
 

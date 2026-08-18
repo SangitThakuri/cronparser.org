@@ -26,17 +26,22 @@ function LoadingSpinner() {
   )
 }
 
-export default function App() {
+// Everything the app renders, minus the Router wrapper itself — so the exact same
+// route tree and layout can be driven by <BrowserRouter> on the client and by
+// <StaticRouter> in the Node-based prerender entry (src/entry-server.tsx), with
+// zero duplication between the two.
+export function AppShell() {
   // Prerendered pages ship static <title>/<meta>/<link>/<script> tags (marked
   // data-prerendered) so crawlers that don't run JS see real per-page SEO content.
   // Once React mounts and Helmet renders the same tags for real, drop the static
-  // ones so they don't linger as duplicates in the live DOM.
+  // ones so they don't linger as duplicates in the live DOM. This never runs
+  // during SSR (useLayoutEffect is a no-op there), only after client hydration.
   useLayoutEffect(() => {
     document.querySelectorAll("[data-prerendered]").forEach((el) => el.remove())
   }, [])
 
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <>
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(WEB_APPLICATION_JSON_LD)}</script>
       </Helmet>
@@ -74,6 +79,14 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ShellLayout>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <AppShell />
     </BrowserRouter>
   )
 }

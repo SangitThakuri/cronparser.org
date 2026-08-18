@@ -51,12 +51,17 @@ const entries = [
   ...blogSlugs.map((slug) => ({ loc: `/blog/${slug}`, changefreq: "monthly", priority: "0.6" })),
 ]
 
+// Cloudflare Pages serves directory-style routes at their trailing-slash form with
+// a genuine 200, and 308-redirects the no-slash form to it — the sitemap should list
+// the URL that's actually served, not one that immediately redirects away from itself.
+const toCanonicalPath = (loc) => (loc === "/" || loc.endsWith("/") ? loc : `${loc}/`)
+
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${entries
   .map(
     (e) => `  <url>
-    <loc>${SITE_URL}${e.loc}</loc>
+    <loc>${SITE_URL}${toCanonicalPath(e.loc)}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${e.changefreq}</changefreq>
     <priority>${e.priority}</priority>
