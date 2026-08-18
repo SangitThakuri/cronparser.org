@@ -167,18 +167,51 @@ if (!existsSync(shellPath)) {
 const shell = readFileSync(shellPath, "utf8")
 
 // Body-prerendered routes. Phase 3: /platforms, /all-tools, /blog (index pages).
-// Phase 2A pilot: 5 interval pages, to validate the same approach on data-driven
-// content pages (H1/intro/examples/mistakes/best-practices/FAQs) before extending
-// to the remaining interval pages, platform guides, and individual blog posts.
+// Phase 2A piloted 5 interval pages to validate the approach on data-driven
+// content pages (H1/intro/examples/mistakes/best-practices/FAQs). Phase 2B
+// extends that to all 37 interval pages. Platform guides and individual blog
+// posts remain head-only for now.
 const BODY_PRERENDER_PATHS = new Set([
   "/platforms",
   "/all-tools",
   "/blog",
   "/every-minute",
+  "/every-2-minutes",
   "/every-5-minutes",
   "/every-10-minutes",
   "/every-15-minutes",
   "/every-30-minutes",
+  "/every-hour",
+  "/every-day",
+  "/every-week",
+  "/every-month",
+  "/every-year",
+  "/every-monday",
+  "/every-tuesday",
+  "/every-wednesday",
+  "/every-thursday",
+  "/every-friday",
+  "/every-saturday",
+  "/every-sunday",
+  "/every-weekday",
+  "/weekends-only",
+  "/first-day-of-month",
+  "/last-day-of-month",
+  "/every-midnight",
+  "/every-noon",
+  "/every-45-minutes",
+  "/every-2-hours",
+  "/every-3-hours",
+  "/every-4-hours",
+  "/every-6-hours",
+  "/every-8-hours",
+  "/every-12-hours",
+  "/twice-daily",
+  "/every-weeknight",
+  "/every-other-day",
+  "/every-20-minutes",
+  "/every-quarter",
+  "/nth-weekday-of-month",
 ])
 
 const ssrEntryPath = join(root, "dist-ssr/entry-server.js")
