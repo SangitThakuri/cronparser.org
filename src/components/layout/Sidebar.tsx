@@ -34,7 +34,12 @@ export function Sidebar({
 }: SidebarProps) {
   const groups = groupByCategory(items)
   const singleGroup = groups.length === 1
-  const scheduleMatches = searchIntervalPages(query)
+  // These are search results, so they're only rendered while a query is active.
+  // searchIntervalPages returns the full set on an empty query (so browse views
+  // like /all-tools can list every schedule) — without this guard the sidebar
+  // would render all 37 schedule links on every page load.
+  const isSearching = query.trim().length > 0
+  const scheduleMatches = isSearching ? searchIntervalPages(query) : []
   const guideMatches = searchPlatformGuides(query)
   const postMatches = searchBlogPosts(query)
 

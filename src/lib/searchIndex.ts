@@ -14,8 +14,15 @@ function matches(query: string, ...fields: string[]): boolean {
   return fields.some((f) => f.toLowerCase().includes(q))
 }
 
+/**
+ * With a real query this narrows to matching pages; with an empty query it returns
+ * every page, so browsing views (the /all-tools schedule section) can render the
+ * full set while search views stay filtered. Returning [] for an empty query made
+ * the /all-tools "Cron Schedules" section invisible outside of an active search,
+ * which left all 37 interval pages with no inlinks from any index page.
+ */
 export function searchIntervalPages(query: string): SimpleMatch[] {
-  if (!query.trim()) return []
+  if (!query.trim()) return INTERVAL_PAGES.map(toIntervalMatch)
   return INTERVAL_PAGES.filter((p) => matches(query, p.h1, p.metaDescription, p.slug)).map(toIntervalMatch)
 }
 

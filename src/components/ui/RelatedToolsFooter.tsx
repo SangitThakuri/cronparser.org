@@ -1,52 +1,19 @@
 import { Link } from "react-router-dom"
-import { BookMarked, CalendarClock, Clock, Newspaper, Server } from "lucide-react"
-import { tools } from "../../registry/tools"
-import { PLATFORM_GUIDES } from "../../data/platformGuides"
-import { INTERVAL_PAGES } from "../../data/intervalPages"
-import { BLOG_POSTS } from "../../data/blogPosts"
-
-const HOME_ENTRY = {
-  path: "/",
-  name: "Cron Parser",
-  description: "Translate cron expressions to plain English",
-  icon: Clock,
-}
-
-const PLATFORMS_ENTRY = {
-  path: "/platforms",
-  name: "Platform Guides",
-  description: "Cron syntax for Linux, Kubernetes, AWS, and more",
-  icon: Server,
-}
-
-const BLOG_ENTRY = {
-  path: "/blog",
-  name: "Blog",
-  description: "Deep dives on cron gotchas, incidents, and tooling",
-  icon: Newspaper,
-}
+import { resolveToolEntries, type RelatedEntry } from "../../lib/relatedTools"
 
 interface RelatedToolsFooterProps {
-  toolIds: string[]
+  /** Tool ids to resolve via the registry. Ignored when `entries` is given. */
+  toolIds?: string[]
+  /**
+   * Pre-resolved entries, for pages linking to non-tool content. Those callers
+   * already have the relevant data loaded, so they resolve entries themselves
+   * rather than this component importing every content module.
+   */
+  entries?: RelatedEntry[]
 }
 
-export function RelatedToolsFooter({ toolIds }: RelatedToolsFooterProps) {
-  const related = toolIds
-    .map((id) => {
-      if (id === "home") return HOME_ENTRY
-      if (id === "platforms") return PLATFORMS_ENTRY
-      if (id === "blog") return BLOG_ENTRY
-      const tool = tools.find((t) => t.id === id)
-      if (tool) return { path: `/${tool.id}`, name: tool.name, description: tool.description, icon: tool.icon }
-      const guide = PLATFORM_GUIDES.find((g) => g.slug === id)
-      if (guide) return { path: `/${guide.slug}`, name: guide.h1, description: guide.metaDescription, icon: BookMarked }
-      const interval = INTERVAL_PAGES.find((p) => p.slug === id)
-      if (interval) return { path: `/${interval.slug}`, name: interval.h1, description: interval.metaDescription, icon: CalendarClock }
-      const post = BLOG_POSTS.find((b) => b.slug === id)
-      if (post) return { path: `/blog/${post.slug}`, name: post.h1, description: post.excerpt, icon: Newspaper }
-      return null
-    })
-    .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+export function RelatedToolsFooter({ toolIds, entries }: RelatedToolsFooterProps) {
+  const related = entries ?? (toolIds ? resolveToolEntries(toolIds) : [])
 
   if (related.length === 0) return null
 
