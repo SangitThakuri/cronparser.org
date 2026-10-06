@@ -53,7 +53,7 @@ export function AllToolsPage() {
   return (
     <div className="mx-auto max-w-5xl py-10">
       <SeoMeta
-        title="Cron Tools | CronParser"
+        title="Cron Tools"
         description="A growing library of free, client-side cron tools — generators, validators, calculators, and guides. Nothing ever leaves your browser."
         path="/all-tools"
       />

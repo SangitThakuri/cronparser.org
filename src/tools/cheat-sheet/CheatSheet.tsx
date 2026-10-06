@@ -41,7 +41,7 @@ export default function CheatSheet() {
   return (
     <div className="mx-auto max-w-4xl">
       <SeoMeta
-        title="Cron Cheat Sheet — Syntax, Special Characters & Shortcuts | CronParser"
+        title="Cron Cheat Sheet — Syntax, Special Characters & Shortcuts"
         description="A quick-reference cron cheat sheet: field ranges, special characters (* , - / ? L W #), @nicknames like @daily and @hourly, and common expression examples."
         path="/cheat-sheet"
       />

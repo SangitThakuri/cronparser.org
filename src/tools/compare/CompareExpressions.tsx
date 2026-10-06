@@ -117,7 +117,7 @@ export default function CompareExpressions() {
   return (
     <div className="mx-auto max-w-4xl">
       <SeoMeta
-        title="Cron Expression Comparison Tool — Are Two Schedules the Same? | CronParser"
+        title="Cron Expression Comparison Tool: Two Schedules?"
         description="Compare two cron expressions side-by-side to see if they produce the same schedule, including support for @daily/@weekly-style nicknames — entirely client-side."
         path="/compare"
       />

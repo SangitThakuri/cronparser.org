@@ -126,7 +126,7 @@ export default function FavoritesManager() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Favorite Cron Expressions Manager — Categories, Notes & Export | CronParser"
+        title="Favorite Cron Expressions Manager: Categories & Export"
         description="Organize your saved cron expressions with categories, notes, and custom labels. Search, rename, and export to JSON, CSV, or TXT — all stored locally in your browser."
         path="/favorites"
       />

@@ -51,7 +51,7 @@ export default function FrequencyCalculator() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Frequency Calculator — How Often Does a Cron Job Run? | CronParser"
+        title="Cron Frequency Calculator — How Often Does a Cron Job Run?"
         description="Calculate exactly how many times a cron expression runs per day, week, month, and year — entirely client-side, based on real upcoming run times."
         path="/frequency-calculator"
       />

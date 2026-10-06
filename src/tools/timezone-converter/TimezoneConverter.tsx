@@ -18,7 +18,7 @@ export default function TimezoneConverter() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Timezone Converter — Convert Cron Schedules Between Timezones | CronParser"
+        title="Cron Timezone Converter — Between Timezones"
         description="Convert a cron expression's fixed hour and minute from one timezone to another — see exactly what time your job actually runs elsewhere."
         path="/timezone-converter"
       />

@@ -24,7 +24,7 @@ export interface IntervalPage {
 export const INTERVAL_PAGES: IntervalPage[] = [
   {
     slug: "every-minute",
-    title: "Cron Job Every Minute — Expression & Examples | CronParser",
+    title: "Cron Job Every Minute — Expression & Examples",
     metaDescription:
       "The cron expression for running a job every minute is * * * * *. See variations, common mistakes, and best practices for minute-level scheduling.",
     h1: "Cron: Every Minute",
@@ -63,7 +63,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-2-minutes",
-    title: "Cron Job Every 2 Minutes — Expression & Examples | CronParser",
+    title: "Cron Job Every 2 Minutes — Expression & Examples",
     metaDescription:
       "Run a cron job every 2 minutes with */2 * * * *. Learn how the step syntax works, common pitfalls, and when to use it instead of every-minute.",
     h1: "Cron: Every 2 Minutes",
@@ -102,7 +102,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-5-minutes",
-    title: "Cron Job Every 5 Minutes — Expression & Examples | CronParser",
+    title: "Cron Job Every 5 Minutes — Expression & Examples",
     metaDescription:
       "The cron expression for every 5 minutes is */5 * * * *. See real-world examples, common mistakes, and scheduling best practices.",
     h1: "Cron: Every 5 Minutes",
@@ -141,7 +141,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-10-minutes",
-    title: "Cron Job Every 10 Minutes — Expression & Examples | CronParser",
+    title: "Cron Job Every 10 Minutes — Expression & Examples",
     metaDescription:
       "Schedule a cron job every 10 minutes with */10 * * * *. See variations, common mistakes, and when 10-minute polling makes sense.",
     h1: "Cron: Every 10 Minutes",
@@ -180,7 +180,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-15-minutes",
-    title: "Cron Job Every 15 Minutes — Expression & Examples | CronParser",
+    title: "Cron Job Every 15 Minutes — Expression & Examples",
     metaDescription:
       "The cron expression for every 15 minutes is */15 * * * *. See quarter-hour scheduling examples, mistakes to avoid, and best practices.",
     h1: "Cron: Every 15 Minutes",
@@ -219,7 +219,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-30-minutes",
-    title: "Cron Job Every 30 Minutes — Expression & Examples | CronParser",
+    title: "Cron Job Every 30 Minutes — Expression & Examples",
     metaDescription:
       "Run a cron job every 30 minutes with */30 * * * *. See half-hourly scheduling examples, common mistakes, and best practices.",
     h1: "Cron: Every 30 Minutes",
@@ -258,7 +258,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-hour",
-    title: "Cron Job Every Hour — Expression & Examples | CronParser",
+    title: "Cron Job Every Hour — Expression & Examples",
     metaDescription:
       "The cron expression for every hour is 0 * * * *. See hourly scheduling examples, common mistakes, and best practices for cron jobs.",
     h1: "Cron: Every Hour",
@@ -297,7 +297,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-day",
-    title: "Cron Job Every Day — Expression & Examples | CronParser",
+    title: "Cron Job Every Day — Expression & Examples",
     metaDescription:
       "The cron expression for every day is 0 0 * * *, running once daily at midnight. See daily scheduling examples and best practices.",
     h1: "Cron: Every Day",
@@ -336,7 +336,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-week",
-    title: "Cron Job Every Week — Expression & Examples | CronParser",
+    title: "Cron Job Every Week — Expression & Examples",
     metaDescription:
       "The cron expression for every week is 0 0 * * 0, running once weekly on Sunday at midnight. See weekly scheduling examples and best practices.",
     h1: "Cron: Every Week",
@@ -375,7 +375,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-month",
-    title: "Cron Job Every Month — Expression & Examples | CronParser",
+    title: "Cron Job Every Month — Expression & Examples",
     metaDescription:
       "The cron expression for every month is 0 0 1 * *, running once on the 1st at midnight. See monthly scheduling examples and best practices.",
     h1: "Cron: Every Month",
@@ -414,7 +414,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-year",
-    title: "Cron Job Every Year — Expression & Examples | CronParser",
+    title: "Cron Job Every Year — Expression & Examples",
     metaDescription:
       "The cron expression for every year is 0 0 1 1 *, running once annually on January 1st. See yearly scheduling examples and best practices.",
     h1: "Cron: Every Year",
@@ -453,7 +453,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-monday",
-    title: "Cron Job Every Monday — Expression & Examples | CronParser",
+    title: "Cron Job Every Monday — Expression & Examples",
     metaDescription:
       "The cron expression for every Monday is 0 0 * * 1, running weekly at midnight. See Monday scheduling examples for reports, digests, and jobs.",
     h1: "Cron: Every Monday",
@@ -492,7 +492,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-tuesday",
-    title: "Cron Job Every Tuesday — Expression & Examples | CronParser",
+    title: "Cron Job Every Tuesday — Expression & Examples",
     metaDescription:
       "The cron expression for every Tuesday is 0 0 * * 2, running weekly at midnight. See Tuesday scheduling examples and best practices.",
     h1: "Cron: Every Tuesday",
@@ -531,7 +531,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-wednesday",
-    title: "Cron Job Every Wednesday — Expression & Examples | CronParser",
+    title: "Cron Job Every Wednesday — Expression & Examples",
     metaDescription:
       "The cron expression for every Wednesday is 0 0 * * 3, running weekly at midnight. See Wednesday scheduling examples and best practices.",
     h1: "Cron: Every Wednesday",
@@ -570,7 +570,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-thursday",
-    title: "Cron Job Every Thursday — Expression & Examples | CronParser",
+    title: "Cron Job Every Thursday — Expression & Examples",
     metaDescription:
       "The cron expression for every Thursday is 0 0 * * 4, running weekly at midnight. See Thursday scheduling examples and best practices.",
     h1: "Cron: Every Thursday",
@@ -609,7 +609,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-friday",
-    title: "Cron Job Every Friday — Expression & Examples | CronParser",
+    title: "Cron Job Every Friday — Expression & Examples",
     metaDescription:
       "The cron expression for every Friday is 0 0 * * 5, running weekly at midnight. See Friday scheduling examples and deployment best practices.",
     h1: "Cron: Every Friday",
@@ -648,7 +648,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-saturday",
-    title: "Cron Job Every Saturday — Expression & Examples | CronParser",
+    title: "Cron Job Every Saturday — Expression & Examples",
     metaDescription:
       "The cron expression for every Saturday is 0 0 * * 6, running weekly at midnight. See Saturday scheduling examples and best practices.",
     h1: "Cron: Every Saturday",
@@ -687,7 +687,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-sunday",
-    title: "Cron Job Every Sunday — Expression & Examples | CronParser",
+    title: "Cron Job Every Sunday — Expression & Examples",
     metaDescription:
       "The cron expression for every Sunday is 0 0 * * 0, running weekly at midnight. See Sunday scheduling examples and best practices.",
     h1: "Cron: Every Sunday",
@@ -726,7 +726,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-weekday",
-    title: "Cron Job Every Weekday — Expression & Examples | CronParser",
+    title: "Cron Job Every Weekday — Expression & Examples",
     metaDescription:
       "The cron expression for every weekday (Monday–Friday) is 0 0 * * 1-5. See weekday scheduling examples for business-hours automation.",
     h1: "Cron: Every Weekday",
@@ -765,7 +765,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "weekends-only",
-    title: "Cron Job Weekends Only — Expression & Examples | CronParser",
+    title: "Cron Job Weekends Only — Expression & Examples",
     metaDescription:
       "The cron expression for weekends only (Saturday and Sunday) is 0 0 * * 0,6. See weekend-only scheduling examples and use cases.",
     h1: "Cron: Weekends Only",
@@ -804,7 +804,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "first-day-of-month",
-    title: "Cron Job First Day of Month — Expression & Examples | CronParser",
+    title: "Cron Job First Day of Month — Expression & Examples",
     metaDescription:
       "The cron expression for the first day of every month is 0 0 1 * *. See scheduling examples for billing, reports, and monthly resets.",
     h1: "Cron: First Day of the Month",
@@ -843,7 +843,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "last-day-of-month",
-    title: "Cron Job Last Day of Month — Expression & Workaround | CronParser",
+    title: "Cron Job Last Day of Month — Expression & Workaround",
     metaDescription:
       "Standard cron can't directly express 'last day of month.' See the common workaround using 28-31 * * plus a date check, and the Quartz L character alternative.",
     h1: "Cron: Last Day of the Month",
@@ -882,7 +882,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-midnight",
-    title: "Cron Job Every Midnight — Expression & Examples | CronParser",
+    title: "Cron Job Every Midnight — Expression & Examples",
     metaDescription:
       "The cron expression for every midnight is 0 0 * * *, running once daily at 00:00. See midnight scheduling examples and best practices.",
     h1: "Cron: Every Midnight",
@@ -921,7 +921,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-noon",
-    title: "Cron Job Every Noon — Expression & Examples | CronParser",
+    title: "Cron Job Every Noon — Expression & Examples",
     metaDescription:
       "The cron expression for every noon is 0 12 * * *, running once daily at 12:00 PM. See noon scheduling examples and best practices.",
     h1: "Cron: Every Noon",
@@ -960,7 +960,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-45-minutes",
-    title: "Cron Job Every 45 Minutes — Expression & The */45 Gotcha | CronParser",
+    title: "Cron Job Every 45 Minutes — Expression & The */45 Gotcha",
     metaDescription:
       "*/45 * * * * does NOT run every 45 minutes on a rolling basis — it only matches minutes 0 and 45. See why, and how to actually get even 45-minute spacing.",
     h1: "Cron: Every 45 Minutes",
@@ -999,7 +999,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-2-hours",
-    title: "Cron Job Every 2 Hours — Expression & Examples | CronParser",
+    title: "Cron Job Every 2 Hours — Expression & Examples",
     metaDescription:
       "The cron expression for every 2 hours is 0 */2 * * *, firing at midnight, 2 AM, 4 AM, and so on. See examples, mistakes, and best practices.",
     h1: "Cron: Every 2 Hours",
@@ -1038,7 +1038,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-3-hours",
-    title: "Cron Job Every 3 Hours — Expression & Examples | CronParser",
+    title: "Cron Job Every 3 Hours — Expression & Examples",
     metaDescription:
       "The cron expression for every 3 hours is 0 */3 * * *, firing 8 times a day. See examples, mistakes, and best practices for this schedule.",
     h1: "Cron: Every 3 Hours",
@@ -1077,7 +1077,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-4-hours",
-    title: "Cron Job Every 4 Hours — Expression & Examples | CronParser",
+    title: "Cron Job Every 4 Hours — Expression & Examples",
     metaDescription:
       "The cron expression for every 4 hours is 0 */4 * * *, firing 6 times a day. See examples, mistakes, and best practices for this schedule.",
     h1: "Cron: Every 4 Hours",
@@ -1116,7 +1116,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-6-hours",
-    title: "Cron Job Every 6 Hours — Expression & Examples | CronParser",
+    title: "Cron Job Every 6 Hours — Expression & Examples",
     metaDescription:
       "The cron expression for every 6 hours is 0 */6 * * *, firing 4 times a day. See examples, mistakes, and best practices for this schedule.",
     h1: "Cron: Every 6 Hours",
@@ -1155,7 +1155,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-8-hours",
-    title: "Cron Job Every 8 Hours — Expression & Examples | CronParser",
+    title: "Cron Job Every 8 Hours — Expression & Examples",
     metaDescription:
       "The cron expression for every 8 hours is 0 */8 * * *, firing 3 times a day — matching a classic 8-hour shift pattern. See examples and best practices.",
     h1: "Cron: Every 8 Hours",
@@ -1194,7 +1194,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-12-hours",
-    title: "Cron Job Every 12 Hours — Expression & Examples | CronParser",
+    title: "Cron Job Every 12 Hours — Expression & Examples",
     metaDescription:
       "The cron expression for every 12 hours is 0 */12 * * *, firing twice a day at midnight and noon. See examples, mistakes, and best practices.",
     h1: "Cron: Every 12 Hours",
@@ -1233,7 +1233,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "twice-daily",
-    title: "Cron Job Twice Daily — Expression & Examples | CronParser",
+    title: "Cron Job Twice Daily — Expression & Examples",
     metaDescription:
       "Run a cron job twice a day with 0 8,20 * * * or similar — see common AM/PM patterns, examples, and best practices for twice-daily schedules.",
     h1: "Cron: Twice Daily",
@@ -1272,7 +1272,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-weeknight",
-    title: "Cron Job Every Weeknight — Expression & Examples | CronParser",
+    title: "Cron Job Every Weeknight — Expression & Examples",
     metaDescription:
       "The cron expression for every weeknight is 0 18 * * 1-5, running weekday evenings only. See examples, mistakes, and best practices.",
     h1: "Cron: Every Weeknight",
@@ -1311,7 +1311,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-other-day",
-    title: "Cron Job Every Other Day — Expression & Workaround | CronParser",
+    title: "Cron Job Every Other Day — Expression & Workaround",
     metaDescription:
       "Standard cron can't natively express 'every other day' across month boundaries. See the common day-of-month workaround, its limitations, and alternatives.",
     h1: "Cron: Every Other Day",
@@ -1350,7 +1350,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-20-minutes",
-    title: "Cron Job Every 20 Minutes — Expression & Examples | CronParser",
+    title: "Cron Job Every 20 Minutes — Expression & Examples",
     metaDescription:
       "The cron expression for every 20 minutes is */20 * * * *, firing at :00, :20, and :40 — a true evenly-spaced interval. See examples and best practices.",
     h1: "Cron: Every 20 Minutes",
@@ -1389,7 +1389,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "every-quarter",
-    title: "Cron Job Every Quarter — Expression & Examples | CronParser",
+    title: "Cron Job Every Quarter — Expression & Examples",
     metaDescription:
       "The cron expression for every quarter is 0 0 1 1,4,7,10 *, firing at midnight on the 1st of January, April, July, and October.",
     h1: "Cron: Every Quarter",
@@ -1428,7 +1428,7 @@ export const INTERVAL_PAGES: IntervalPage[] = [
   },
   {
     slug: "nth-weekday-of-month",
-    title: "Cron: First Monday (or Nth Weekday) of the Month | CronParser",
+    title: "Cron: First Monday (or Nth Weekday) of the Month",
     metaDescription:
       "Standard cron can't natively express 'first Monday of the month' — see why the common day-range trick is actually wrong, and the correct workaround.",
     h1: "Cron: First Monday (Nth Weekday) of the Month",

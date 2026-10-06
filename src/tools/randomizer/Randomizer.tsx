@@ -95,7 +95,7 @@ export default function Randomizer() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Randomizer — Generate Random Cron Expressions | CronParser"
+        title="Cron Randomizer — Generate Random Cron Expressions"
         description="Generate random, valid cron expressions for testing schedulers, fuzz-testing parsers, or exploring cron syntax — entirely client-side."
         path="/randomizer"
       />

@@ -28,7 +28,7 @@ export function BlogIndexPage() {
   return (
     <div className="mx-auto max-w-3xl py-10">
       <SeoMeta
-        title="Blog — Cron Gotchas, Incidents & Tooling | CronParser"
+        title="Blog — Cron Gotchas, Incidents & Tooling"
         description="Deep dives on cron scheduling: silent failures, real-world bugs, and when to reach for something other than plain cron."
         path="/blog"
       />

@@ -43,7 +43,7 @@ export default function VisualBuilder() {
   return (
     <div className="mx-auto max-w-4xl">
       <SeoMeta
-        title="Visual Cron Builder — Build Cron Expressions Field by Field | CronParser"
+        title="Visual Cron Builder — Build Cron Expressions Field by Field"
         description="Build a cron expression visually — pick every, specific, range, or step values for each field with a live preview and next-run calculation."
         path="/visual-builder"
       />

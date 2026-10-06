@@ -33,8 +33,8 @@ export default function ExamplesLibrary() {
   return (
     <div className="mx-auto max-w-4xl">
       <SeoMeta
-        title="Cron Examples Library — Searchable Cron Expression Examples | CronParser"
-        description="Browse and search dozens of common cron expression examples — intervals, daily/weekly/monthly schedules, business hours, DevOps, and backup jobs — with instant copy and try-it links."
+        title="Cron Examples Library — Searchable Cron Expression Examples"
+        description="Browse dozens of common cron expression examples — intervals, daily, weekly, monthly, business hours, DevOps, and backups — with instant copy."
         path="/examples"
       />
 

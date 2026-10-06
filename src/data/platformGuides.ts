@@ -25,7 +25,7 @@ export interface PlatformGuide {
 export const PLATFORM_GUIDES: PlatformGuide[] = [
   {
     slug: "linux-cron",
-    title: "Linux Cron Guide — Crontab Syntax & Examples | CronParser",
+    title: "Linux Cron Guide — Crontab Syntax & Examples",
     metaDescription:
       "How to schedule jobs with cron on Linux: crontab -e, standard 5-field syntax, log locations, and common gotchas. Complete guide with examples.",
     h1: "Linux Cron Guide",
@@ -66,7 +66,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "ubuntu-cron",
-    title: "Ubuntu Cron Guide — Setup, Syntax & Common Issues | CronParser",
+    title: "Ubuntu Cron Guide — Setup, Syntax & Common Issues",
     metaDescription:
       "Set up and troubleshoot cron jobs on Ubuntu: installing cron, systemd service commands, crontab -e, and Ubuntu-specific gotchas.",
     h1: "Ubuntu Cron Guide",
@@ -107,7 +107,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "macos-cron",
-    title: "macOS Cron Guide — Setup, Permissions & launchd Alternative | CronParser",
+    title: "macOS Cron Guide — Setup, Permissions & launchd Alternative",
     metaDescription:
       "How cron works on macOS, why Apple recommends launchd instead, and the Full Disk Access permission issue that silently breaks many cron jobs.",
     h1: "macOS Cron Guide",
@@ -147,7 +147,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "windows-task-scheduler-vs-cron",
-    title: "Windows Task Scheduler vs Cron — Key Differences | CronParser",
+    title: "Windows Task Scheduler vs Cron — Key Differences",
     metaDescription:
       "Compare Windows Task Scheduler and Unix cron: syntax, GUI vs config file, trigger types, and how to translate a cron expression into a scheduled task.",
     h1: "Windows Task Scheduler vs Cron",
@@ -188,7 +188,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "kubernetes-cronjob",
-    title: "Kubernetes CronJob Guide — YAML Syntax & Examples | CronParser",
+    title: "Kubernetes CronJob Guide — YAML Syntax & Examples",
     metaDescription:
       "How to schedule recurring jobs in Kubernetes with CronJob resources: YAML manifest syntax, concurrency policy, and common gotchas.",
     h1: "Kubernetes CronJob Guide",
@@ -234,7 +234,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "github-actions-cron",
-    title: "GitHub Actions Cron Guide — Scheduled Workflows | CronParser",
+    title: "GitHub Actions Cron Guide — Scheduled Workflows",
     metaDescription:
       "Schedule GitHub Actions workflows with cron syntax: the schedule trigger, UTC-only timing, and why scheduled workflows can be delayed.",
     h1: "GitHub Actions Cron Guide",
@@ -280,7 +280,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "aws-eventbridge-scheduler",
-    title: "AWS EventBridge Scheduler Cron Guide | CronParser",
+    title: "AWS EventBridge Scheduler Cron Guide",
     metaDescription:
       "How cron and rate expressions work in AWS EventBridge Scheduler: 6-field Quartz-style syntax, UTC timing, and common Lambda trigger patterns.",
     h1: "AWS EventBridge Scheduler Cron Guide",
@@ -321,7 +321,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "google-cloud-scheduler",
-    title: "Google Cloud Scheduler Cron Guide | CronParser",
+    title: "Google Cloud Scheduler Cron Guide",
     metaDescription:
       "How to schedule jobs with Google Cloud Scheduler: standard 5-field cron syntax (unix-cron), timezone support, and HTTP/Pub/Sub targets.",
     h1: "Google Cloud Scheduler Guide",
@@ -364,7 +364,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "azure-timer-trigger",
-    title: "Azure Functions Timer Trigger Cron Guide (NCRONTAB) | CronParser",
+    title: "Azure Functions Timer Trigger Cron Guide (NCRONTAB)",
     metaDescription:
       "How Azure Functions timer triggers use NCRONTAB syntax: the 6-field seconds-first format, UTC defaults, and common configuration examples.",
     h1: "Azure Functions Timer Trigger Guide",
@@ -405,7 +405,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "quartz-scheduler",
-    title: "Quartz Scheduler Cron Guide — Java Job Scheduling | CronParser",
+    title: "Quartz Scheduler Cron Guide — Java Job Scheduling",
     metaDescription:
       "Quartz Scheduler's 6/7-field cron syntax for Java applications: the L, W, and # special characters, and how it differs from standard cron.",
     h1: "Quartz Scheduler Cron Guide",
@@ -447,7 +447,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "jenkins-cron",
-    title: "Jenkins Cron Guide — Build Trigger Syntax | CronParser",
+    title: "Jenkins Cron Guide — Build Trigger Syntax",
     metaDescription:
       "How to schedule Jenkins builds with cron syntax: the Build periodically trigger, the H (hash) character for load distribution, and common patterns.",
     h1: "Jenkins Cron Guide",
@@ -488,7 +488,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "node-cron",
-    title: "node-cron Guide — Scheduling Jobs in Node.js | CronParser",
+    title: "node-cron Guide — Scheduling Jobs in Node.js",
     metaDescription:
       "How to schedule recurring tasks in Node.js with the node-cron package: standard cron syntax, timezone options, and common patterns.",
     h1: "node-cron Guide",
@@ -534,7 +534,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "laravel-scheduler",
-    title: "Laravel Task Scheduler Guide — Fluent Syntax & Cron | CronParser",
+    title: "Laravel Task Scheduler Guide — Fluent Syntax & Cron",
     metaDescription:
       "How Laravel's task scheduler works: the fluent API (->daily(), ->hourly()), the single cron entry needed, and common scheduling patterns.",
     h1: "Laravel Task Scheduler Guide",
@@ -578,7 +578,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "spring-scheduler",
-    title: "Spring @Scheduled Cron Guide — Java Scheduling | CronParser",
+    title: "Spring @Scheduled Cron Guide — Java Scheduling",
     metaDescription:
       "How Spring's @Scheduled annotation uses cron expressions: 6-field Quartz-inspired syntax, fixedRate vs cron, and common configuration patterns.",
     h1: "Spring @Scheduled Cron Guide",
@@ -619,7 +619,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "docker-cron",
-    title: "Cron in Docker Guide — Running Scheduled Jobs in Containers | CronParser",
+    title: "Cron in Docker Guide — Running Scheduled Jobs in Containers",
     metaDescription:
       "Docker has no built-in cron. See the common patterns for scheduled jobs in containers: cron inside the container, sidecar containers, and orchestrator-native scheduling.",
     h1: "Cron in Docker Guide",
@@ -665,9 +665,9 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "wordpress-wp-cron",
-    title: "WordPress WP-Cron Guide — How Pseudo-Cron Really Works | CronParser",
+    title: "WordPress WP-Cron Guide — How Pseudo-Cron Really Works",
     metaDescription:
-      "WP-Cron isn't real cron — it's triggered by site visits. Learn how WordPress's pseudo-cron system works, why scheduled posts can be late, and how to fix it with real system cron.",
+      "WP-Cron isn't real cron — it's triggered by site visits. Learn how WordPress pseudo-cron works, why posts can be late, and how to fix it with real cron.",
     h1: "WordPress WP-Cron Guide",
     category: "Application Framework",
     intro:
@@ -706,7 +706,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "cpanel-cron",
-    title: "cPanel Cron Jobs Guide — Setup via the UI & Common Issues | CronParser",
+    title: "cPanel Cron Jobs Guide — Setup via the UI & Common Issues",
     metaDescription:
       "How to add, edit, and troubleshoot cron jobs in cPanel: the Cron Jobs UI, email notification pitfalls, PHP path issues, and standard intervals.",
     h1: "cPanel Cron Jobs Guide",
@@ -747,7 +747,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "systemd-timers",
-    title: "systemd Timers vs Cron — Syntax, Setup & When to Switch | CronParser",
+    title: "systemd Timers vs Cron — Syntax, Setup & When to Switch",
     metaDescription:
       "How systemd timers work as a modern alternative to cron: OnCalendar syntax, unit file setup, and when timers are actually worth switching to.",
     h1: "systemd Timers vs Cron",
@@ -788,7 +788,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "gitlab-ci-cron",
-    title: "GitLab CI Scheduled Pipelines — Cron Syntax & Setup | CronParser",
+    title: "GitLab CI Scheduled Pipelines — Cron Syntax & Setup",
     metaDescription:
       "How to schedule GitLab CI/CD pipelines with cron syntax: the Schedules UI, timezone handling, rules:if conditions, and common gotchas.",
     h1: "GitLab CI Scheduled Pipelines",
@@ -829,7 +829,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "celery-beat-cron",
-    title: "Celery Beat Schedule Guide — crontab() Syntax & Setup | CronParser",
+    title: "Celery Beat Schedule Guide — crontab() Syntax & Setup",
     metaDescription:
       "Schedule periodic tasks in Celery with Beat: the crontab() schedule helper, beat_schedule dict syntax, common pitfalls, and Django integration.",
     h1: "Celery Beat Schedule Guide",
@@ -873,7 +873,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "rails-whenever-cron",
-    title: "Rails Cron Jobs with Whenever — Schedule.rb Syntax | CronParser",
+    title: "Rails Cron Jobs with Whenever — Schedule.rb Syntax",
     metaDescription:
       "Schedule background jobs in Ruby on Rails with the whenever gem: schedule.rb syntax, writing a crontab automatically, and common deployment gotchas.",
     h1: "Rails Cron Jobs with Whenever",
@@ -914,7 +914,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "vercel-cron-jobs",
-    title: "Vercel Cron Jobs Guide — vercel.json Syntax & Limits | CronParser",
+    title: "Vercel Cron Jobs Guide — vercel.json Syntax & Limits",
     metaDescription:
       "Schedule serverless functions on Vercel with Cron Jobs: vercel.json syntax, plan-based frequency limits, authentication, and common gotchas.",
     h1: "Vercel Cron Jobs Guide",
@@ -955,7 +955,7 @@ export const PLATFORM_GUIDES: PlatformGuide[] = [
   },
   {
     slug: "supabase-pg-cron",
-    title: "Supabase Cron (pg_cron) Guide — Scheduling SQL Jobs | CronParser",
+    title: "Supabase Cron (pg_cron) Guide — Scheduling SQL Jobs",
     metaDescription:
       "Schedule recurring database jobs in Supabase with the pg_cron extension: cron.schedule() syntax, calling Edge Functions, and common gotchas.",
     h1: "Supabase Cron (pg_cron) Guide",

@@ -36,7 +36,7 @@ export default function BatchValidator() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Batch Crontab Validator — Check Every Line at Once | CronParser"
+        title="Batch Crontab Validator — Check Every Line at Once"
         description="Paste a whole crontab file and validate every scheduled entry at once, with a plain-English explanation for each line and every error flagged — entirely client-side."
         path="/batch-validator"
       />

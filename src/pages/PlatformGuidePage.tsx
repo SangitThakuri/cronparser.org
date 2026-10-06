@@ -6,6 +6,7 @@ import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../components/ui/SeoMeta"
 import { PLATFORM_GUIDES, type PlatformGuide } from "../data/platformGuides"
+import { CONTENT_ICONS, resolveToolEntries } from "../lib/relatedTools"
 import { buildTechArticleJsonLd } from "../lib/seoSchema"
 
 export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
@@ -134,7 +135,17 @@ export function PlatformGuidePage({ guide }: { guide: PlatformGuide }) {
         </dl>
       </section>
 
-      <RelatedToolsFooter toolIds={["platforms", sibling1.slug, sibling2.slug]} />
+      <RelatedToolsFooter
+        entries={[
+          ...resolveToolEntries(["platforms"]),
+          ...[sibling1, sibling2].map((g) => ({
+            path: `/${g.slug}`,
+            name: g.h1,
+            description: g.metaDescription,
+            icon: CONTENT_ICONS.guide,
+          })),
+        ]}
+      />
     </div>
   )
 }

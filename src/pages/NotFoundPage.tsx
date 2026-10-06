@@ -6,7 +6,7 @@ export function NotFoundPage() {
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center py-20 text-center">
       <SeoMeta
-        title="Page Not Found | CronParser"
+        title="Page Not Found"
         description="The page you're looking for doesn't exist on CronParser."
         path="/404"
         noindex

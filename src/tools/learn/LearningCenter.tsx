@@ -33,9 +33,9 @@ const FAQS = [
   },
 ]
 
-const LEARN_TITLE = "Cron Learning Center — What is Cron, Syntax & Best Practices | CronParser"
+const LEARN_TITLE = "Cron Learning Center — What is Cron, Syntax & Best Practices"
 const LEARN_DESCRIPTION =
-  "A complete beginner-to-practitioner guide to cron: what it is, how it differs from crontab, how the syntax works, and the best practices and common mistakes that matter in production."
+  "A beginner-to-practitioner guide to cron: what it is, how it differs from crontab, how the syntax works, and the best practices that matter in production."
 
 const faqJsonLd = {
   "@context": "https://schema.org",

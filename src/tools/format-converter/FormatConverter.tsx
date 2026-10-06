@@ -9,8 +9,22 @@ import { RelatedToolsFooter } from "../../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../../components/ui/SeoMeta"
 import { ToolSeoSection } from "../../components/ui/ToolSeoSection"
 import { convertCronFormat, FORMAT_LABELS, type CronFormat } from "./convertFormat"
+import { PLATFORM_GUIDES } from "../../data/platformGuides"
+import { CONTENT_ICONS, HOME_ENTRY, type RelatedEntry } from "../../lib/relatedTools"
 
 const FORMATS: CronFormat[] = ["standard5", "quartz6", "quartz7", "aws6"]
+
+// This tool links to platform guides rather than other tools, so it resolves its
+// own entries — resolveToolEntries only knows registry tool ids.
+const RELATED_GUIDE_SLUGS = ["quartz-scheduler", "aws-eventbridge-scheduler"]
+
+const relatedEntries: RelatedEntry[] = [
+  HOME_ENTRY,
+  ...RELATED_GUIDE_SLUGS.flatMap((slug) => {
+    const guide = PLATFORM_GUIDES.find((g) => g.slug === slug)
+    return guide ? [{ path: `/${guide.slug}`, name: guide.h1, description: guide.metaDescription, icon: CONTENT_ICONS.guide }] : []
+  }),
+]
 
 const PLACEHOLDERS: Record<CronFormat, string> = {
   standard5: "0 9 * * 1-5",
@@ -40,8 +54,8 @@ export default function FormatConverter() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Quartz ⇄ Standard Cron Converter — 5, 6 & 7-Field Formats | CronParser"
-        description="Convert cron expressions between standard 5-field, Quartz 6-field, Quartz 7-field, and AWS EventBridge syntax — including day-of-week numbering and the '?' character. Entirely client-side."
+        title="Quartz ⇄ Standard Cron Converter — 5, 6 & 7-Field Formats"
+        description="Convert cron between standard 5-field, Quartz 6- and 7-field, and AWS EventBridge syntax — including day-of-week numbering and the '?' character."
         path="/format-converter"
       />
 
@@ -158,7 +172,7 @@ export default function FormatConverter() {
         ]}
       />
 
-      <RelatedToolsFooter toolIds={["home", "quartz-scheduler", "aws-eventbridge-scheduler"]} />
+      <RelatedToolsFooter entries={relatedEntries} />
     </div>
   )
 }

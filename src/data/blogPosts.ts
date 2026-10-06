@@ -33,7 +33,7 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "why-cron-jobs-fail-silently",
-    title: "Why Cron Jobs Fail Silently (And How to Actually Catch It) | CronParser Blog",
+    title: "Why Cron Jobs Fail Silently (And How to Actually Catch It)",
     metaDescription:
       "Cron's biggest flaw isn't syntax — it's that jobs can fail completely without any signal. Here's why that happens and the fixes that actually close the gap.",
     h1: "Why Cron Jobs Fail Silently (And How to Actually Catch It)",
@@ -106,9 +106,9 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "cron-vs-modern-schedulers",
-    title: "Cron vs. Modern Schedulers: When Plain Cron Is (and Isn't) Enough | CronParser Blog",
+    title: "Cron vs. Modern Schedulers: When to Switch",
     metaDescription:
-      "Cron has survived 50 years of software fashion cycles. A practical decision framework for when to stick with it and when systemd timers, workflow engines, or a cloud scheduler actually earn their extra complexity.",
+      "Cron has survived 50 years of software fashion. A decision framework for when to stick with it and when systemd timers or a cloud scheduler earn their extra complexity.",
     h1: "Cron vs. Modern Schedulers: When Plain Cron Is (and Isn't) Enough",
     excerpt:
       "Cron has survived fifty years of software fashion cycles for a reason. A practical framework for knowing when it's still the right call — and when it isn't.",
@@ -175,9 +175,9 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: "real-world-cron-scheduling-bugs",
-    title: "5 Real Cron Scheduling Bugs That Actually Happened | CronParser Blog",
+    title: "5 Real Cron Scheduling Bugs That Actually Happened",
     metaDescription:
-      "Five composite scheduling bugs drawn from real incident postmortems: the */45 double-charge, a DST-driven duplicate run, an OR-logic surprise, a silent downtime gap, and a broken Quartz migration.",
+      "Five scheduling bugs from real incident postmortems: the */45 double-charge, a DST-driven duplicate run, an OR-logic surprise, and a broken Quartz migration.",
     h1: "5 Real Cron Scheduling Bugs That Actually Happened",
     excerpt:
       "Most cron mistakes aren't exotic — they're the same handful of patterns causing trouble over and over. Five composite incidents, and the one fix each one actually needed.",

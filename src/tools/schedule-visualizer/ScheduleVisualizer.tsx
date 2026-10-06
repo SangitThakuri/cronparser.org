@@ -161,7 +161,7 @@ export default function ScheduleVisualizer() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Schedule Visualizer — Calendar & Timeline View | CronParser"
+        title="Cron Schedule Visualizer — Calendar & Timeline View"
         description="Visualize a cron expression on a day, week, or month calendar, or as a filterable timeline of upcoming runs with CSV export — entirely client-side."
         path="/visualizer"
       />

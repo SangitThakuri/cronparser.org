@@ -95,7 +95,7 @@ export default function Countdown() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Next Run Countdown — Live Timer Until Next Execution | CronParser"
+        title="Cron Next Run Countdown — Live Timer Until Next Execution"
         description="A live, second-by-second countdown until a cron expression's next scheduled execution, with timezone support and automatic refresh — entirely client-side."
         path="/countdown"
       />

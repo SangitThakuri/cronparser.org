@@ -6,10 +6,26 @@ import { Breadcrumbs } from "../components/ui/Breadcrumbs"
 import { CopyButton } from "../components/ui/CopyButton"
 import { RelatedToolsFooter } from "../components/ui/RelatedToolsFooter"
 import { SeoMeta } from "../components/ui/SeoMeta"
-import type { IntervalPage } from "../data/intervalPages"
+import { INTERVAL_PAGES, type IntervalPage } from "../data/intervalPages"
+import { CONTENT_ICONS, resolveToolEntries } from "../lib/relatedTools"
 import { buildTechArticleJsonLd } from "../lib/seoSchema"
 
 export function IntervalLandingPage({ page }: { page: IntervalPage }) {
+  // Neighbouring entries in INTERVAL_PAGES are topically adjacent (minutes ->
+  // hours -> days -> months), so index proximity is a good proxy for "related
+  // schedule" without maintaining a hand-written relation table. Mirrors the
+  // sibling pattern already used by PlatformGuidePage.
+  //
+  // This gives the 37 interval pages mutual internal links. They were previously
+  // only reachable from the home page, and all 37 shared an identical Related
+  // Tools footer, leaving the cluster with no crawlable path between its own
+  // members. Taking the neighbour on each side plus the next one forward keeps
+  // the links reciprocal and spreads authority across the cluster.
+  const pageIndex = INTERVAL_PAGES.findIndex((p) => p.slug === page.slug)
+  const siblings = [-1, 1, 2]
+    .map((offset) => INTERVAL_PAGES[(pageIndex + offset + INTERVAL_PAGES.length) % INTERVAL_PAGES.length])
+    .filter((s) => s.slug !== page.slug)
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -143,7 +159,17 @@ export function IntervalLandingPage({ page }: { page: IntervalPage }) {
         </dl>
       </section>
 
-      <RelatedToolsFooter toolIds={["home", "cheat-sheet", "examples"]} />
+      <RelatedToolsFooter
+        entries={[
+          ...resolveToolEntries(["home", "cheat-sheet", "examples"]),
+          ...siblings.map((s) => ({
+            path: `/${s.slug}`,
+            name: s.h1,
+            description: s.metaDescription,
+            icon: CONTENT_ICONS.interval,
+          })),
+        ]}
+      />
     </div>
   )
 }

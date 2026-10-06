@@ -54,7 +54,7 @@ export default function IcalExport() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron to iCal Export — Add a Cron Schedule to Your Calendar | CronParser"
+        title="Cron to iCal Export — Add a Cron Schedule to Your Calendar"
         description="Export a cron expression's upcoming run times as a downloadable .ics calendar file, ready to import into Google Calendar, Outlook, or Apple Calendar. Entirely client-side."
         path="/ical-export"
       />

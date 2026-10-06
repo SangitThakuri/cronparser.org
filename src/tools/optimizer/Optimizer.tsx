@@ -84,7 +84,7 @@ export default function Optimizer() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Schedule Optimizer — Simplify Cron Expressions | CronParser"
+        title="Cron Schedule Optimizer — Simplify Cron Expressions"
         description="Simplify a verbose cron expression into cleaner, equivalent syntax — turning lists like 0,15,30,45 into */15 automatically. Entirely client-side."
         path="/optimizer"
       />

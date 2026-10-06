@@ -37,8 +37,8 @@ export function PlatformGuidesIndex() {
   return (
     <div className="mx-auto max-w-5xl py-10">
       <SeoMeta
-        title="Cron Platform Guides — Linux, Kubernetes, AWS, GitHub Actions & More | CronParser"
-        description="Cron syntax and gotchas for every major platform: Linux, Ubuntu, macOS, Kubernetes CronJob, GitHub Actions, AWS EventBridge, Google Cloud Scheduler, Azure, Quartz, Jenkins, and more."
+        title="Cron Platform Guides: Linux, Kubernetes, AWS & More"
+        description="Cron syntax and gotchas for every major platform: Linux, macOS, Kubernetes, GitHub Actions, AWS EventBridge, Google Cloud, Azure, Quartz, and Jenkins."
         path="/platforms"
       />
 

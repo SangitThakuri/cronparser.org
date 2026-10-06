@@ -17,7 +17,7 @@ export default function CronGenerator() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Generator — Plain English to Cron Expression | CronParser"
+        title="Cron Generator — Plain English to Cron Expression"
         description="Describe a schedule in plain English — 'every weekday at 9am', 'every 15 minutes' — and get the matching cron expression instantly, entirely client-side."
         path="/generator"
       />

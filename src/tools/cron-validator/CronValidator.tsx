@@ -27,7 +27,7 @@ export default function CronValidator() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Validator — Validate & Normalize Cron Expressions | CronParser"
+        title="Cron Validator — Validate & Normalize Cron Expressions"
         description="Validate a cron expression field-by-field, catch out-of-range values and malformed steps, and get a clean normalized version — entirely client-side."
         path="/validator"
       />

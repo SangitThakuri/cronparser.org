@@ -85,7 +85,7 @@ export default function ConflictDetector() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Conflict Detector — Find Overlapping Cron Jobs | CronParser"
+        title="Cron Conflict Detector — Find Overlapping Cron Jobs"
         description="Check whether multiple cron jobs are scheduled to execute at the same time. Add expressions and instantly see any overlapping run times — entirely client-side."
         path="/conflict-detector"
       />

@@ -10,7 +10,7 @@ export function HomePage() {
   return (
     <div>
       <SeoMeta
-        title="Online Cron Expression Parser & Crontab Descriptor | CronParser"
+        title="Online Cron Expression Parser & Crontab Descriptor"
         description="Translate complex crontab schedule expressions into plain, human-readable language instantly. View upcoming job execution times entirely client-side."
         path="/"
       />

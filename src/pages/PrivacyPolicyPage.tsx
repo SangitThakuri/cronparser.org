@@ -5,7 +5,7 @@ export function PrivacyPolicyPage() {
   return (
     <div className="mx-auto max-w-2xl py-10">
       <SeoMeta
-        title="Privacy Policy | CronParser"
+        title="Privacy Policy"
         description="How CronParser.org handles your data: what's stored locally in your browser, what Google Analytics collects, and how that could change if ads are added."
         path="/privacy"
       />

@@ -66,7 +66,7 @@ export default function PreviousRun() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Previous Cron Run Calculator — Find the Last Execution Time | CronParser"
+        title="Previous Cron Run Calculator — Find the Last Execution Time"
         description="Calculate when a cron expression last ran — the previous 1, 5, or 10 execution times, walked backward from now, with timezone support. Entirely client-side."
         path="/previous-run"
       />

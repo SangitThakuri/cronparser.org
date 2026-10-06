@@ -126,7 +126,7 @@ export default function InterviewQuestions() {
   return (
     <div className="mx-auto max-w-3xl">
       <SeoMeta
-        title="Cron Interview Questions — Beginner to Advanced with Answers | CronParser"
+        title="Cron Interview Questions — Beginner to Advanced with Answers"
         description="18 cron interview questions with detailed answers, from basic syntax to distributed scheduling and platform-specific gotchas. Prepare for DevOps and backend interviews."
         path="/interview-questions"
       />
