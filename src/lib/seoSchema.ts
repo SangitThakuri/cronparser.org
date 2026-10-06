@@ -1,5 +1,12 @@
 const SITE_URL = "https://cronparser.org"
 
+// Default social-share card. Every route that doesn't pass its own image falls
+// back to this, so no page ships a bare-text link when shared. Absolute URL
+// required: og:image is resolved by the crawler's origin, not the page's.
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-default.png`
+export const OG_IMAGE_WIDTH = 1200
+export const OG_IMAGE_HEIGHT = 630
+
 // Cloudflare Pages serves directory-style routes (everything except "/") at their
 // trailing-slash form with a genuine 200, and 308-redirects the no-slash form to it.
 // Every canonical/OG/JSON-LD URL must use the trailing-slash form to match what

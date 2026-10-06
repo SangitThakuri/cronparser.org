@@ -59,8 +59,15 @@ function importTs(relPath) {
 const { INTERVAL_PAGES } = await importTs("src/data/intervalPages.ts")
 const { PLATFORM_GUIDES } = await importTs("src/data/platformGuides.ts")
 const { BLOG_POSTS } = await importTs("src/data/blogPosts.ts")
-const { WEB_APPLICATION_JSON_LD, buildTechArticleJsonLd, buildBlogPostingJsonLd, toCanonicalPath } =
-  await importTs("src/lib/seoSchema.ts")
+const {
+  WEB_APPLICATION_JSON_LD,
+  buildTechArticleJsonLd,
+  buildBlogPostingJsonLd,
+  toCanonicalPath,
+  DEFAULT_OG_IMAGE: OG_IMAGE,
+  OG_IMAGE_WIDTH,
+  OG_IMAGE_HEIGHT,
+} = await importTs("src/lib/seoSchema.ts")
 
 function extractSeoMeta(fileContent) {
   const blockMatch = fileContent.match(/<SeoMeta([\s\S]*?)\/>/)
@@ -153,9 +160,14 @@ ${indexingTag}
     <meta property="og:title" content="${t}" data-prerendered="true" />
     <meta property="og:description" content="${d}" data-prerendered="true" />
     <meta property="og:url" content="${url}" data-prerendered="true" />
-    <meta name="twitter:card" content="summary" data-prerendered="true" />
+    <meta property="og:image" content="${OG_IMAGE}" data-prerendered="true" />
+    <meta property="og:image:width" content="${OG_IMAGE_WIDTH}" data-prerendered="true" />
+    <meta property="og:image:height" content="${OG_IMAGE_HEIGHT}" data-prerendered="true" />
+    <meta property="og:image:alt" content="CronParser — parse, generate, and validate cron expressions" data-prerendered="true" />
+    <meta name="twitter:card" content="summary_large_image" data-prerendered="true" />
     <meta name="twitter:title" content="${t}" data-prerendered="true" />
     <meta name="twitter:description" content="${d}" data-prerendered="true" />
+    <meta name="twitter:image" content="${OG_IMAGE}" data-prerendered="true" />
 ${scriptTags}`
 }
 
@@ -166,52 +178,29 @@ if (!existsSync(shellPath)) {
 }
 const shell = readFileSync(shellPath, "utf8")
 
-// Body-prerendered routes. Phase 3: /platforms, /all-tools, /blog (index pages).
-// Phase 2A piloted 5 interval pages to validate the approach on data-driven
-// content pages (H1/intro/examples/mistakes/best-practices/FAQs). Phase 2B
-// extends that to all 37 interval pages. Platform guides and individual blog
-// posts remain head-only for now.
+// Routes that get real SSR body markup injected into #root, not just <head>.
+//
+// Derived from the route data itself rather than hand-listed, so adding a new
+// interval page / platform guide / blog post opts it in automatically — the
+// previous hardcoded list had to be edited in two places to stay in sync with
+// the data files, which is exactly the kind of drift this removes.
+//
+// Tools are deliberately NOT here: they're lazy() components, and renderToString
+// does not resolve Suspense, so an SSR'd tool page would capture the <Suspense>
+// fallback spinner instead of the tool UI. They stay head-only until the app is
+// restructured to preload tool chunks for SSR (tracked separately).
 const BODY_PRERENDER_PATHS = new Set([
+  // Static index/static-content pages
+  "/",
   "/platforms",
   "/all-tools",
   "/blog",
-  "/every-minute",
-  "/every-2-minutes",
-  "/every-5-minutes",
-  "/every-10-minutes",
-  "/every-15-minutes",
-  "/every-30-minutes",
-  "/every-hour",
-  "/every-day",
-  "/every-week",
-  "/every-month",
-  "/every-year",
-  "/every-monday",
-  "/every-tuesday",
-  "/every-wednesday",
-  "/every-thursday",
-  "/every-friday",
-  "/every-saturday",
-  "/every-sunday",
-  "/every-weekday",
-  "/weekends-only",
-  "/first-day-of-month",
-  "/last-day-of-month",
-  "/every-midnight",
-  "/every-noon",
-  "/every-45-minutes",
-  "/every-2-hours",
-  "/every-3-hours",
-  "/every-4-hours",
-  "/every-6-hours",
-  "/every-8-hours",
-  "/every-12-hours",
-  "/twice-daily",
-  "/every-weeknight",
-  "/every-other-day",
-  "/every-20-minutes",
-  "/every-quarter",
-  "/nth-weekday-of-month",
+  "/about",
+  "/privacy",
+  // Data-driven content pages
+  ...INTERVAL_PAGES.map((page) => `/${page.slug}`),
+  ...PLATFORM_GUIDES.map((guide) => `/${guide.slug}`),
+  ...BLOG_POSTS.map((post) => `/blog/${post.slug}`),
 ])
 
 const ssrEntryPath = join(root, "dist-ssr/entry-server.js")
